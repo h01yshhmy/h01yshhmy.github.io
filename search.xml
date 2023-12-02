@@ -3371,4 +3371,58 @@ class="math inline">\(v_3\)</span>
         <tag>斜率优化</tag>
       </tags>
   </entry>
+  <entry>
+    <title>CF825F</title>
+    <url>/2023/12/02/CF825F/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF825F">String
+Compression</a></p>
+<span id="more"></span>
+<p>对这种 各个子段有操作 要求全局最优化
+的问题，大多都是要写<code>DP</code>，且<code>DP</code>的计算过程一般都是
+目前右端点是 <span
+class="math inline">\(i\)</span>，向前枚举子段的左端点。</p>
+<p>设 <span class="math inline">\(f[i]\)</span>：长度为 <span
+class="math inline">\(i\)</span> 前缀的答案，显然 <span
+class="math inline">\(f[i]\)</span> 可以从 <span
+class="math inline">\(f[j],j\in[1,i-1]\)</span> 转移而来。</p>
+<p>为了好写，后面都采用和上述没有本质区别的刷表法，也就是从 <span
+class="math inline">\(f[i]\)</span> 转移到 <span
+class="math inline">\(f[i+j],j\in[1,n-i]\)</span>。</p>
+<p>那么就要考虑 <span class="math inline">\([i+1,i+j]\)</span>
+这一段如何计算了。</p>
+<p>发现题目和循环节相关，想到字符串中经典结论：设 <span
+class="math inline">\(S\)</span> 的 <span
+class="math inline">\(border\)</span> 集合为 <span
+class="math inline">\(B\)</span>，若 <span class="math inline">\(\exist
+T\in B,2|T|\ge |S|\)</span>，则 <span class="math inline">\(S\)</span>
+的周期为 <span class="math inline">\(|S|-|T|\)</span>，最短周期就是最长
+<span class="math inline">\(border\)</span> 对应的 <span
+class="math inline">\(|S|-|T|\)</span>。</p>
+<p>也就是说，我们需要求出当前 <span class="math inline">\(i\)</span>
+开头的这个后缀内的 <span
+class="math inline">\(border\)</span>，因为要在后缀中枚举 <span
+class="math inline">\(i+j\)</span> 位置。</p>
+<p>用 <code>KMP</code> 求这个后缀的 <code>next</code>
+数组即可，字符串（也就是这个后缀）中长度为 <span
+class="math inline">\(j\)</span> 的前缀的最短周期为：<span
+class="math inline">\(j-next[j]\)</span>。</p>
+<p>显然数字增长带来的长度增加比周期本身的长度增加慢的多，所以只需要找最短周期。</p>
+<p>转移时判断 <span class="math inline">\(j\equiv 0\mod
+j-next[j]\)</span>
+是否成立，成立就可以缩成<code>?abc</code>的形式，不成立就是<code>1abc</code>的形式。</p>
+<p>其实这可以看作通过周期的性质找到了最优转移点，也算是<code>KMP</code>优化<code>DP</code>了吧。</p>
+<p>时间复杂度 <span class="math inline">\(O(n^2)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">const</span> <span class="type">int</span> <span class="title">N</span><span class="params">(<span class="number">8005</span>)</span></span>;</span><br><span class="line"><span class="type">char</span> s[N];</span><br><span class="line"><span class="type">int</span> n,cnt[N],f[N],nxt[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">kmp</span><span class="params">(<span class="type">char</span> *s,<span class="type">int</span> len)</span></span>&#123;</span><br><span class="line">    nxt[<span class="number">0</span>]=nxt[<span class="number">1</span>]=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,len<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="type">int</span> p=nxt[i];</span><br><span class="line">        <span class="keyword">while</span>(p&amp;&amp;s[i]!=s[p])p=nxt[p];</span><br><span class="line">        nxt[i+<span class="number">1</span>]=(s[p]==s[i])?p+<span class="number">1</span>:<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin&gt;&gt;s;</span><br><span class="line">    n=<span class="built_in">strlen</span>(s);</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        cnt[i]=cnt[i/<span class="number">10</span>]+<span class="number">1</span>;</span><br><span class="line">        f[i]=i+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">rep</span>(i,<span class="number">0</span>,n<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="built_in">kmp</span>(s+i,n-i);</span><br><span class="line">        <span class="built_in">re</span>(j,n-i)&#123;</span><br><span class="line">            <span class="keyword">if</span>(j%(j-nxt[j])==<span class="number">0</span>)&#123;</span><br><span class="line">                f[i+j]=<span class="built_in">min</span>(f[i+j],f[i]+cnt[j/(j-nxt[j])]+j-nxt[j]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                f[i+j]=<span class="built_in">min</span>(f[i+j],f[i]+j+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout&lt;&lt;f[n]&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>DP的优化</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+        <tag>DP优化</tag>
+        <tag>KMP</tag>
+        <tag>字符串</tag>
+      </tags>
+  </entry>
 </search>
