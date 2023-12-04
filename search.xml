@@ -2401,6 +2401,7 @@ n\)</span>，这是点分治的经典分析。</p>
         <category>GraphTA</category>
       </categories>
       <tags>
+        <tag>图论</tag>
         <tag>分治</tag>
         <tag>点分治</tag>
         <tag>树的重心</tag>
@@ -3316,7 +3317,7 @@ class="math inline">\(u,v\)</span> 的做法。</p>
 <p>考虑枚举 <span
 class="math inline">\(u\)</span>，思考<strong>当什么情况下，我们应该去选
 <span class="math inline">\(v_1\)</span> 而不是 <span
-class="math inline">\(v_2\)</span>。</strong></p>
+class="math inline">\(v_2\)</span></strong>，这其实是斜率优化的一个常用想法。</p>
 <p>当然，肯定是走 <span class="math inline">\(v_1\)</span> 更短。</p>
 <p>也就是：</p>
 <p><span class="math display">\[
@@ -3635,6 +3636,7 @@ class="math inline">\(O(m\times 20\log^2 n)\)</span>，很难卡满。</p>
         <category>题解</category>
       </categories>
       <tags>
+        <tag>图论</tag>
         <tag>点分治</tag>
         <tag>点分树</tag>
       </tags>
@@ -3700,8 +3702,76 @@ class="math inline">\(O((n+q)\log n)\)</span>。</p>
         <category>GraphTA</category>
       </categories>
       <tags>
+        <tag>图论</tag>
         <tag>点分治</tag>
         <tag>点分树</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P4072</title>
+    <url>/2023/12/04/P4072/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P4072">P4072 [SDOI2016]
+征途</a></p>
+<span id="more"></span>
+<p>题意：将数列划分为 <span class="math inline">\(m\)</span> 段，设第
+<span class="math inline">\(i\)</span> 段之和为 <span
+class="math inline">\(x_i\)</span>，最小化 <span
+class="math inline">\(m^2\times \sum_{i=1}^m\frac{(\overline x
+-x_i)^2}{m}\)</span></p>
+<p>当然要拆式子，设 <span class="math inline">\(S=\sum_{i=1}^m
+x_i\)</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;m^2\times \sum_{i=1}^m\frac{(\overline x -x_i)^2}{m}\\
+=&amp;m\times \sum_{i=1}^m\overline x^2 -2\overline xx_i+x_i^2\\
+=&amp;m\left(\sum_{i=1}^m\overline x^2-2\sum_{i=1}^m\overline
+xx_i+\sum_{i=1}^mx_i^2\right)\\
+=&amp;m\left(\sum_{i=1}^m\left(\frac{S}{m}\right)^2-2\sum_{i=1}^m\frac{S}{m}x_i+\sum_{i=1}^mx_i^2\right)\\
+=&amp;\sum_{i=1}^m\frac{S^2}{m}-2S\sum_{i=1}^mx_i+m\sum_{i=1}^mx_i^2\\
+=&amp;m\sum_{i=1}^mx_i^2-S^2
+\end{aligned}
+\]</span></p>
+<p>现在考虑怎么DP。</p>
+<p>将数列划分为若干段，广为人知的做法是 <span
+class="math inline">\(f[i][j]\)</span> 为 前 <span
+class="math inline">\(j\)</span> 个划分了 <span
+class="math inline">\(i\)</span>
+段，转移时枚举最后一段的左端点，这种思想适用于很多算法。</p>
+<p><span class="math inline">\(f\)</span> 只处理式子中 <span
+class="math inline">\(\sum_{i=1}^mx_i^2\)</span> 的部分。</p>
+<p>先写暴力式子，设 <span class="math inline">\(s_i=\sum_{i=1}^n
+a_i\)</span>。</p>
+<p><span class="math display">\[
+f[i][j]=\min_{k=1}^{j-1}f[i-1][k-1]+(s_i-s_{k-1})^2
+\]</span></p>
+<p>如何优化这个过程？这个式子看起来很凸。</p>
+<p>考虑什么情况下从 <span class="math inline">\(f[i-1][p]\)</span>
+转移比 <span class="math inline">\(f[i-1][q]\)</span> 更优。</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;f[i-1][p]+(s_i-s_p)^2&gt;f[i-1][q]+(s_i-s_q)^2\\
+&amp;f[i-1][p]-2s_is_p+s_p^2&gt;f[i-1][q]-2s_is_q+s_q^2\\
+&amp;(f[i-1][p]+s_p^2)-(f[i-1][q]+s_q^2)&gt;-2s_i(s_q-s_p)\\
+&amp;\frac{f[i-1][p]+s_p^2-f[i-1][q]+s_q^2}{s_p-s_q}&lt;2s_i\\
+&amp;\frac{f(p)-f(q)}{p-q}&lt;k
+\end{aligned}
+\]</span></p>
+<p>顺利变成了斜率形式。斜率优化直接做就行了，可以说是板子。</p>
+<p>最后答案是 <span class="math inline">\(m\times
+f[m][n]-S^2\)</span>。</p>
+<p>时间复杂度 <span class="math inline">\(O(n^2)\)</span>。</p>
+<p>这个题也可以 <code>wqs</code> 二分，但是我们需要的斜率 <span
+class="math inline">\(2s_i\)</span> 单调递增，所以写 <code>wqs</code>
+比较大材小用。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">const</span> <span class="type">int</span> <span class="title">N</span><span class="params">(<span class="number">3005</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> n,m,a[N],q[N],h,t;</span><br><span class="line">ll sum[N],f[N][N];</span><br><span class="line"><span class="function"><span class="type">double</span> <span class="title">slope</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> j,<span class="type">int</span> k)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="type">double</span>)(f[u][j]-f[u][k]+sum[j]*sum[j]-sum[k]*sum[k])/(<span class="type">double</span>)(sum[j]-sum[k]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n,m);</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="built_in">read</span>(a[i]);</span><br><span class="line">        sum[i]=sum[i<span class="number">-1</span>]+a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">memset</span>(f,<span class="number">0x3f</span>,<span class="built_in">sizeof</span>(f));</span><br><span class="line">    f[<span class="number">0</span>][<span class="number">0</span>]=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        f[<span class="number">1</span>][i]=sum[i]*sum[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">rep</span>(j,<span class="number">2</span>,m)&#123;</span><br><span class="line">        h=<span class="number">1</span>,t=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">            <span class="keyword">while</span>(h&lt;t&amp;&amp;<span class="built_in">slope</span>(j<span class="number">-1</span>,q[h],q[h+<span class="number">1</span>])&lt;<span class="number">2</span>*sum[i])&#123;</span><br><span class="line">                h++;</span><br><span class="line">            &#125;</span><br><span class="line">            f[j][i]=f[j<span class="number">-1</span>][q[h]]+(sum[q[h]]-sum[i])*(sum[q[h]]-sum[i]);</span><br><span class="line">            <span class="keyword">while</span>(h&lt;t&amp;&amp;<span class="built_in">slope</span>(j<span class="number">-1</span>,q[t<span class="number">-1</span>],q[t])&gt;<span class="built_in">slope</span>(j<span class="number">-1</span>,q[t],i))&#123;</span><br><span class="line">                t--;</span><br><span class="line">            &#125;</span><br><span class="line">            q[++t]=i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans=m*f[m][n]-sum[n]*sum[n];</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>DP的优化</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+        <tag>斜率优化</tag>
       </tags>
   </entry>
 </search>
