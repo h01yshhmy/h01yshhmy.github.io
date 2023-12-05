@@ -3749,14 +3749,14 @@ f[i][j]=\min_{k=1}^{j-1}f[i-1][k-1]+(s_i-s_{k-1})^2
 转移比 <span class="math inline">\(f[i-1][q]\)</span> 更优。</p>
 <p><span class="math display">\[
 \begin{aligned}
-&amp;f[i-1][p]+(s_i-s_p)^2&gt;f[i-1][q]+(s_i-s_q)^2\\
-&amp;f[i-1][p]-2s_is_p+s_p^2&gt;f[i-1][q]-2s_is_q+s_q^2\\
-&amp;(f[i-1][p]+s_p^2)-(f[i-1][q]+s_q^2)&gt;-2s_i(s_q-s_p)\\
+&amp;f[i-1][p]+(s_i-s_p)^2&lt;f[i-1][q]+(s_i-s_q)^2\\
+&amp;f[i-1][p]-2s_is_p+s_p^2&lt;f[i-1][q]-2s_is_q+s_q^2\\
+&amp;(f[i-1][p]+s_p^2)-(f[i-1][q]+s_q^2)&lt;2s_i(s_p-s_q)\\
 &amp;\frac{f[i-1][p]+s_p^2-f[i-1][q]+s_q^2}{s_p-s_q}&lt;2s_i\\
 &amp;\frac{f(p)-f(q)}{p-q}&lt;k
 \end{aligned}
 \]</span></p>
-<p>顺利变成了斜率形式。斜率优化直接做就行了，可以说是板子。</p>
+<p>顺利变成了斜率形式。单调队列维护下凸壳，直接做就行了，可以说是板子。</p>
 <p>最后答案是 <span class="math inline">\(m\times
 f[m][n]-S^2\)</span>。</p>
 <p>时间复杂度 <span class="math inline">\(O(n^2)\)</span>。</p>
