@@ -4498,4 +4498,33 @@ n)\)</span>，常数较大，<code>2s,500MB</code>的题在洛谷跑了<code>1s,
         <tag>树套树</tag>
       </tags>
   </entry>
+  <entry>
+    <title>AGC006F</title>
+    <url>/2023/12/08/AGC006F/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/AT_agc006_f">[AGC006F]
+Blackout</a></p>
+<span id="more"></span>
+<p>首先将点 <span class="math inline">\((x,y)\)</span> 转成 <span
+class="math inline">\(x,y\)</span> 之间连边。</p>
+<p>题意转化为：如果 <span class="math inline">\(x\leftrightarrow
+y,y\leftrightarrow z\)</span>，那么 <span
+class="math inline">\(x,z\)</span> 也连边，求最终边的个数。</p>
+<p>对图 三染色。</p>
+<p>如果染色成功，那么红色可以连蓝色，蓝色可以连绿色，绿色可以连红色，一个连通块可以贡献
+<span class="math inline">\(R\times B+B\times G+G\times R\)</span>
+的答案。</p>
+<p>否则如果染色失败，可以发现，最终整个图可以连成完全图，可以贡献连通块大小的平方。</p>
+<p>记得要特判：染色成功，但是总颜色个数不足三种的情况，答案只会被贡献原图中边数。</p>
+<p>时间复杂度 <span class="math inline">\(O(n)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">const</span> <span class="type">int</span> <span class="title">N</span><span class="params">(<span class="number">1e5</span>+<span class="number">5</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> n,m,cnt[<span class="number">3</span>],col[N],vis[N],tot,esum,flg;</span><br><span class="line">vector&lt;pii&gt; G[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">cor</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x&gt;=<span class="number">3</span>)x-=<span class="number">3</span>;<span class="keyword">if</span>(x&lt;<span class="number">0</span>)x+=<span class="number">3</span>;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u)</span></span>&#123;</span><br><span class="line">    cnt[col[u]]++,vis[u]=<span class="number">1</span>,tot++;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> [v,w]:G[u])&#123;</span><br><span class="line">        esum+=(w==<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span>(!vis[v])&#123;</span><br><span class="line">            col[v]=<span class="built_in">cor</span>(col[u]+w);</span><br><span class="line">            <span class="built_in">dfs</span>(v);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(col[v]!=<span class="built_in">cor</span>(col[u]+w))&#123;</span><br><span class="line">            flg=<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n,m);</span><br><span class="line">    <span class="type">int</span> u=<span class="number">0</span>,v=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,m)&#123;</span><br><span class="line">        <span class="built_in">read</span>(u,v);</span><br><span class="line">        G[u].<span class="built_in">pb</span>(&#123;v,<span class="number">1</span>&#125;);</span><br><span class="line">        G[v].<span class="built_in">pb</span>(&#123;u,<span class="number">-1</span>&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="keyword">if</span>(vis[i])<span class="keyword">continue</span>;</span><br><span class="line">        cnt[<span class="number">0</span>]=cnt[<span class="number">1</span>]=cnt[<span class="number">2</span>]=<span class="number">0</span>;</span><br><span class="line">        flg=esum=tot=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(i);</span><br><span class="line">        <span class="keyword">if</span>(flg)&#123;</span><br><span class="line">            ans+=<span class="number">1ll</span>*tot*tot;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(cnt[<span class="number">0</span>]&amp;&amp;cnt[<span class="number">1</span>]&amp;&amp;cnt[<span class="number">2</span>])&#123;</span><br><span class="line">            ans+=<span class="number">1ll</span>*cnt[<span class="number">0</span>]*cnt[<span class="number">1</span>]+<span class="number">1ll</span>*cnt[<span class="number">1</span>]*cnt[<span class="number">2</span>]+<span class="number">1ll</span>*cnt[<span class="number">0</span>]*cnt[<span class="number">2</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            ans+=esum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>图论</tag>
+        <tag>纯思维</tag>
+        <tag>图上染色</tag>
+      </tags>
+  </entry>
 </search>

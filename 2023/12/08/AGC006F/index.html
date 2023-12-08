@@ -19,30 +19,30 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"h01yshhmy.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="[AGC020C] Median Sum">
+    <meta name="description" content="[AGC006F] Blackout">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AGC020C">
-<meta property="og:url" content="https://h01yshhmy.github.io/2023/12/02/AGC020C/index.html">
+<meta property="og:title" content="AGC006F">
+<meta property="og:url" content="https://h01yshhmy.github.io/2023/12/08/AGC006F/index.html">
 <meta property="og:site_name" content="h01yshhmy">
-<meta property="og:description" content="[AGC020C] Median Sum">
+<meta property="og:description" content="[AGC006F] Blackout">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-12-02T00:07:15.000Z">
-<meta property="article:modified_time" content="2023-12-02T01:23:01.456Z">
+<meta property="article:published_time" content="2023-12-08T07:18:16.000Z">
+<meta property="article:modified_time" content="2023-12-08T07:25:13.750Z">
 <meta property="article:author" content="Untitled-1">
-<meta property="article:tag" content="DP">
-<meta property="article:tag" content="DP优化">
-<meta property="article:tag" content="bitset">
+<meta property="article:tag" content="图论">
+<meta property="article:tag" content="纯思维">
+<meta property="article:tag" content="图上染色">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://h01yshhmy.github.io/2023/12/02/AGC020C/">
+<link rel="canonical" href="https://h01yshhmy.github.io/2023/12/08/AGC006F/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://h01yshhmy.github.io/2023/12/02/AGC020C/","path":"2023/12/02/AGC020C/","title":"AGC020C"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://h01yshhmy.github.io/2023/12/08/AGC006F/","path":"2023/12/08/AGC006F/","title":"AGC006F"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>AGC020C | h01yshhmy</title>
+<title>AGC006F | h01yshhmy</title>
   
 
 
@@ -210,7 +210,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://h01yshhmy.github.io/2023/12/02/AGC020C/">
+    <link itemprop="mainEntityOfPage" href="https://h01yshhmy.github.io/2023/12/08/AGC006F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/1.png">
@@ -223,12 +223,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="AGC020C | h01yshhmy">
+      <meta itemprop="name" content="AGC006F | h01yshhmy">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          AGC020C
+          AGC006F
         </h1>
 
         <div class="post-meta-container">
@@ -240,7 +240,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-12-02 08:07:15 / 修改时间：09:23:01" itemprop="dateCreated datePublished" datetime="2023-12-02T08:07:15+08:00">2023-12-02</time>
+      <time title="创建时间：2023-12-08 15:18:16 / 修改时间：15:25:13" itemprop="dateCreated datePublished" datetime="2023-12-08T15:18:16+08:00">2023-12-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -249,10 +249,6 @@
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">题解</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%A2%98%E8%A7%A3/DP%E7%9A%84%E4%BC%98%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">DP的优化</span></a>
         </span>
     </span>
 
@@ -272,32 +268,22 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/AT_agc020_c">[AGC020C]
-Median Sum</a></p>
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/AT_agc006_f">[AGC006F]
+Blackout</a></p>
 <span id="more"></span>
-<p>看上去像是DP。</p>
-<p>设 <span class="math inline">\(f[i][j]\)</span> 为前 <span
-class="math inline">\(i\)</span> 个数能否组成 <span
-class="math inline">\(j\)</span>。</p>
-<p>显然有 <span class="math inline">\(f[i][j]=f[i-1][j]\cup
-f[i-1][j-a[i]]\)</span></p>
-<p>滚掉第一维，发现后面是一个整体位移后做按位与，可以用bitset优化。</p>
-<p>如何求中位数？</p>
-<p>似乎不太能直接扫，因为不知道每个数到底能被多少个子集拼出来。</p>
-<p>但真的需要知道吗？</p>
-<p>如果所有子集和序列中，<span class="math inline">\(x\)</span> 有 <span
-class="math inline">\(m\)</span> 个，那么 <span
-class="math inline">\(\sum a[i]-x\)</span> 也有个 <span
-class="math inline">\(m\)</span>，选和不选是对称的，左边有 <span
-class="math inline">\(m\)</span> 个右边也一定有对应的 <span
-class="math inline">\(m\)</span> 个。</p>
-<p>所以我们并不需要知道具体有多少个，从 <span
-class="math inline">\(\lceil\frac{\sum a[i]}{2}\rceil\)</span>
-开始扫，遇到第一个可以拼出来的就是答案了。</p>
-<p>时间复杂度 <span
-class="math inline">\(O(\frac{n^2A}{w})\)</span>，<span
-class="math inline">\(10^8\)</span> 左右，常数很小，可以通过。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">const</span> <span class="type">int</span> <span class="title">N</span><span class="params">(<span class="number">2005</span>)</span></span>;</span><br><span class="line">bitset&lt;N*N&gt; f;</span><br><span class="line"><span class="type">int</span> n,a[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n);</span><br><span class="line">    <span class="type">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="built_in">read</span>(a[i]);</span><br><span class="line">        sum+=a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    f[<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        f|=f&lt;&lt;a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">rep</span>(i,(sum+<span class="number">1</span>)/<span class="number">2</span>,sum)&#123;</span><br><span class="line">        <span class="keyword">if</span>(f[i])&#123;</span><br><span class="line">            <span class="built_in">write</span>(i,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先将点 <span class="math inline">\((x,y)\)</span> 转成 <span
+class="math inline">\(x,y\)</span> 之间连边。</p>
+<p>题意转化为：如果 <span class="math inline">\(x\leftrightarrow
+y,y\leftrightarrow z\)</span>，那么 <span
+class="math inline">\(x,z\)</span> 也连边，求最终边的个数。</p>
+<p>对图 三染色。</p>
+<p>如果染色成功，那么红色可以连蓝色，蓝色可以连绿色，绿色可以连红色，一个连通块可以贡献
+<span class="math inline">\(R\times B+B\times G+G\times R\)</span>
+的答案。</p>
+<p>否则如果染色失败，可以发现，最终整个图可以连成完全图，可以贡献连通块大小的平方。</p>
+<p>记得要特判：染色成功，但是总颜色个数不足三种的情况，答案只会被贡献原图中边数。</p>
+<p>时间复杂度 <span class="math inline">\(O(n)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">const</span> <span class="type">int</span> <span class="title">N</span><span class="params">(<span class="number">1e5</span>+<span class="number">5</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> n,m,cnt[<span class="number">3</span>],col[N],vis[N],tot,esum,flg;</span><br><span class="line">vector&lt;pii&gt; G[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">cor</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x&gt;=<span class="number">3</span>)x-=<span class="number">3</span>;<span class="keyword">if</span>(x&lt;<span class="number">0</span>)x+=<span class="number">3</span>;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u)</span></span>&#123;</span><br><span class="line">    cnt[col[u]]++,vis[u]=<span class="number">1</span>,tot++;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> [v,w]:G[u])&#123;</span><br><span class="line">        esum+=(w==<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span>(!vis[v])&#123;</span><br><span class="line">            col[v]=<span class="built_in">cor</span>(col[u]+w);</span><br><span class="line">            <span class="built_in">dfs</span>(v);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(col[v]!=<span class="built_in">cor</span>(col[u]+w))&#123;</span><br><span class="line">            flg=<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n,m);</span><br><span class="line">    <span class="type">int</span> u=<span class="number">0</span>,v=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,m)&#123;</span><br><span class="line">        <span class="built_in">read</span>(u,v);</span><br><span class="line">        G[u].<span class="built_in">pb</span>(&#123;v,<span class="number">1</span>&#125;);</span><br><span class="line">        G[v].<span class="built_in">pb</span>(&#123;u,<span class="number">-1</span>&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="keyword">if</span>(vis[i])<span class="keyword">continue</span>;</span><br><span class="line">        cnt[<span class="number">0</span>]=cnt[<span class="number">1</span>]=cnt[<span class="number">2</span>]=<span class="number">0</span>;</span><br><span class="line">        flg=esum=tot=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(i);</span><br><span class="line">        <span class="keyword">if</span>(flg)&#123;</span><br><span class="line">            ans+=<span class="number">1ll</span>*tot*tot;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(cnt[<span class="number">0</span>]&amp;&amp;cnt[<span class="number">1</span>]&amp;&amp;cnt[<span class="number">2</span>])&#123;</span><br><span class="line">            ans+=<span class="number">1ll</span>*cnt[<span class="number">0</span>]*cnt[<span class="number">1</span>]+<span class="number">1ll</span>*cnt[<span class="number">1</span>]*cnt[<span class="number">2</span>]+<span class="number">1ll</span>*cnt[<span class="number">0</span>]*cnt[<span class="number">2</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            ans+=esum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -307,23 +293,20 @@ class="math inline">\(10^8\)</span> 左右，常数很小，可以通过。</p>
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/DP/" rel="tag"># DP</a>
-              <a href="/tags/DP%E4%BC%98%E5%8C%96/" rel="tag"># DP优化</a>
-              <a href="/tags/bitset/" rel="tag"># bitset</a>
+              <a href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag"># 图论</a>
+              <a href="/tags/%E7%BA%AF%E6%80%9D%E7%BB%B4/" rel="tag"># 纯思维</a>
+              <a href="/tags/%E5%9B%BE%E4%B8%8A%E6%9F%93%E8%89%B2/" rel="tag"># 图上染色</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/12/01/P2034/" rel="prev" title="P2034">
-                  <i class="fa fa-angle-left"></i> P2034
+                <a href="/2023/12/08/P4585/" rel="prev" title="P4585">
+                  <i class="fa fa-angle-left"></i> P4585
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/12/02/AGC022E/" rel="next" title="AGC022E">
-                  AGC022E <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
