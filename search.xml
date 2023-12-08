@@ -4437,7 +4437,6 @@ class="math inline">\(O(n\log^2n)\)</span>。</p>
 ]]></content>
       <categories>
         <category>题解</category>
-        <category>DSs</category>
       </categories>
       <tags>
         <tag>线段树</tag>
@@ -4525,6 +4524,45 @@ class="math inline">\(x,z\)</span> 也连边，求最终边的个数。</p>
         <tag>图论</tag>
         <tag>纯思维</tag>
         <tag>图上染色</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CF576E</title>
+    <url>/2023/12/08/CF576E/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF576E">Painting
+Edges</a></p>
+<span id="more"></span>
+<p>数据结构脑筋急转弯。</p>
+<p><span class="math inline">\(k\)</span>
+很小，可以对每种颜色分别维护。</p>
+<p>二分图的判断较为容易，拓展域并查集即可（二分图无奇环）。</p>
+<p>类似于 <a href="https://www.luogu.com.cn/problem/P5787">P5787 二分图
+/【模板】线段树分治</a>，我们可以用线段树分治来解决这个问题，有同类题题解：<a
+href="https://h01yshhmy.github.io/2023/12/08/CF1140F/">CF1140F |
+h01yshhmy</a>。</p>
+<p>对于同一条边，考虑相邻的两个操作，编号分别为 <span
+class="math inline">\(i,j\)</span>，那么操作 <span
+class="math inline">\(i\)</span> 影响到其他操作的范围是 <span
+class="math inline">\([i+1,j-1]\)</span>。</p>
+<p>所以将操作 <span class="math inline">\(i\)</span> 覆盖到 <span
+class="math inline">\([i+1,j-1]\)</span>
+上，在分治到叶子节点的时候判断操作 <span
+class="math inline">\(i\)</span>
+能否执行，并查集判断是否为二分图，可以发现操作不被执行实际上也就是把上一次执行的染色操作重新执行了一遍，把
+<span class="math inline">\(c[i]\)</span> 改为上一次操作的颜色即可。</p>
+<p>时间复杂度 <span class="math inline">\(O(nk+n\log^2 n)\)</span>。</p>
+<p>总结：</p>
+<p>实际上和线段树分治的模板很相似，难点或启发之处在于：将操作是否可以执行的<code>check</code>部分后置，考虑每个操作的影响区间，先将影响区间放在结构上维护，在影响区间真正造成影响之前再做<code>check</code>检验是否可以操作。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">5e5</span>+<span class="number">10</span>,K=<span class="number">55</span>;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt;e[N&lt;&lt;<span class="number">2</span>];</span><br><span class="line"><span class="type">int</span> pos[N],top,u[N],v[N],a[N],c[N],n,m,k,q,f[K][N&lt;&lt;<span class="number">1</span>],height[K][N&lt;&lt;<span class="number">1</span>];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> c,<span class="type">int</span> x)</span></span>&#123;<span class="keyword">return</span> f[c][x]==x?x:<span class="built_in">find</span>(c,f[c][x]);&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">node</span>&#123;<span class="type">int</span> c,x,y,add;&#125;stk[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge</span><span class="params">(<span class="type">int</span> c,<span class="type">int</span> x,<span class="type">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x==y) <span class="keyword">return</span> ;</span><br><span class="line">    <span class="keyword">if</span>(height[c][x]&gt;height[c][y]) <span class="built_in">swap</span>(x,y);</span><br><span class="line">    stk[++top]=node&#123;c,x,y,height[c][x]==height[c][y]&#125;;</span><br><span class="line">    f[c][x]=y;height[c][y]+=height[c][x]==height[c][y];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">update</span><span class="params">(<span class="type">int</span> p,<span class="type">int</span> l,<span class="type">int</span> r,<span class="type">int</span> nl,<span class="type">int</span> nr,<span class="type">int</span> k)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(nl&lt;=l&amp;&amp;r&lt;=nr)&#123;e[p].<span class="built_in">push_back</span>(k);<span class="keyword">return</span> ;&#125;</span><br><span class="line">    <span class="type">int</span> mid=l+r&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(nl&lt;=mid) <span class="built_in">update</span>(p&lt;&lt;<span class="number">1</span>,l,mid,nl,nr,k);</span><br><span class="line">    <span class="keyword">if</span>(nr&gt;mid) <span class="built_in">update</span>(p&lt;&lt;<span class="number">1</span>|<span class="number">1</span>,mid+<span class="number">1</span>,r,nl,nr,k);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">(<span class="type">int</span> p,<span class="type">int</span> l,<span class="type">int</span> r)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> back=top,mid=l+r&gt;&gt;<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i:e[p])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> fx=<span class="built_in">find</span>(c[i],u[a[i]]),fy=<span class="built_in">find</span>(c[i],v[a[i]]);</span><br><span class="line">        <span class="built_in">merge</span>(c[i],<span class="built_in">find</span>(c[i],u[a[i]]),<span class="built_in">find</span>(c[i],v[a[i]]+n));</span><br><span class="line">        <span class="built_in">merge</span>(c[i],<span class="built_in">find</span>(c[i],u[a[i]]+n),<span class="built_in">find</span>(c[i],v[a[i]]));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(l==r)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">find</span>(c[r],u[a[r]])==<span class="built_in">find</span>(c[r],v[a[r]])) <span class="built_in">puts</span>(<span class="string">&quot;NO&quot;</span>),c[r]=pos[a[r]]; </span><br><span class="line">        <span class="keyword">else</span> <span class="built_in">puts</span>(<span class="string">&quot;YES&quot;</span>),pos[a[r]]=c[r];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="built_in">solve</span>(p&lt;&lt;<span class="number">1</span>,l,mid),<span class="built_in">solve</span>(p&lt;&lt;<span class="number">1</span>|<span class="number">1</span>,mid+<span class="number">1</span>,r);</span><br><span class="line">    <span class="keyword">while</span>(top&gt;back)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> c=stk[top].c,x=stk[top].x,z=stk[top].add;top--;</span><br><span class="line">        height[c][f[c][x]]-=z;f[c][x]=x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d%d&quot;</span>,&amp;n,&amp;m,&amp;k,&amp;q);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=k;j++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">            f[j][i]=i,f[j][i+n]=i+n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=m;i++) <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>,&amp;u[i],&amp;v[i]),pos[i]=q+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=q;i++) <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>,&amp;a[i],&amp;c[i]);</span><br><span class="line">    <span class="type">int</span> cnt=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=q;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(i+<span class="number">1</span>&lt;pos[a[i]]) <span class="built_in">update</span>(<span class="number">1</span>,<span class="number">1</span>,q,i+<span class="number">1</span>,pos[a[i]]<span class="number">-1</span>,i);</span><br><span class="line">        <span class="comment">//i+1是因为如果判断i时直接把它加进来，这时的颜色是新的颜色，但后面撤销的就是原来的颜色，就会产生错误 </span></span><br><span class="line">        pos[a[i]]=i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">memset</span>(pos,<span class="number">0</span>,<span class="built_in">sizeof</span>(pos));</span><br><span class="line">    <span class="built_in">solve</span>(<span class="number">1</span>,<span class="number">1</span>,q);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>DSs</category>
+      </categories>
+      <tags>
+        <tag>线段树</tag>
+        <tag>并查集</tag>
+        <tag>线段树分治</tag>
       </tags>
   </entry>
 </search>
