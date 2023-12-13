@@ -5017,9 +5017,48 @@ class="math inline">\(siz[v]\)</span> 的种类为 <span
 class="math inline">\(O(\sqrt{n})\)</span> 量级，将 01
 背包转化为多重背包，对每一个种类的个数做二进制分组，最终复杂度为 <span
 class="math inline">\(O(\frac{n\sqrt{n}}{w})\)</span>，不带 <span
-class="math inline">\(\log\)</span>，因为 <span
-class="math inline">\(\sum_{i=1}^{\sqrt{n}}\log
-i=O(\sqrt{n})\)</span>。</p>
+class="math inline">\(\log\)</span>。</p>
+<p>复杂度证明：</p>
+<ul>
+<li>首先，复杂度上界看起来像是 <span
+class="math inline">\(O(\frac{n\sqrt{n}\log n}{\omega})\)</span>
+的，而实际上是 <span
+class="math inline">\(O(\frac{n\sqrt{n}}{\omega})\)</span> 的。</li>
+<li>设 <span class="math inline">\(w_i\)</span> 为背包中原始权值，一共有
+<span class="math inline">\(\sqrt{n}\)</span> 种 <span
+class="math inline">\(w\)</span>
+的取值。多重背包中每个物品的权值都是形如 <span
+class="math inline">\(k\times w_i\)</span> 的，容易发现最多只有 <span
+class="math inline">\(\sqrt{n}\)</span> 个 <span
+class="math inline">\(k\)</span> 不是二的整数次幂。我们将同一个系数
+<span class="math inline">\(k\)</span> 的下标 <span
+class="math inline">\(i\)</span> 放进集合 <span
+class="math inline">\(S_k\)</span> 中。</li>
+<li>以系数为标准分开来看，设 <span
+class="math inline">\(\sum\limits_{k=2^z}|S_k|=O(T(n))\)</span>，那么总物品数
+<span class="math inline">\(\sum\limits_{k\ge
+1}|S_k|=O(T(n)+\sqrt{n})\)</span>。</li>
+<li>显然 <span class="math inline">\(\sum\limits_{i\in S_k}kw_i\le
+n\)</span>，有 <span class="math inline">\(\sum\limits_{i\in S_k}w_i\le
+\frac{n}{k}\)</span>，因为在同一个 <span
+class="math inline">\(k\)</span> 的 <span
+class="math inline">\(S_k\)</span> 内，所有 <span
+class="math inline">\(w\)</span> 显然不重复，那么左边的 <span
+class="math inline">\(w\)</span> 都尽可能取最小值时，总和是 <span
+class="math inline">\(\frac{|S_k|\times(|S_k|+1)}{2}\)</span>（这样
+<span class="math inline">\(|S_k|\)</span>
+会变得最大，这正是我们想要的），那么就有 <span
+class="math inline">\(|S_k|\le \sqrt{\frac{n}{k}}\)</span>。</li>
+<li>进一步的，<span class="math inline">\(\sum\limits_{k=2^z}|S_k|\le
+\sum\limits_{z\ge 1}\sqrt{\frac{n}{2^z}}=\sqrt{n}\times
+\sum\limits_{z\ge
+1}\sqrt{\frac{1}{2^z}}=\frac{\sqrt{n}}{\sqrt{2}-1}=O(\sqrt{n})\)</span>。</li>
+<li>那么总物品数为 <span class="math inline">\(O(\sqrt{n})\)</span>
+量级，复杂度 <span
+class="math inline">\(O(\frac{n\sqrt{n}}{\omega})\)</span>，得证。</li>
+<li>参考：<a href="https://codeforces.com/blog/entry/98663">[Tutorial]
+Knapsack, Subset Sum and the (max,+) Convolution</a></li>
+</ul>
 <p>注意 <code>bitset</code> 不能直接开
 <code>bitset&lt;N&gt;</code>，要用到一些 <code>template</code>
 的小技巧来减少内存开销。</p>
@@ -5350,13 +5389,13 @@ class="math inline">\(F(i,L(i),k)\leftarrow F(i-1,L(i-1),k)\)</span>
 <p>显然 <span
 class="math inline">\(L(i,j)-L(i,j-1)\in\{0,1\}\)</span>，我们可以对
 <span class="math inline">\(L(i,j)\)</span>
-的第二位做差分，将差分出的结果当作 <span
+的第二维做差分，对差分出的数组状压得到 <span
+class="math inline">\(S(i)\)</span>，当作 <span
 class="math inline">\(F(i,j,k)\)</span> 的 <span
 class="math inline">\(j\)</span>。</p>
-<p>总而言之，预处理出每个差分状态 <span
-class="math inline">\(L(i,j)\)</span> 的下一行 <span
-class="math inline">\(L(i+1,j)\)</span> 的差分状态 <span
-class="math inline">\(nxt[L(i)]\)</span>，这样就可以做形如：<span
+<p>总而言之，预处理出 <span class="math inline">\(S(i)\)</span>
+下一行的差分状态 <span
+class="math inline">\(nxt[S(i)]\)</span>，这样就可以做形如：<span
 class="math inline">\(F(i,nxt[j],k)\leftarrow F(i-1,j,k)\)</span>
 的转移。</p>
 <p>不要忘了<code>NOI</code>不能连续出现的限制，不仅要对 <span
@@ -5373,7 +5412,7 @@ class="math inline">\(ans[popcount(s)]\leftarrow
 F(n,s,k),k\in[0,2]\)</span>，显然，差分数组上的 <span
 class="math inline">\(1\)</span> 个数就是LCS长度。</p>
 <p>注意到 <span class="math inline">\(F,L\)</span>
-的处理均只和上一行有关，都滚掉第一维可以优化空间。</p>
+的处理均只和上一行有关，都滚掉第一维，优化空间。</p>
 <p>时间复杂度 <span class="math inline">\(O(2^k(n+k))\)</span>。</p>
 <p>总结：DP套DP 常用于解决一些字符串问题，预处理 <span
 class="math inline">\(L\)</span>

@@ -27,7 +27,7 @@
 <meta property="og:description" content="PermuTree (hard version)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-10T08:30:39.000Z">
-<meta property="article:modified_time" content="2023-12-10T11:42:30.390Z">
+<meta property="article:modified_time" content="2023-12-13T06:32:29.234Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="DP">
 <meta property="article:tag" content="DP优化">
@@ -241,9 +241,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-12-10 16:30:39 / 修改时间：19:42:30" itemprop="dateCreated datePublished" datetime="2023-12-10T16:30:39+08:00">2023-12-10</time>
+      <time title="创建时间：2023-12-10 16:30:39" itemprop="dateCreated datePublished" datetime="2023-12-10T16:30:39+08:00">2023-12-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-13 14:32:29" itemprop="dateModified" datetime="2023-12-13T14:32:29+08:00">2023-12-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -311,9 +317,48 @@ class="math inline">\(siz[v]\)</span> 的种类为 <span
 class="math inline">\(O(\sqrt{n})\)</span> 量级，将 01
 背包转化为多重背包，对每一个种类的个数做二进制分组，最终复杂度为 <span
 class="math inline">\(O(\frac{n\sqrt{n}}{w})\)</span>，不带 <span
-class="math inline">\(\log\)</span>，因为 <span
-class="math inline">\(\sum_{i=1}^{\sqrt{n}}\log
-i=O(\sqrt{n})\)</span>。</p>
+class="math inline">\(\log\)</span>。</p>
+<p>复杂度证明：</p>
+<ul>
+<li>首先，复杂度上界看起来像是 <span
+class="math inline">\(O(\frac{n\sqrt{n}\log n}{\omega})\)</span>
+的，而实际上是 <span
+class="math inline">\(O(\frac{n\sqrt{n}}{\omega})\)</span> 的。</li>
+<li>设 <span class="math inline">\(w_i\)</span> 为背包中原始权值，一共有
+<span class="math inline">\(\sqrt{n}\)</span> 种 <span
+class="math inline">\(w\)</span>
+的取值。多重背包中每个物品的权值都是形如 <span
+class="math inline">\(k\times w_i\)</span> 的，容易发现最多只有 <span
+class="math inline">\(\sqrt{n}\)</span> 个 <span
+class="math inline">\(k\)</span> 不是二的整数次幂。我们将同一个系数
+<span class="math inline">\(k\)</span> 的下标 <span
+class="math inline">\(i\)</span> 放进集合 <span
+class="math inline">\(S_k\)</span> 中。</li>
+<li>以系数为标准分开来看，设 <span
+class="math inline">\(\sum\limits_{k=2^z}|S_k|=O(T(n))\)</span>，那么总物品数
+<span class="math inline">\(\sum\limits_{k\ge
+1}|S_k|=O(T(n)+\sqrt{n})\)</span>。</li>
+<li>显然 <span class="math inline">\(\sum\limits_{i\in S_k}kw_i\le
+n\)</span>，有 <span class="math inline">\(\sum\limits_{i\in S_k}w_i\le
+\frac{n}{k}\)</span>，因为在同一个 <span
+class="math inline">\(k\)</span> 的 <span
+class="math inline">\(S_k\)</span> 内，所有 <span
+class="math inline">\(w\)</span> 显然不重复，那么左边的 <span
+class="math inline">\(w\)</span> 都尽可能取最小值时，总和是 <span
+class="math inline">\(\frac{|S_k|\times(|S_k|+1)}{2}\)</span>（这样
+<span class="math inline">\(|S_k|\)</span>
+会变得最大，这正是我们想要的），那么就有 <span
+class="math inline">\(|S_k|\le \sqrt{\frac{n}{k}}\)</span>。</li>
+<li>进一步的，<span class="math inline">\(\sum\limits_{k=2^z}|S_k|\le
+\sum\limits_{z\ge 1}\sqrt{\frac{n}{2^z}}=\sqrt{n}\times
+\sum\limits_{z\ge
+1}\sqrt{\frac{1}{2^z}}=\frac{\sqrt{n}}{\sqrt{2}-1}=O(\sqrt{n})\)</span>。</li>
+<li>那么总物品数为 <span class="math inline">\(O(\sqrt{n})\)</span>
+量级，复杂度 <span
+class="math inline">\(O(\frac{n\sqrt{n}}{\omega})\)</span>，得证。</li>
+<li>参考：<a target="_blank" rel="noopener" href="https://codeforces.com/blog/entry/98663">[Tutorial]
+Knapsack, Subset Sum and the (max,+) Convolution</a></li>
+</ul>
 <p>注意 <code>bitset</code> 不能直接开
 <code>bitset&lt;N&gt;</code>，要用到一些 <code>template</code>
 的小技巧来减少内存开销。</p>
