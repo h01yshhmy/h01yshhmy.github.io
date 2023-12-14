@@ -5428,8 +5428,8 @@ class="math inline">\(F\)</span>
         <tag>DP</tag>
         <tag>状态压缩</tag>
         <tag>字符串</tag>
-        <tag>DP套DP</tag>
         <tag>有限状态自动机</tag>
+        <tag>DFA-DP</tag>
       </tags>
   </entry>
   <entry>
@@ -5642,7 +5642,7 @@ n)\)</span>。</p>
 <span class="math inline">\(\delta\)</span>
 函数自然地为动态规划的转移指明了方向。因此，当遇到形如
 “不能出现若干单词” 的字符串<strong>计数或最优化</strong>问题，可以考虑在
-ACAM 上 DP，将 ACAM 的状态写进 DP 的一个维度。———— Alex_Wei</p>
+ACAM 上 DP，将 ACAM 的状态写进 DP 的一个维度。</p>
 </blockquote>
 <p>自动机上DP，算经典题。</p>
 <p>首先容斥一步，至少含有一个的串个数不好计算，转为总个数减去一个都没有的串个数，称这样的串为合法串。</p>
@@ -5680,7 +5680,61 @@ class="math inline">\(F(i,*)\to F(\delta(i,c),*&#39;)\)</span>
       <tags>
         <tag>DP</tag>
         <tag>字符串</tag>
-        <tag>DP套DP</tag>
+        <tag>AC自动机</tag>
+        <tag>DFA-DP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P2292</title>
+    <url>/2023/12/14/P2292/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P2292">P2292 [HNOI2004] L
+语言</a></p>
+<span id="more"></span>
+<p>首先有一个较为显然的DP想法。</p>
+<p>设 <span class="math inline">\(f[i]\)</span>：前缀 <span
+class="math inline">\(i\)</span> 能否理解，如果存在 <span
+class="math inline">\(f[j]=1\)</span> 且 <span
+class="math inline">\(t[j+1,i]\in D\)</span>，那么 <span
+class="math inline">\(f[i]=1\)</span>，否则 <span
+class="math inline">\(f[i]=0\)</span>。</p>
+<p>暴力做，复杂度 <span class="math inline">\(O(nm|s||t|)\)</span>。</p>
+<p>考虑优化，对 <span class="math inline">\(D\)</span> 建AC自动机。</p>
+<p>将 <span class="math inline">\(t\)</span>
+放到AC自动机上匹配，不要忘记将AC自动机上叶子的每个儿子都指回根，可以自动循环匹配。</p>
+<p>对于自动机上点 <span class="math inline">\(p\)</span>，我们需要知道
+<span class="math inline">\(t[1,p]\)</span>
+中哪些后缀是模式串，而且我们只需要知道后缀的长度。</p>
+<p>直接枚举可能的后缀，复杂度 <span
+class="math inline">\(O(m|s||t|)\)</span>，不够快。</p>
+<p>发现 <span class="math inline">\(|s|\le 20\)</span>，状压。</p>
+<p>设 <span class="math inline">\(can[p]\)</span>，如果 <span
+class="math inline">\(can[p]\)</span> 第 <span
+class="math inline">\(i\)</span> 位为 <span
+class="math inline">\(1\)</span>，代表 <span
+class="math inline">\(t[p-i+1,p]\)</span> 等于某个模式串。</p>
+<p>怎么求 <span class="math inline">\(can[p]\)</span> 呢？</p>
+<p>预处理一下每个模式串的深度，枚举节点，跳 <span
+class="math inline">\(fail\)</span>，点 <span
+class="math inline">\(p\)</span> 的每个 <span
+class="math inline">\(fail\)</span>
+祖先代表的是<strong>所有</strong>作为某个模式串<strong>前缀</strong>出现的
+<span class="math inline">\(p\)</span>
+串<strong>后缀</strong>，我们需要作为<strong>整个</strong>模式串出现的
+<span class="math inline">\(p\)</span>
+串<strong>后缀</strong>，判断是不是结束位置即可。</p>
+<p>查询计算合法状态时，只需要关注前 <span
+class="math inline">\(20\)</span>
+位信息，用<code>unsigned</code>自然溢出比较简便。</p>
+<p>时间复杂度 <span class="math inline">\(O(n|s|^2+m|t|)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">const</span> <span class="type">int</span> <span class="title">N</span><span class="params">(<span class="number">25</span>)</span>,<span class="title">M</span><span class="params">(<span class="number">55</span>)</span>,<span class="title">L</span><span class="params">(<span class="number">2e6</span>+<span class="number">5</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> n,m,ncnt=<span class="number">1</span>;</span><br><span class="line"><span class="type">char</span> s[N],t[L];</span><br><span class="line"><span class="type">int</span> ch[N*N][<span class="number">26</span>],ed[N*N],dep[N*N],fail[N*N];</span><br><span class="line"><span class="type">unsigned</span> can[N*N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">insert</span><span class="params">(<span class="type">char</span> *s)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> len=<span class="built_in">strlen</span>(s+<span class="number">1</span>),p=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,len)&#123;</span><br><span class="line">        <span class="type">int</span> c=s[i]-<span class="string">&#x27;a&#x27;</span>;</span><br><span class="line">        <span class="keyword">if</span>(!ch[p][c])ch[p][c]=++ncnt;</span><br><span class="line">        p=ch[p][c];</span><br><span class="line">    &#125;</span><br><span class="line">    ed[p]=<span class="number">1</span>,dep[p]=len;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">build</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">rep</span>(i,<span class="number">0</span>,<span class="number">25</span>)ch[<span class="number">0</span>][i]=<span class="number">1</span>;</span><br><span class="line">    queue&lt;<span class="type">int</span>&gt; q;</span><br><span class="line">    q.<span class="built_in">push</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">while</span>(!q.<span class="built_in">empty</span>())&#123;</span><br><span class="line">        <span class="type">int</span> u=q.<span class="built_in">front</span>();q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="built_in">rep</span>(i,<span class="number">0</span>,<span class="number">25</span>)&#123;</span><br><span class="line">            <span class="type">int</span> &amp;v=ch[u][i];</span><br><span class="line">            <span class="keyword">if</span>(v)&#123;</span><br><span class="line">                fail[v]=ch[fail[u]][i];</span><br><span class="line">                q.<span class="built_in">push</span>(v);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> v=ch[fail[u]][i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(i,ncnt)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> u=i;u;u=fail[u])&#123;</span><br><span class="line">            <span class="keyword">if</span>(ed[u])&#123;</span><br><span class="line">                can[i]|=(<span class="number">1</span>&lt;&lt;dep[u]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">work</span><span class="params">(<span class="type">char</span> *s)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> len=<span class="built_in">strlen</span>(s+<span class="number">1</span>),p=<span class="number">1</span>,res=<span class="number">0</span>;</span><br><span class="line">    <span class="type">unsigned</span> sta=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,len)&#123;</span><br><span class="line">        <span class="type">int</span> c=s[i]-<span class="string">&#x27;a&#x27;</span>;</span><br><span class="line">        p=ch[p][c];</span><br><span class="line">        sta&lt;&lt;=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(sta&amp;can[p])&#123;</span><br><span class="line">            sta|=<span class="number">1</span>;</span><br><span class="line">            res=i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>)-&gt;<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin&gt;&gt;n&gt;&gt;m;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        cin&gt;&gt;(s+<span class="number">1</span>);</span><br><span class="line">        <span class="built_in">insert</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">build</span>();</span><br><span class="line">    <span class="built_in">re</span>(i,m)&#123;</span><br><span class="line">        cin&gt;&gt;(t+<span class="number">1</span>);</span><br><span class="line">        cout&lt;&lt;<span class="built_in">work</span>(t)&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>Strin</category>
+      </categories>
+      <tags>
+        <tag>状态压缩</tag>
+        <tag>字符串</tag>
         <tag>AC自动机</tag>
       </tags>
   </entry>
