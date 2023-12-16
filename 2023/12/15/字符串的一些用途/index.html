@@ -19,15 +19,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"h01yshhmy.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Hash  快速判断已经做完预处理的两串中子串是否相等。 使用 和哈希或者异或哈希 + 随机化 的技巧，快速判断两个结构之间是否相等。 对一些判定性的DS题，用数据结构维护哈希。  KMP  匹配模式串在文本串中位置。 利用next指针的 \(\textrm{border}\) 各种性质解题。 找最小循环节，找周期（ \(\textrm{period}\) ），CF825">
+    <meta name="description" content="瞎写，未完待续。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="字符串的一些用途">
 <meta property="og:url" content="https://h01yshhmy.github.io/2023/12/15/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E9%80%94/index.html">
 <meta property="og:site_name" content="h01yshhmy">
-<meta property="og:description" content="Hash  快速判断已经做完预处理的两串中子串是否相等。 使用 和哈希或者异或哈希 + 随机化 的技巧，快速判断两个结构之间是否相等。 对一些判定性的DS题，用数据结构维护哈希。  KMP  匹配模式串在文本串中位置。 利用next指针的 \(\textrm{border}\) 各种性质解题。 找最小循环节，找周期（ \(\textrm{period}\) ），CF825">
+<meta property="og:description" content="瞎写，未完待续。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-15T00:06:55.000Z">
-<meta property="article:modified_time" content="2023-12-15T13:50:52.996Z">
+<meta property="article:modified_time" content="2023-12-16T05:12:03.861Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="字符串">
 <meta name="twitter:card" content="summary">
@@ -237,9 +237,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-12-15 08:06:55 / 修改时间：21:50:52" itemprop="dateCreated datePublished" datetime="2023-12-15T08:06:55+08:00">2023-12-15</time>
+      <time title="创建时间：2023-12-15 08:06:55" itemprop="dateCreated datePublished" datetime="2023-12-15T08:06:55+08:00">2023-12-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-16 13:12:03" itemprop="dateModified" datetime="2023-12-16T13:12:03+08:00">2023-12-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,7 +277,8 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><span id="more"></span>
+    <div class="post-body" itemprop="articleBody"><p>瞎写，未完待续。</p>
+<span id="more"></span>
 <h2 id="hash">Hash</h2>
 <ol type="1">
 <li>快速判断已经做完预处理的两串中子串是否相等。</li>
@@ -317,11 +324,44 @@ F(*&#39;,\delta(i,c))\)</span>。</li>
 <li>求任意后缀 <span class="math inline">\(\textrm{LCP}\)</span>。</li>
 <li>把所有串拼起来，求任意两串 <span
 class="math inline">\(\textrm{LCP}\)</span>。</li>
+<li>字典序第 <span class="math inline">\(k\)</span> 大子串。</li>
 </ol>
 <h2 id="sam">SAM</h2>
 <ol type="1">
-<li>在另一个字符串中搜索一个字符串的所有出现位置。</li>
-<li>计算给定的字符串中有多少个不同的子串。</li>
+<li>在单个 <span class="math inline">\(T\)</span> 中搜索多个 <span
+class="math inline">\(P\)</span> 是否出现过，单次复杂度 <span
+class="math inline">\(O(|P|)\)</span>，其实还顺便可以找到 <span
+class="math inline">\(P\)</span> 在 <span
+class="math inline">\(T\)</span> 中出现的最长前缀长度。</li>
+<li>计算单个 <span class="math inline">\(T\)</span>
+中有多少个不同的子串，或计算不同的子串的总长度。</li>
+<li>字典序第 <span class="math inline">\(k\)</span>
+大子串，单次查询复杂度 <span class="math inline">\(O(|ans|\times
+|\Sigma|)\)</span>。</li>
+<li>找 <span class="math inline">\(T\)</span> 最长循环移位。</li>
+<li>在单个 <span class="math inline">\(T\)</span> 中多次询问，<span
+class="math inline">\(P\)</span> 的出现次数，复杂度 <span
+class="math inline">\(O(|T|)-O(|P|)\)</span>。</li>
+<li>在单个 <span class="math inline">\(T\)</span> 中多次询问，<span
+class="math inline">\(P\)</span>
+的<strong>第一次</strong>出现位置，复杂度 <span
+class="math inline">\(O(|T|)-O(|P|)\)</span>。</li>
+<li>在单个 <span class="math inline">\(T\)</span> 中多次询问，<span
+class="math inline">\(P\)</span> 的<strong>所有</strong>出现位置，复杂度
+<span class="math inline">\(O(|T|)-O(|P|+|ans|)\)</span>。</li>
+<li>给定一个字符串 <span class="math inline">\(S\)</span>
+和一个特定的字符集，找一个长度最短的没有在 <span
+class="math inline">\(S\)</span> 中出现过的字符串。</li>
+<li>给定两个字符串 <span class="math inline">\(S\)</span> 和 <span
+class="math inline">\(T\)</span>，求出最长公共子串，公共子串定义为在
+<span class="math inline">\(S\)</span> 和 <span
+class="math inline">\(T\)</span> 中都作为子串出现过的字符串 <span
+class="math inline">\(X\)</span>，时间复杂度 <span
+class="math inline">\(O(|T|+|S|)\)</span>。</li>
+<li>给定 <span class="math inline">\(k\)</span> 个字符串 <span
+class="math inline">\(S_i\)</span>。我们需要找到它们的最长公共子串，即作为子串出现在每个字符串中的字符串
+<span class="math inline">\(X\)</span>，时间复杂度 <span
+class="math inline">\(O(\sum_{i=1}^k{|S_i|})\)</span>。</li>
 </ol>
 
     </div>

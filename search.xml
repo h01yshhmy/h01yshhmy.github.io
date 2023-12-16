@@ -5833,7 +5833,8 @@ class="math inline">\(j\)</span>，<span class="math inline">\(w\)</span>
   <entry>
     <title>字符串的一些用途</title>
     <url>/2023/12/15/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E9%80%94/</url>
-    <content><![CDATA[<span id="more"></span>
+    <content><![CDATA[<p>瞎写，未完待续。</p>
+<span id="more"></span>
 <h2 id="hash">Hash</h2>
 <ol type="1">
 <li>快速判断已经做完预处理的两串中子串是否相等。</li>
@@ -5879,11 +5880,44 @@ F(*&#39;,\delta(i,c))\)</span>。</li>
 <li>求任意后缀 <span class="math inline">\(\textrm{LCP}\)</span>。</li>
 <li>把所有串拼起来，求任意两串 <span
 class="math inline">\(\textrm{LCP}\)</span>。</li>
+<li>字典序第 <span class="math inline">\(k\)</span> 大子串。</li>
 </ol>
 <h2 id="sam">SAM</h2>
 <ol type="1">
-<li>在另一个字符串中搜索一个字符串的所有出现位置。</li>
-<li>计算给定的字符串中有多少个不同的子串。</li>
+<li>在单个 <span class="math inline">\(T\)</span> 中搜索多个 <span
+class="math inline">\(P\)</span> 是否出现过，单次复杂度 <span
+class="math inline">\(O(|P|)\)</span>，其实还顺便可以找到 <span
+class="math inline">\(P\)</span> 在 <span
+class="math inline">\(T\)</span> 中出现的最长前缀长度。</li>
+<li>计算单个 <span class="math inline">\(T\)</span>
+中有多少个不同的子串，或计算不同的子串的总长度。</li>
+<li>字典序第 <span class="math inline">\(k\)</span>
+大子串，单次查询复杂度 <span class="math inline">\(O(|ans|\times
+|\Sigma|)\)</span>。</li>
+<li>找 <span class="math inline">\(T\)</span> 最长循环移位。</li>
+<li>在单个 <span class="math inline">\(T\)</span> 中多次询问，<span
+class="math inline">\(P\)</span> 的出现次数，复杂度 <span
+class="math inline">\(O(|T|)-O(|P|)\)</span>。</li>
+<li>在单个 <span class="math inline">\(T\)</span> 中多次询问，<span
+class="math inline">\(P\)</span>
+的<strong>第一次</strong>出现位置，复杂度 <span
+class="math inline">\(O(|T|)-O(|P|)\)</span>。</li>
+<li>在单个 <span class="math inline">\(T\)</span> 中多次询问，<span
+class="math inline">\(P\)</span> 的<strong>所有</strong>出现位置，复杂度
+<span class="math inline">\(O(|T|)-O(|P|+|ans|)\)</span>。</li>
+<li>给定一个字符串 <span class="math inline">\(S\)</span>
+和一个特定的字符集，找一个长度最短的没有在 <span
+class="math inline">\(S\)</span> 中出现过的字符串。</li>
+<li>给定两个字符串 <span class="math inline">\(S\)</span> 和 <span
+class="math inline">\(T\)</span>，求出最长公共子串，公共子串定义为在
+<span class="math inline">\(S\)</span> 和 <span
+class="math inline">\(T\)</span> 中都作为子串出现过的字符串 <span
+class="math inline">\(X\)</span>，时间复杂度 <span
+class="math inline">\(O(|T|+|S|)\)</span>。</li>
+<li>给定 <span class="math inline">\(k\)</span> 个字符串 <span
+class="math inline">\(S_i\)</span>。我们需要找到它们的最长公共子串，即作为子串出现在每个字符串中的字符串
+<span class="math inline">\(X\)</span>，时间复杂度 <span
+class="math inline">\(O(\sum_{i=1}^k{|S_i|})\)</span>。</li>
 </ol>
 ]]></content>
       <categories>
@@ -6069,11 +6103,13 @@ class="math inline">\(\ge \frac{j}{2}\)</span>，<span
 class="math inline">\(j\)</span> 为偶数。</p>
 <p>点分治即可，处理出 <span class="math inline">\(mx[s]\)</span>
 表示子树大小为 <span class="math inline">\(s\)</span>
-的子树到当前分治中心的最大距离，求 <span
+的子树根到当前分治中心的最大距离，求 <span
 class="math inline">\(mx\)</span> 的后缀最大值 <span
 class="math inline">\(suf[s]\)</span>，得到 <span
-class="math inline">\(\ge s\)</span>
-的答案，同时处理出，分支中心连接的，其他已经处理过的儿子的答案——因为分治中心作为链的顶端，答案要从两个儿子中得出。</p>
+class="math inline">\(\ge s\)</span> 的答案，同时对于每个 <span
+class="math inline">\(s\)</span>，处理出，分治中心连接的，在前面已经处理过的儿子的最大
+<span
+class="math inline">\(suf[s]\)</span>，分治中心作为链的顶端，答案要从某两个儿子中得出。</p>
 <p>这些操作直接做就好，复杂度 <span class="math inline">\(O(n\log
 n)\)</span>。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">const</span> <span class="type">int</span> <span class="title">N</span><span class="params">(<span class="number">2e5</span>+<span class="number">5</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; G[N];</span><br><span class="line"><span class="type">int</span> siz[N],vis[N];</span><br><span class="line"><span class="type">int</span> mx[N],suf[N],ans[N],othmx[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">getmx</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> fa,<span class="type">int</span> d)</span></span>&#123;</span><br><span class="line">    siz[u]=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> v:G[u])&#123;</span><br><span class="line">        <span class="keyword">if</span>(v==fa||vis[v])<span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">getmx</span>(v,u,d+<span class="number">1</span>);</span><br><span class="line">        siz[u]+=siz[v];</span><br><span class="line">    &#125;</span><br><span class="line">    mx[siz[u]]=<span class="built_in">max</span>(mx[siz[u]],d);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> rt,tot,mn;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">getrot</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> fa)</span></span>&#123;</span><br><span class="line">    siz[u]=<span class="number">1</span>;<span class="type">int</span> mxp=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> v:G[u])&#123;</span><br><span class="line">        <span class="keyword">if</span>(v==fa||vis[v])<span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">getrot</span>(v,u);</span><br><span class="line">        siz[u]+=siz[v];</span><br><span class="line">        mxp=<span class="built_in">max</span>(mxp,siz[v]);</span><br><span class="line">    &#125;</span><br><span class="line">    mxp=<span class="built_in">max</span>(mxp,tot-siz[u]);</span><br><span class="line">    <span class="keyword">if</span>(mxp&lt;mn)&#123;</span><br><span class="line">        mn=mxp,rt=u;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> all)</span></span>&#123;</span><br><span class="line">    tot=mn=all;<span class="built_in">getrot</span>(u,<span class="number">0</span>);u=rt;</span><br><span class="line">    vis[u]=<span class="number">1</span>;<span class="type">int</span> mxs=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> v:G[u])&#123;</span><br><span class="line">        <span class="keyword">if</span>(vis[v])<span class="keyword">continue</span>;</span><br><span class="line">        mxs=<span class="built_in">max</span>(mxs,siz[v]);</span><br><span class="line">        <span class="built_in">getmx</span>(v,u,<span class="number">1</span>);</span><br><span class="line">        <span class="built_in">pe</span>(i,siz[v])suf[i]=<span class="built_in">max</span>(suf[i+<span class="number">1</span>],mx[i]);</span><br><span class="line">        <span class="built_in">re</span>(i,siz[v])ans[i*<span class="number">2</span>]=<span class="built_in">max</span>(ans[i*<span class="number">2</span>],othmx[i]+suf[i]);</span><br><span class="line">        <span class="built_in">re</span>(i,siz[v])othmx[i]=<span class="built_in">max</span>(othmx[i],suf[i]);</span><br><span class="line">        <span class="built_in">re</span>(i,siz[v])mx[i]=suf[i]=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(i,mxs)othmx[i]=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> v:G[u])&#123;</span><br><span class="line">        <span class="keyword">if</span>(vis[v])<span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">solve</span>(v,siz[v]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n);</span><br><span class="line">    <span class="type">int</span> u=<span class="number">0</span>,v=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="built_in">read</span>(u,v);</span><br><span class="line">        G[u].<span class="built_in">pb</span>(v),G[v].<span class="built_in">pb</span>(u);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">solve</span>(<span class="number">1</span>,n);</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="built_in">write</span>(ans[i]+<span class="number">1</span>,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
