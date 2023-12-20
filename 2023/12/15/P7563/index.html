@@ -27,7 +27,7 @@
 <meta property="og:description" content="P7563 [JOISC 2021 Day4] 最悪の記者 4 (Worst Reporter 4)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-15T07:12:36.000Z">
-<meta property="article:modified_time" content="2023-12-15T11:46:07.872Z">
+<meta property="article:modified_time" content="2023-12-18T02:05:02.498Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="DP">
 <meta property="article:tag" content="线段树">
@@ -161,7 +161,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">113</span>
+          <span class="site-state-item-count">116</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -172,7 +172,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">95</span>
+        <span class="site-state-item-count">96</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -239,9 +239,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-12-15 15:12:36 / 修改时间：19:46:07" itemprop="dateCreated datePublished" datetime="2023-12-15T15:12:36+08:00">2023-12-15</time>
+      <time title="创建时间：2023-12-15 15:12:36" itemprop="dateCreated datePublished" datetime="2023-12-15T15:12:36+08:00">2023-12-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-18 10:05:02" itemprop="dateModified" datetime="2023-12-18T10:05:02+08:00">2023-12-18</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -277,10 +283,8 @@
 Day4] 最悪の記者 4 (Worst Reporter 4)</a></p>
 <span id="more"></span>
 <p>设计状态要直击要点，做什么操作就放什么状态。</p>
-<p>连 <span class="math inline">\(i\to a_i\)</span> 的边，<span
-class="math inline">\(n\)</span> 条边 <span
-class="math inline">\(n\)</span>
-个点，可以发现，最终一定连成一个内向基环树。</p>
+<p>连 <span class="math inline">\(i\to a_i\)</span>
+的边，可以发现，最终会连成内向基环森林。</p>
 <p>发现环上点权值一定相等，但先不关注环，想前两个sub。</p>
 <p>考虑DP。</p>
 <p>设 <span class="math inline">\(f(u,i)\)</span>：将 <span
@@ -312,7 +316,6 @@ class="math inline">\(u\)</span> 之后，在对应的 <span
 class="math inline">\(i=h_u\)</span> 位置减掉 <span
 class="math inline">\(c_u\)</span>。</p>
 <p>现在可以做无环版本了，考虑基环树怎么办。</p>
-<p>注意图不一定连通，所以是基环森林。</p>
 <p>发现环上点权值一定相等（x2），可以缩点，进一步的，环上的值，要么是
 <span
 class="math inline">\(1\)</span>（最小值），要么就是环上某个点的值。</p>
