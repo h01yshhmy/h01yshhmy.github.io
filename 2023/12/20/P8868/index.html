@@ -27,7 +27,7 @@
 <meta property="og:description" content="P8868 [NOIP2022] 比赛">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-20T04:32:45.000Z">
-<meta property="article:modified_time" content="2023-12-20T09:56:55.747Z">
+<meta property="article:modified_time" content="2023-12-20T12:13:06.655Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="线段树">
 <meta property="article:tag" content="扫描线">
@@ -241,7 +241,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-12-20 12:32:45 / 修改时间：17:56:55" itemprop="dateCreated datePublished" datetime="2023-12-20T12:32:45+08:00">2023-12-20</time>
+      <time title="创建时间：2023-12-20 12:32:45 / 修改时间：20:13:06" itemprop="dateCreated datePublished" datetime="2023-12-20T12:32:45+08:00">2023-12-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -276,6 +276,9 @@
     <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P8868">P8868 [NOIP2022]
 比赛</a></p>
 <span id="more"></span>
+<p>有一个很好的题解，较为模板化，形式化的通过双半群模型来做此类多标记的合并：<a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/blog/eulogized/solution-p8868">既已身披英雄之名，就应具备不容撼动的觉悟
+- 致逝者的摇篮 - 洛谷博客 (luogu.com.cn)</a>。</p>
 <p>题意：给定数列 <span class="math inline">\(A,B\)</span>，<span
 class="math inline">\(q\)</span> 次询问 <span
 class="math inline">\([l,r]\)</span>，求 <span
@@ -305,20 +308,24 @@ class="math inline">\([l,r]\)</span>
 这个区间中，每个“版本”的和——也就是区间的<strong>历史和</strong>，和上面的暴力查询是完全等价的，原因显然：每次
 <span class="math inline">\(R\)</span>
 都是向右拓展的“新位置”，不包含其他值，所以历史上所有的值都可以贡献。</p>
-<p>这里定义<strong>历史和</strong>为：设线段树上原序列为 <span
+<p>这里定义<strong>历史和</strong>为：设原序列为 <span
 class="math inline">\(T\)</span>，在每次 <span
 class="math inline">\(R\)</span> 向右拓展之前，做 <span
 class="math inline">\(S_i\leftarrow S_i+T_i,i\in[1,R]\)</span>，<span
-class="math inline">\(S\)</span> 就是历史和。</p>
-<p>现在问题变为：查询 <span class="math inline">\(X_p\times
-Y_p,p\in[l,r]\)</span> 的<strong>历史和</strong>，同时支持对 <span
+class="math inline">\(S\)</span> 就是 <span
+class="math inline">\(T\)</span> 的历史和。</p>
+<p>后文中 <span class="math inline">\(S_i\)</span> 均代表位置 <span
+class="math inline">\(i\)</span> 上的 <span
+class="math inline">\(X_i\times Y_i\)</span> 的历史和。</p>
+<p>现在问题变为：查 <span
+class="math inline">\(\sum_{i=l}^rS_i\)</span>，同时支持对 <span
 class="math inline">\([1,R]\)</span> 某个后缀上 <span
 class="math inline">\(X\times Y\)</span> 的修改（修改是区间覆盖）。</p>
 <p><span class="math inline">\(X,Y\)</span>
 作为前缀上的后缀最大值，用单调栈维护每次的修改范围。</p>
 <p>处理历史和其实是在处理上面的定义，每次对 <span
 class="math inline">\(p\in [1,R]\)</span> 的位置加上 <span
-class="math inline">\(X_p\times Y_p\)</span>。</p>
+class="math inline">\(X_p\times Y_p\)</span>，在线段树上做。</p>
 <p>比较难写，需要具体一点，两种思维模式。</p>
 <h2 id="线段树标记的逻辑合并">线段树标记的逻辑合并</h2>
 <p>先看维护的区间和怎么做。</p>
@@ -378,15 +385,14 @@ len&amp;c_Y\ne0\end{cases}\\
 \end{aligned}
 \]</span> 都维护一下就好了。</p>
 <h2 id="隐式矩阵乘法">隐式矩阵乘法</h2>
-<p>继续沿用上文的记号。</p>
+<p>沿用上文的记号。</p>
 <p>设序列 <span class="math inline">\(C_i=S_i-t\times
 XY_i\)</span>，<span class="math inline">\(t\)</span>
 为时间，历史和的“时间轴”长度。</p>
 <p>这个 <span class="math inline">\(C\)</span>
 是一种历史和的特定思路，也是经典思路，</p>
-<p>注意这里 <span class="math inline">\(t,S,C\)</span>
-都<strong>不包含当前操作</strong>，都是上一次操作留下来的，下文中 <span
-class="math inline">\(\Delta S_i\)</span> 也是不包含当前这次操作的。</p>
+<p>注意 <span class="math inline">\(t,S,C\)</span>
+都<strong>不包含当前操作</strong>，是上一次操作留下来的。</p>
 <p>用矩阵去找系数的变化方法，代码中写隐式矩阵乘。</p>
 <p>设 <span class="math inline">\(D\)</span> 为常数变化量，和上文 <span
 class="math inline">\(k_1\)</span> 大小相同，有状态矩阵： <span
@@ -405,11 +411,9 @@ c_X\times c_Y&amp;c_X&amp;c_Y&amp;1&amp;v_D\\
 \]</span> <span class="math inline">\(v_{*}\)</span> 是状态矩阵前四项对
 <span class="math inline">\(\sum C\)</span> 的贡献系数，现在要推一推
 <span class="math inline">\(v\)</span>。</p>
-<p>设 <span class="math inline">\(*&#39;\)</span> 为 <span
-class="math inline">\(*\)</span> 在这次修改前的值，当我们把 <span
-class="math inline">\(X\)</span> 改为 <span
-class="math inline">\(c_X\)</span> 时，有： <span
-class="math display">\[
+<p>设当前做了一些修改， <span class="math inline">\(*&#39;\)</span> 为
+<span class="math inline">\(*\)</span>
+在这次修改<strong>之前</strong>的值，有： <span class="math display">\[
 \begin{aligned}
 \Delta C_i=&amp;\Delta S_i-\Delta(t\times XY_i)\\
 =&amp;\Delta t\times XY&#39;_i-(t&#39;+\Delta t)\times (XY&#39;_i+\Delta
@@ -418,8 +422,14 @@ XY_i)+t&#39;\times XY&#39;_i\\
 =&amp;-\Delta XY_i\times (t&#39;+\Delta t)\\
 =&amp;-t\times \Delta XY_i
 \end{aligned}
-\]</span> 也就是说，总贡献系数是 <span class="math inline">\(-t\times
-\Delta XY_i\)</span>。</p>
+\]</span> 关于为什么 <span class="math inline">\(\Delta S_i=\Delta
+t\times XY&#39;_i\)</span>：<span class="math inline">\(S_i\)</span>
+不包含当前操作，现在只需要补上前面没加上的历史和；就算照着 <span
+class="math inline">\(\Delta S_i=\Delta t\times XY_i\)</span>
+推，最后也只是将每个 <span class="math inline">\(t\)</span> 改成了 <span
+class="math inline">\(t-1\)</span>，不影响本质。</p>
+<p>也就是说，总贡献系数是 <span class="math inline">\(-t\times \Delta
+XY_i\)</span>。</p>
 <p>若 <span class="math inline">\(X\)</span> 替换为 <span
 class="math inline">\(c_X\)</span>，有 <span
 class="math inline">\(\Delta XY_i=c_X\sum Y-\sum XY\)</span>，所以 <span
@@ -428,12 +438,15 @@ class="math inline">\(v_S=t,v_X=0,v_Y=-t\times c_X,v_D=0\)</span>。</p>
 class="math inline">\(c_Y\)</span>，有 <span
 class="math inline">\(\Delta XY_i=c_Y\sum X-\sum XY\)</span>，所以 <span
 class="math inline">\(v_S=t,v_X=-t\times c_Y,v_Y=0,v_D=0\)</span>。</p>
-<p><del>好像 <span class="math inline">\(v_D\)</span> 没啥用</del></p>
-<p>别忘了 <span class="math inline">\(t,S,C\)</span>
-都不包含当前操作，每次查询的答案为 <span
-class="math inline">\(\sum_{i=l}^rC_i+(t+1)\times XY_i\)</span>。</p>
+<p><del>好像 <span class="math inline">\(v_D\)</span> 没啥用。</del></p>
+<p><span class="math inline">\(S_i=C_i+t\times XY_i\)</span>，别忘了
+<span class="math inline">\(t,S,C\)</span> 都不包含当前操作，每次查询
+<span class="math inline">\([l,r]\)</span> 的答案为 <span
+class="math inline">\(\sum_{i=l}^rC_i+(t+1)\times
+XY_i\)</span>，查询维护好的 <span class="math inline">\(C,XY\)</span>
+区间和即可。</p>
 <p>直接矩阵乘法常数过大，<span class="math inline">\(0\)</span>
-比较多，手动模拟即可。</p>
+比较多，需要手动模拟矩阵乘法（隐式）。</p>
 <p>注意到所有修改只有转移矩阵的最后一列不同，所以修改传递的标记也只需要记录最后一列，代码很直观。</p>
 <p>矩阵乘法的思维方式更通用，比较有实际意义。</p>
 <h2 id="代码">代码</h2>
