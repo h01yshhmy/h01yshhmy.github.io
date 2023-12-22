@@ -27,7 +27,7 @@
 <meta property="og:description" content="P3747 [六省联考 2017] 相逢是问候">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-21T08:07:12.000Z">
-<meta property="article:modified_time" content="2023-12-21T09:08:09.617Z">
+<meta property="article:modified_time" content="2023-12-22T01:47:15.653Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="线段树">
 <meta property="article:tag" content="数论">
@@ -161,7 +161,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-count">121</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -239,9 +239,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-12-21 16:07:12 / 修改时间：17:08:09" itemprop="dateCreated datePublished" datetime="2023-12-21T16:07:12+08:00">2023-12-21</time>
+      <time title="创建时间：2023-12-21 16:07:12" itemprop="dateCreated datePublished" datetime="2023-12-21T16:07:12+08:00">2023-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-22 09:47:15" itemprop="dateModified" datetime="2023-12-22T09:47:15+08:00">2023-12-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -281,17 +287,19 @@
 target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4145">P4145 上帝造题的七分钟 2 /
 花神游历各国</a>的结合题——前者有：欧拉函数的嵌套性质对指数塔的应用，后者有：对于减小速度很快的信息，可以暴力做的思想。</p>
 <p>有前置知识：拓展欧拉定理。</p>
-<p>我们需要它降幂，来推推式子。 <span class="math display">\[
+<p>我们需要它降幂，来推推式子。</p>
+<p>设 <span class="math inline">\(C(i)\)</span> 为 <span
+class="math inline">\(c\)</span> 的 “<span
+class="math inline">\(i\)</span> 阶方”，也就是一共有 <span
+class="math inline">\(i\)</span> 个 <span
+class="math inline">\(c\)</span> 叠起来。 <span class="math display">\[
 \begin{aligned}
-&amp;c^x=c^{x\;\textrm{mod}\;\varphi(p)+\varphi(p)}&amp;\mod p\\
-&amp;\text{设 }b=x\;\textrm{mod}\;\varphi(p)+\varphi(p)&amp;\mod p\\
-&amp;c^x=c^b=c^{b\;\textrm{mod}\;\varphi(p)+\varphi(p)}&amp;\mod p\\
-&amp;b\;\textrm{mod}\;\varphi(p)+\varphi(p)\\&amp;=x\;\textrm{mod}\;\varphi(p)+\varphi(p)\;\textrm{mod}\;\varphi(p)+\varphi(p)&amp;\mod
-p\\&amp;=(x\;\textrm{mod}\;\varphi(p)+\varphi(p))\;\textrm{mod}\;\varphi(\varphi(p))+\varphi(\varphi(p)&amp;\mod
-p
+&amp;C(x)\;\textrm{mod}\;p=c^{C(x-1)\;\textrm{mod}\;\varphi(p)}\\
+&amp;C(x-1)\;\textrm{mod}\;\varphi(p)=c^{C(x-2)\;\textrm{mod}\;\varphi(\varphi(p))}
 \end{aligned}
-\]</span> （值得一提，不一定每次都会加 <span
-class="math inline">\(\varphi(p)\)</span>，定理内容，不再赘述）。</p>
+\]</span> （值得一提，可能会出现加 <span
+class="math inline">\(\varphi(p)\)</span>
+的情况（定理内容），不影响正确性，不再赘述）。</p>
 <p>发现 <span class="math inline">\(\varphi(p)\)</span>
 会不断向上嵌套。</p>
 <p>注意到，当 <span class="math inline">\(p\)</span> 是奇数，<span
@@ -300,9 +308,10 @@ class="math inline">\(p\)</span> 是偶数，<span
 class="math inline">\(\varphi(p)\le
 \frac{\varphi(p)}{2}\)</span>，所以最多嵌套 <span
 class="math inline">\(\log p\)</span> 次后，值就为 <span
-class="math inline">\(1\)</span>，也就是说，当这个“指数塔”到达 <span
-class="math inline">\(\log p\)</span> 的高度后，即使继续增高，它的值在模
-<span class="math inline">\(p\)</span> 意义下也不变。</p>
+class="math inline">\(1\)</span>，也就是说，这个“指数塔”高度在 <span
+class="math inline">\(\log p\)</span> 以上的部分，模数都为 <span
+class="math inline">\(1\)</span>，这部分被消掉了，一个塔的值最大也只有
+<span class="math inline">\(C(\log p)\)</span> 这个级别。</p>
 <p>既然这样，建立线段树，维护区间内修改次数最少的块的修改次数，修改时，如果区间内最小修改次数
 <span class="math inline">\(\ge\log
 p\)</span>，显然可以<code>return</code>，否则继续暴力递归。</p>
@@ -319,11 +328,13 @@ class="math inline">\(O(n\log n\log^2 p)\)</span>，过不去。</p>
 <p>这启发我们预处理。</p>
 <p>设 <span class="math inline">\(ph[i]\)</span> 为嵌套了 <span
 class="math inline">\(i\)</span> 层的 <span
-class="math inline">\(\varphi(p)\)</span>，这就是全部的模数。可以预处理
-<span class="math inline">\(c^j\mod ph[i]\)</span> 的值。</p>
-<p>但是 <span class="math inline">\(j\)</span> 比较大（ <span
-class="math inline">\(p\)</span>
-的级别，或者说幂上模数的级别），预处理需要对 <span
+class="math inline">\(\varphi(p)\)</span>，这就是全部的非 <span
+class="math inline">\(1\)</span> 模数。可以预处理 <span
+class="math inline">\(c^j\mod ph[i]\)</span> 的值。</p>
+<p>但是 <span class="math inline">\(j\)</span> 比较大（因为 <span
+class="math inline">\(j\)</span> 是由模数约束的，低层的模数和 <span
+class="math inline">\(a,p\)</span> 相关而且同级，<span
+class="math inline">\(10^8\)</span>），预处理需要对 <span
 class="math inline">\(j\)</span> 根号分治：预处理 <span
 class="math inline">\(c1[i][j],c2[i][j]\)</span> 分别表示 <span
 class="math inline">\(c^j\mod ph[i]\)</span> 和 <span
