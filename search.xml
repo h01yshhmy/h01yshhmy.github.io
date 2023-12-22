@@ -6413,31 +6413,33 @@ Constrained Sums</a></p>
 <p>两个条件，显然第二个条件比较有用，将两个不等式分开看，现在一个是变量大于等于定量，一个是变量小于等于定量，我们要想办法搞出两个式子，在两个式子里分别做<strong>统一的符号</strong>，有结论：
 <span class="math display">\[
 \begin{aligned}
-&amp;L\le x_i+x_j\Leftrightarrow\forall t\in\Z,t\le x_i\or L-t+1\le
-x_j\\
-&amp;x_i+x_j\le R\Leftrightarrow\forall t\in\Z,t&gt;x_i\or R-t+1&gt;x_j
+&amp;L\le x_i+x_j\Leftrightarrow\forall t\in\mathbb{Z},t\le x_i\lor
+L-t+1\le x_j\\
+&amp;x_i+x_j\le R\Leftrightarrow\forall t\in\mathbb{Z},t&gt;x_i\lor
+R-t+1&gt;x_j
 \end{aligned}
 \]</span> 证明：</p>
-<p>若 <span class="math inline">\(\exists t\in\Z,t&gt;x_i\and
-L-t+1&gt;x_j\)</span>，有<span class="math inline">\(\exists t\in\Z,t\ge
-x_i+1\and L-t+1\ge x_j+1\)</span>。</p>
-<p>将 <span class="math inline">\(\and\)</span> 两边两式相加，得 <span
+<p>若 <span class="math inline">\(\exists t\in\mathbb{Z},t&gt;x_i\land
+L-t+1&gt;x_j\)</span>，有<span class="math inline">\(\exists
+t\in\mathbb{Z},t\ge x_i+1\land L-t+1\ge x_j+1\)</span>。</p>
+<p>将 <span class="math inline">\(\land\)</span> 两边两式相加，得 <span
 class="math inline">\(L-1\ge x_i+x_j\)</span> 即 <span
 class="math inline">\(L&gt;x_i+x_j\)</span>，所以 <span
-class="math inline">\(L&gt;x_i+x_j\Leftarrow \exists t\in\Z,t&gt;x_i\and
-L-t+1&gt;x_j\)</span>。</p>
+class="math inline">\(L&gt;x_i+x_j\Leftarrow \exists
+t\in\mathbb{Z},t&gt;x_i\land L-t+1&gt;x_j\)</span>。</p>
 <p>若 <span class="math inline">\(L&gt;x_i+x_j\)</span>，当 <span
 class="math inline">\(t=x_i+1\)</span> 时，满足 <span
-class="math inline">\(t&gt;x_i\and L-t+1&gt;x_j\)</span>，所以 <span
+class="math inline">\(t&gt;x_i\land L-t+1&gt;x_j\)</span>，所以 <span
 class="math inline">\(L&gt;x_i+x_j\Rightarrow \exists
-t\in\Z,t&gt;x_i\and L-t+1&gt;x_j\)</span>。</p>
+t\in\mathbb{Z},t&gt;x_i\land L-t+1&gt;x_j\)</span>。</p>
 <p>综上，<span class="math inline">\(L&gt;x_i+x_j\Leftrightarrow \exists
-t\in\Z,t&gt;x_i\and L-t+1&gt;x_j\)</span>，可得：<span
-class="math inline">\(L\le x_i+x_j\Leftrightarrow\forall t\in\Z,t\le
-x_i\or L-t+1\le x_j\)</span>。</p>
+t\in\mathbb{Z},t&gt;x_i\land L-t+1&gt;x_j\)</span>，可得：<span
+class="math inline">\(L\le x_i+x_j\Leftrightarrow\forall
+t\in\mathbb{Z},t\le x_i\lor L-t+1\le x_j\)</span>。</p>
 <p>同理可证 <span class="math inline">\(x_i+x_j\le
-R\Leftrightarrow\forall t\in\Z,t&gt;x_i\or R-t+1&gt;x_j\)</span>。</p>
-<p>两个结论中，<span class="math inline">\(\or\)</span>
+R\Leftrightarrow\forall t\in\mathbb{Z},t&gt;x_i\lor
+R-t+1&gt;x_j\)</span>。</p>
+<p>两个结论中，<span class="math inline">\(\lor\)</span>
 两侧的符号都可以统一成 <span class="math inline">\(\le\)</span>（<span
 class="math inline">\(&gt;\)</span> 就取反一下）。</p>
 <p>对于“或”命题，考虑 2-SAT。</p>
@@ -6474,7 +6476,7 @@ class="math inline">\(O((N+Q)M)\)</span>。</p>
       </tags>
   </entry>
   <entry>
-    <title></title>
+    <title>CF1903F</title>
     <url>/2023/12/21/CF1903F/</url>
     <content><![CDATA[<p><a
 href="https://www.luogu.com.cn/problem/CF1903F">Babysitting</a></p>
@@ -6600,6 +6602,89 @@ p+n\log^2 p)\)</span>。</p>
         <tag>数论</tag>
         <tag>欧拉函数</tag>
         <tag>根号分治</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CF1313E</title>
+    <url>/2023/12/22/CF1313E/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF1313E">Concatenation with
+intersection</a></p>
+<span id="more"></span>
+<p>串串题，只要发现题目和前后缀相关，就要想想前后缀的思路方向好不好写。</p>
+<p>发现还挺好写的，不过这题应该是字符串还是DS呢？</p>
+<p>定于 <span class="math inline">\(S[l,r]\)</span> 为 <span
+class="math inline">\(S\)</span> 中 <span
+class="math inline">\(l\)</span> 到 <span
+class="math inline">\(r\)</span> 的子串，<span
+class="math inline">\(S[:i]\)</span> 为 <span
+class="math inline">\(i\)</span> 结尾的前缀，<span
+class="math inline">\(S[i:]\)</span> 为 <span
+class="math inline">\(i\)</span> 开头的后缀。</p>
+<p>有 <span class="math inline">\(a[l_1,r_1]+b[l_2,r_2]=s\)</span>，设
+<span class="math inline">\(r_1-l_1+1=x\)</span>，那么 <span
+class="math inline">\(r_2-l_2+1=m-x\)</span>。</p>
+<p>对于条件一，<span class="math inline">\([l_1,r_1]\cap[l_2,r_2]\ne
+\varnothing\)</span>，可得 <span class="math inline">\(r_1\le l_2\land
+r_2\ge l_1\)</span>，化简，得到 <span class="math inline">\(l_1\le
+r_2\le
+l_1+m-2\)</span>（式一），注意这里化简要和下文有<strong>统一性</strong>，留下
+<span class="math inline">\(l_1,r_2\)</span> 两点。</p>
+<p><span class="math inline">\(a[l_1,r_1]\)</span> 是 <span
+class="math inline">\(s\)</span> 的前缀，<span
+class="math inline">\(b[l_2,r_2]\)</span> 是 <span
+class="math inline">\(s\)</span> 的后缀；这也就意味着 <span
+class="math inline">\(1\le x\le\textrm{LCP}(a[l_1:],s)\)</span>，<span
+class="math inline">\(1\le m-x\le \textrm{LCS}(b[:r_2],s)\)</span>。</p>
+<p>设 <span
+class="math inline">\(p_i=\textrm{LCP}(a[i:],s)\)</span>，<span
+class="math inline">\(q_i=\textrm{LCS}(b[:i],s)\)</span>，<span
+class="math inline">\(p,q\)</span> 均可以通过<span
+class="math inline">\(\textrm{exKMP}\)</span>（<span
+class="math inline">\(\textrm{Z}\)</span> 函数）在线性复杂度内求出。</p>
+<p>有 <span class="math inline">\(1\le x\le p_{l_1},1\le m-x\le
+q_{r_2}\)</span>，合并这一共四个不等式，可以得到：<span
+class="math inline">\(\max(1,m-q_{r_2})\le x\le
+\min(p_{l_1},m-1)\)</span>，做 <span class="math inline">\(p_i\leftarrow
+\min(p_i,m-1),q_i\leftarrow\min(q_i,m-1)\)</span>，现在式子变为 <span
+class="math inline">\(m-q_{r_2}\le x\le p_{l_1}\)</span>（式二），<span
+class="math inline">\(x\)</span> 的个数为 <span
+class="math inline">\(p_{l_1}-(m-q_{r_2})+1\)</span>。</p>
+<p>综上，我们将两个条件，转化为：对于 <span
+class="math inline">\((l_1,r_2)\)</span> 满足 <span
+class="math inline">\(l_1\le r_2\le l_1+m-2\land p_{l_1}\ge
+m-q_{r_2}\)</span>，合法四元组 <span
+class="math inline">\((l_1,r_1,l_2,r_2)\)</span> 的个数是 <span
+class="math inline">\(p_{l_1}-(m-q_{r_2})+1\)</span>，求全部个数之和，简单扫描线就可以解决。</p>
+<p>具体的，因为下标不太统一，写两个树状数组分别记录 <span
+class="math inline">\(p_{l_1}\)</span> 之和的<strong>系数</strong>，
+<span class="math inline">\(-(m-q_{r_2})+1\)</span>
+的和。记录系数是因为我们扫到谁就要乘谁，不能直接记录和。倒着扫 <span
+class="math inline">\(i\)</span>，将 <span
+class="math inline">\(i=r_2\)</span>
+的贡献<strong>后缀加</strong>到树状数组上（查询直接单点查询），然后对答案贡献
+<span class="math inline">\(i=l_1+m-1\)</span>
+的部分，如果不越界，再差分，答案减去 <span
+class="math inline">\(i=l_1\)</span> 的部分，因为 <span
+class="math inline">\(p,q\)</span>
+值域和整体不协调，所以代码中树状数组下标做了整体 <span
+class="math inline">\(+1\)</span>。</p>
+<p>可以发现，每次统计到的 <span
+class="math inline">\(r_2\)</span>，都大于对应的 <span
+class="math inline">\(l_1\)</span>，且满足 <span
+class="math inline">\(p_{l_1}\ge
+m-q_{r_2}\)</span>，没有贡献的次序问题。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log n)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1e6</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n, m;</span><br><span class="line"><span class="type">char</span> a[N], b[N], s[N];</span><br><span class="line"><span class="type">int</span> z[N], p[N], q[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">exKMP</span><span class="params">(<span class="type">int</span> z[], <span class="type">int</span> p[], <span class="type">char</span> t[])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>, l = <span class="number">0</span>, r = <span class="number">0</span>; i &lt;= m; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &lt;= r)</span><br><span class="line">            z[i] = <span class="built_in">min</span>(z[i - l + <span class="number">1</span>], r - i + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            z[i] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (i + z[i] &lt;= m &amp;&amp; s[z[i] + <span class="number">1</span>] == s[i + z[i]]) z[i]++;</span><br><span class="line">        <span class="keyword">if</span> (i + z[i] - <span class="number">1</span> &gt; r) r = i + z[i] - <span class="number">1</span>, l = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>, l = <span class="number">0</span>, r = <span class="number">0</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &lt;= r)</span><br><span class="line">            p[i] = <span class="built_in">min</span>(z[i - l + <span class="number">1</span>], r - i + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            p[i] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (p[i] &lt; m &amp;&amp; i + p[i] &lt;= n &amp;&amp; s[p[i] + <span class="number">1</span>] == t[i + p[i]]) p[i]++;</span><br><span class="line">        <span class="keyword">if</span> (i + p[i] - <span class="number">1</span> &gt; r) r = i + p[i] - <span class="number">1</span>, l = i;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">BIT</span> &#123;</span><br><span class="line">    ll c[N];</span><br><span class="line">    <span class="built_in">BIT</span>() &#123;</span><br><span class="line">        <span class="built_in">memset</span>(c, <span class="number">0</span>, <span class="built_in">sizeof</span>(c));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> x, ll v)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (x++; x &lt;= n + <span class="number">1</span>; x += <span class="built_in">lowbit</span>(x)) c[x] += v;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">ll <span class="title">ask</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        ll res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (x++; x; x -= <span class="built_in">lowbit</span>(x)) res += c[x];</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; t1, t2;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>)-&gt;<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    cin &gt;&gt; (a + <span class="number">1</span>) &gt;&gt; (b + <span class="number">1</span>) &gt;&gt; (s + <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">exKMP</span>(z, p, a);</span><br><span class="line">    <span class="built_in">reverse</span>(b + <span class="number">1</span>, b + n + <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">reverse</span>(s + <span class="number">1</span>, s + m + <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">exKMP</span>(z, q, b);</span><br><span class="line">    <span class="built_in">reverse</span>(q + <span class="number">1</span>, q + n + <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">re</span>(i, n) &#123;</span><br><span class="line">        p[i] = <span class="built_in">min</span>(p[i], m - <span class="number">1</span>), q[i] = <span class="built_in">min</span>(q[i], m - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">pe</span>(i, n) &#123;</span><br><span class="line">        t1.<span class="built_in">add</span>(m - q[i], <span class="number">1</span>);</span><br><span class="line">        t2.<span class="built_in">add</span>(m - q[i], -m + q[i] + <span class="number">1</span>);</span><br><span class="line">        ans += t1.<span class="built_in">ask</span>(p[i]) * p[i] + t2.<span class="built_in">ask</span>(p[i]);</span><br><span class="line">        <span class="keyword">if</span> (i - m + <span class="number">1</span> &gt;= <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="type">int</span> l = i - m + <span class="number">1</span>;</span><br><span class="line">            ans -= t1.<span class="built_in">ask</span>(p[l]) * p[l] + t2.<span class="built_in">ask</span>(p[l]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>Strin</category>
+      </categories>
+      <tags>
+        <tag>扫描线</tag>
+        <tag>树状数组</tag>
+        <tag>字符串</tag>
+        <tag>Z函数</tag>
       </tags>
   </entry>
 </search>

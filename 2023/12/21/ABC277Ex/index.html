@@ -27,7 +27,7 @@
 <meta property="og:description" content="[ABC277Ex] Constrained Sums">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-21T11:32:55.000Z">
-<meta property="article:modified_time" content="2023-12-21T12:15:35.074Z">
+<meta property="article:modified_time" content="2023-12-21T12:29:31.977Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="图论">
 <meta property="article:tag" content="构造">
@@ -160,7 +160,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">119</span>
+          <span class="site-state-item-count">120</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -171,7 +171,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-count">99</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -240,7 +240,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-12-21 19:32:55 / 修改时间：20:15:35" itemprop="dateCreated datePublished" datetime="2023-12-21T19:32:55+08:00">2023-12-21</time>
+      <time title="创建时间：2023-12-21 19:32:55 / 修改时间：20:29:31" itemprop="dateCreated datePublished" datetime="2023-12-21T19:32:55+08:00">2023-12-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -279,31 +279,33 @@ Constrained Sums</a></p>
 <p>两个条件，显然第二个条件比较有用，将两个不等式分开看，现在一个是变量大于等于定量，一个是变量小于等于定量，我们要想办法搞出两个式子，在两个式子里分别做<strong>统一的符号</strong>，有结论：
 <span class="math display">\[
 \begin{aligned}
-&amp;L\le x_i+x_j\Leftrightarrow\forall t\in\Z,t\le x_i\or L-t+1\le
-x_j\\
-&amp;x_i+x_j\le R\Leftrightarrow\forall t\in\Z,t&gt;x_i\or R-t+1&gt;x_j
+&amp;L\le x_i+x_j\Leftrightarrow\forall t\in\mathbb{Z},t\le x_i\lor
+L-t+1\le x_j\\
+&amp;x_i+x_j\le R\Leftrightarrow\forall t\in\mathbb{Z},t&gt;x_i\lor
+R-t+1&gt;x_j
 \end{aligned}
 \]</span> 证明：</p>
-<p>若 <span class="math inline">\(\exists t\in\Z,t&gt;x_i\and
-L-t+1&gt;x_j\)</span>，有<span class="math inline">\(\exists t\in\Z,t\ge
-x_i+1\and L-t+1\ge x_j+1\)</span>。</p>
-<p>将 <span class="math inline">\(\and\)</span> 两边两式相加，得 <span
+<p>若 <span class="math inline">\(\exists t\in\mathbb{Z},t&gt;x_i\land
+L-t+1&gt;x_j\)</span>，有<span class="math inline">\(\exists
+t\in\mathbb{Z},t\ge x_i+1\land L-t+1\ge x_j+1\)</span>。</p>
+<p>将 <span class="math inline">\(\land\)</span> 两边两式相加，得 <span
 class="math inline">\(L-1\ge x_i+x_j\)</span> 即 <span
 class="math inline">\(L&gt;x_i+x_j\)</span>，所以 <span
-class="math inline">\(L&gt;x_i+x_j\Leftarrow \exists t\in\Z,t&gt;x_i\and
-L-t+1&gt;x_j\)</span>。</p>
+class="math inline">\(L&gt;x_i+x_j\Leftarrow \exists
+t\in\mathbb{Z},t&gt;x_i\land L-t+1&gt;x_j\)</span>。</p>
 <p>若 <span class="math inline">\(L&gt;x_i+x_j\)</span>，当 <span
 class="math inline">\(t=x_i+1\)</span> 时，满足 <span
-class="math inline">\(t&gt;x_i\and L-t+1&gt;x_j\)</span>，所以 <span
+class="math inline">\(t&gt;x_i\land L-t+1&gt;x_j\)</span>，所以 <span
 class="math inline">\(L&gt;x_i+x_j\Rightarrow \exists
-t\in\Z,t&gt;x_i\and L-t+1&gt;x_j\)</span>。</p>
+t\in\mathbb{Z},t&gt;x_i\land L-t+1&gt;x_j\)</span>。</p>
 <p>综上，<span class="math inline">\(L&gt;x_i+x_j\Leftrightarrow \exists
-t\in\Z,t&gt;x_i\and L-t+1&gt;x_j\)</span>，可得：<span
-class="math inline">\(L\le x_i+x_j\Leftrightarrow\forall t\in\Z,t\le
-x_i\or L-t+1\le x_j\)</span>。</p>
+t\in\mathbb{Z},t&gt;x_i\land L-t+1&gt;x_j\)</span>，可得：<span
+class="math inline">\(L\le x_i+x_j\Leftrightarrow\forall
+t\in\mathbb{Z},t\le x_i\lor L-t+1\le x_j\)</span>。</p>
 <p>同理可证 <span class="math inline">\(x_i+x_j\le
-R\Leftrightarrow\forall t\in\Z,t&gt;x_i\or R-t+1&gt;x_j\)</span>。</p>
-<p>两个结论中，<span class="math inline">\(\or\)</span>
+R\Leftrightarrow\forall t\in\mathbb{Z},t&gt;x_i\lor
+R-t+1&gt;x_j\)</span>。</p>
+<p>两个结论中，<span class="math inline">\(\lor\)</span>
 两侧的符号都可以统一成 <span class="math inline">\(\le\)</span>（<span
 class="math inline">\(&gt;\)</span> 就取反一下）。</p>
 <p>对于“或”命题，考虑 2-SAT。</p>
@@ -351,6 +353,9 @@ class="math inline">\(O((N+Q)M)\)</span>。</p>
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2023/12/22/CF1313E/" rel="next" title="CF1313E">
+                  CF1313E <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
