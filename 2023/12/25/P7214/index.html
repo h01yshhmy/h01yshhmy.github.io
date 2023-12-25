@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.luogu.com.cn/upload/image_hosting/dwp0kc4f.png">
 <meta property="article:published_time" content="2023-12-25T03:16:14.000Z">
-<meta property="article:modified_time" content="2023-12-25T06:03:14.316Z">
+<meta property="article:modified_time" content="2023-12-25T09:04:08.267Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="图论">
 <meta property="article:tag" content="线段树">
@@ -243,7 +243,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-12-25 11:16:14 / 修改时间：14:03:14" itemprop="dateCreated datePublished" datetime="2023-12-25T11:16:14+08:00">2023-12-25</time>
+      <time title="创建时间：2023-12-25 11:16:14 / 修改时间：17:04:08" itemprop="dateCreated datePublished" datetime="2023-12-25T11:16:14+08:00">2023-12-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -278,7 +278,7 @@
     <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P7214">P7214 [JOISC2020]
 治療計画</a></p>
 <span id="more"></span>
-<p>这道题有点牛的。</p>
+<p>这道题有点牛的，算是势能线段树优化建图。</p>
 <p>对题目做转化，变成最短路问题，这里很难说怎么想到最短路，说实话没啥逻辑上的东西，凭感觉吧，确实看起来是很像的。</p>
 <p>可能会想到：以当前整个局面为状态，在状态之间连边，然后跑从全感染状态到全健康状态的最短路，但是这东西难做，没前途。</p>
 <p>画图。找其他形式。</p>
@@ -306,18 +306,19 @@ class="math inline">\(i\le j\)</span> 来说（向右连的边），有 <span
 class="math inline">\(R_i+T_i+1\ge L_j+T_j\)</span>；对于 <span
 class="math inline">\(i&gt;j\)</span> 来说（向左连的边），有 <span
 class="math inline">\(R_i-T_i+1\ge L_j-T_j\)</span>。</p>
-<p>我们成功统一了下标，将这两个值当作点的属性，用两个线段树维护第二个属性的两种值（向左向右）的区间最小值。</p>
+<p>我们成功统一了下标，将这两个值当作点的属性，用两个线段树维护第二个属性的两种值（向左向右）。</p>
 <p>对于当前点 <span
-class="math inline">\(j\)</span>，在线段树上暴力找符合条件的 <span
-class="math inline">\(i\)</span>，因为此题是点权最短路，点权最短路有一个很好的性质：每个点只需要被转移一次，所以可以暴力。</p>
-<p>具体的，在线段树中遍历全部符合条件的 <span
-class="math inline">\(i\)</span>，打
-<code>tag</code>，然后将维护的值改为 <span
-class="math inline">\(+\infty\)</span>（需要记录区间最小值来保证复杂度，是势能分析，考虑到：或者说考虑到一共只有
-<span class="math inline">\(O(m)\)</span> 个点被改为 <span
-class="math inline">\(+\infty\)</span>，每个点 <span
-class="math inline">\(O(\log m)\)</span> 复杂度）</p>
-<p>当然，由于每个点只需要转移一次，我们甚至不需要建图，在线段树操作内直接对
+class="math inline">\(j\)</span>，在线段树上依照第一个属性暴力找符合条件的
+<span
+class="math inline">\(i\)</span>，此题是点权最短路，点权最短路有一个很好的性质：每个点只需要被转移一次，所以可以暴力。</p>
+<p>具体的，线段树维护第二个属性的区间最小值，在线段树中遍历全部符合条件的
+<span class="math inline">\(i\)</span>，打 <code>vis</code>
+标记，然后将维护的值改为 <span
+class="math inline">\(+\infty\)</span>，代表这个点不会再满足任何要求，不被访问。</p>
+<p>关于复杂度：每次修改会使一条叶子到根的链上 <span
+class="math inline">\(+\infty\)</span> 个数 <span
+class="math inline">\(+1\)</span>，当个数等于长度的时候就不再访问子树，容易发现复杂度得到保证。</p>
+<p>由于每个点只需要转移一次，我们甚至不需要建图，在对线段树搜索的时候直接对
 <code>priority_queue</code> 做 <code>push</code> 即可。</p>
 <p>时间复杂度 <span class="math inline">\(O(m\log m)\)</span>。</p>
 <p>注意 <span class="math inline">\(+\infty\)</span>
