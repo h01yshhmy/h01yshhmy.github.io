@@ -7020,6 +7020,7 @@ class="math inline">\(\textrm{Z}\)</span> 函数模板，直接做。</p>
     <url>/2023/12/26/P3973/</url>
     <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P3973">P3973 [TJOI2015]
 线性代数</a></p>
+<span id="more"></span>
 <p>先把具体式子写出来。 <span class="math display">\[
 \begin{aligned}
 D&amp;=(A\times B-C)\times A^{\mathsf{T}}\\
@@ -7083,6 +7084,110 @@ class="math inline">\(O(n^{2.5})\)</span>。</p>
         <tag>图论</tag>
         <tag>网络流</tag>
         <tag>最大流最小割</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>231226T3</title>
+    <url>/2023/12/26/231226T3/</url>
+    <content><![CDATA[<p>23年梦熊省选集训的站外题，题面见下。</p>
+<h2 id="问题描述">问题描述</h2>
+<p>小 <span class="math inline">\(L\)</span> 是 Y
+国的国王，这一天他派你去决定哪个城市应该设置为首都。Y 国一共有 <span
+class="math inline">\(n\)</span>
+个城市，城市之间有一些双向道路连接。当你确定好首都之后，小 <span
+class="math inline">\(L\)</span>
+还会派另外一个人在除了首都的另外一座城市建立防御工事，假设他的是等概率地选择，即选每座城市的概率都是
+<span class="math inline">\(\frac {1} {n-1}\)</span>。</p>
+<p>叛军未来会对 Y
+国的首都发起袭击，而你身为叛军安插在国王身边的内鬼，知道叛军可能会按照
+<span class="math inline">\(q\)</span> 种方案中的一种开始行动。在第
+<span class="math inline">\(i\)</span> 种方案中，他们会在 <span
+class="math inline">\(k_i\)</span>
+个城市中准备一支军队，如果存在某条从这个城市到首都的路径，使得它不经过建立了防御工事的城市，那么这只军队会一路打到首都。显然，越多的军队能进攻首都，胜利的概率就越大。你的任务就是，对于所有的进攻方案，选择一个首都，使得能进攻首都的军队个数的期望值最大。你只要输出这个期望值乘以
+<span class="math inline">\(n-1\)</span>
+即可，容易发现这一定是一个整数。</p>
+<h2 id="输入格式">输入格式</h2>
+<p>输入的第一行有三个数 <span
+class="math inline">\(n,m,q\)</span>，分别表示城市的个数，道路的条数，和进攻方案数。</p>
+<p>接下来 <span class="math inline">\(m\)</span> 行，每行两个数 <span
+class="math inline">\(x_i,y_i\)</span>，表示第 <span
+class="math inline">\(x_i\)</span> 个城市和第 <span
+class="math inline">\(y_i\)</span>
+个城市之间有一条双向道路相连。保证没有重边和自环。</p>
+<p>接下来 <span class="math inline">\(q\)</span>
+行，每一行表示一种方案。每种方案的第一个数 <span
+class="math inline">\(k_i\)</span> 表示军队的个数。接下来 <span
+class="math inline">\(k_i\)</span>
+个数表示每支军队所在的城市，注意可能有一些军队在相同的城市。</p>
+<h2 id="输出格式">输出格式</h2>
+<p>输出共 <span class="math inline">\(q\)</span>
+行，对于每一种方案，输出最大的期望能进攻首都的军队个数乘以 <span
+class="math inline">\(n-1\)</span> 的值。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">4 4 2</span><br><span class="line">1 2</span><br><span class="line">1 3</span><br><span class="line">2 3</span><br><span class="line">1 4</span><br><span class="line">2 2 4</span><br><span class="line">2 1 4</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">4</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+<h2 id="数据范围">数据范围</h2>
+<p>对于所有数据，满足 <span class="math inline">\(1 \leq n \leq 2 \times
+10^5,1 \leq m \leq 5 \times 10^5,1 \leq q \leq 5 \times 10^5,\sum k_i
+\leq 5 \times 10^5\)</span>，保证图连通。</p>
+<h2 id="题解">题解</h2>
+<p>期望乘上 <span
+class="math inline">\(n-1\)</span>，相当于是在求全部防御工事方案的答案之和了。</p>
+<p>显然，只有防御工事是割点的时候，才对答案有贡献。</p>
+<p>对图求一个圆方树。</p>
+<p>设关键点集合为 <span
+class="math inline">\(S\)</span>，在圆方树上，如果首都为 <span
+class="math inline">\(u\)</span>，设 <span
+class="math inline">\(W(u,v)\)</span> 为圆方树上 <span
+class="math inline">\(u\to v\)</span> 路径上的圆点个数（除去 <span
+class="math inline">\(u,v\)</span> 自己），答案为 <span
+class="math inline">\(k(n-1)-\sum_{v\in S}W(u,v)\)</span>。</p>
+<p>为什么呢？首先做了一个容斥，数无法到达的个数。</p>
+<p>显然这些路径上圆点显然都是割点，他们都在两个方点之间，那么这些割点作为防御工事的时候，<span
+class="math inline">\(v\)</span> 一定无法达到 <span
+class="math inline">\(u\)</span>，这是 <span
+class="math inline">\(v\)</span>
+自己的贡献。不需要对其他关键点去重之类的，对每个 <span
+class="math inline">\(v\)</span> 都减去即可。</p>
+<p>现在考虑怎么找到一个 <span class="math inline">\(u\)</span> 使得
+<span class="math inline">\(\sum_{v\in S}W(u,v)\)</span> 最小。</p>
+<p>看到类似于 <span class="math inline">\(f(u)=\sum_{v\in
+D}dis(u,v)\)</span> 的最小化问题，想到重心。</p>
+<p>首先对关键点建出虚树，显然 <span class="math inline">\(u\)</span>
+至少要存在于虚树上或虚树的边上。我们需要虚树点数 <span
+class="math inline">\(O(k)\)</span> 的性质来减少复杂度。</p>
+<p>如果将虚树边上的点也加入虚树，设关键点点权为 <span
+class="math inline">\(1\)</span>，其余为 <span
+class="math inline">\(0\)</span>，那么最优首都就是虚树上重心。</p>
+<p>进一步发现，如果首都在边上最优，那么这条边两边的块内关键点个数一定相等——不然向两侧移动可以使
+<span class="math inline">\(\sum_{v\in S}W(u,v)\)</span> 更小。</p>
+<p>相等的情况，向两侧移动 <span class="math inline">\(\sum_{v\in
+S}W(u,v)\)</span> 是不变的，那就不如放在虚树上好做了。</p>
+<p>所以可以去掉虚树边上的点，直接对真虚树跑重心，重心就是最优点。</p>
+<p>但是需要注意，虚树中有很多方点，那么重心也可能是方点，这样就需要移动重心。</p>
+<p>具体的，遍历虚树上和重心 <span class="math inline">\(u\)</span>
+相邻的圆点 <span class="math inline">\(v\)</span>，如果 <span
+class="math inline">\(v\)</span> 在圆方树上深度比 <span
+class="math inline">\(u\)</span> 浅，那就考虑取 <span
+class="math inline">\(v\)</span> 为首都；否则，我们需要找 <span
+class="math inline">\(u\)</span> 在 <span
+class="math inline">\(v\)</span>
+方向上的儿子，需要写一个树上祖先的倍增数组，从 <span
+class="math inline">\(u\)</span> 调整到 <span
+class="math inline">\(v\)</span> 上方深度为“<span
+class="math inline">\(u\)</span>
+在圆方树上深度加一”的祖先。对所有可以调整到的点取一个最优即可（找最大的一个块），具体见代码。</p>
+<p>时间复杂度 <span class="math inline">\(O(\sum k\log k)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ll long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">600005</span>,M=<span class="number">1000005</span>;</span><br><span class="line"><span class="type">int</span> dfn[N],tot,vis[N],h[N],cnt,num,dep[N],f[N][<span class="number">20</span>],n,m,q;</span><br><span class="line"><span class="type">int</span> siz[N],mx[N],a[N],b[N],sum,rt,u,v,k,val[N];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">edge</span>&#123;<span class="type">int</span> v,nxt;&#125;e[M];vector&lt;<span class="type">int</span>&gt;c[N],g[N],G[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> v)</span></span>&#123;e[++cnt]=&#123;v,h[u]&#125;;h[u]=cnt;&#125;</span><br><span class="line"><span class="keyword">namespace</span> Tarjan</span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> dfn[N],low[N],vis[N],tot;stack&lt;<span class="type">int</span>&gt;st;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">tarjan</span><span class="params">(<span class="type">int</span> u)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    dfn[u]=low[u]=++tot;vis[u]=<span class="number">1</span>;st.<span class="built_in">push</span>(u);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=h[u];i;i=e[i].nxt)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="type">int</span> v=e[i].v;</span><br><span class="line">      <span class="keyword">if</span>(!dfn[v])</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">tarjan</span>(v);</span><br><span class="line">        low[u]=<span class="built_in">min</span>(low[u],low[v]);</span><br><span class="line">        <span class="keyword">if</span>(low[v]&gt;=dfn[u])</span><br><span class="line">        &#123;</span><br><span class="line">          num++;</span><br><span class="line">          <span class="keyword">while</span>(!st.<span class="built_in">empty</span>())</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="type">int</span> x=st.<span class="built_in">top</span>();</span><br><span class="line">            st.<span class="built_in">pop</span>();vis[x]=<span class="number">0</span>;</span><br><span class="line">            c[num].<span class="built_in">emplace_back</span>(x);</span><br><span class="line">            <span class="keyword">if</span>(x==v)<span class="keyword">break</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          c[num].<span class="built_in">emplace_back</span>(u);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span>(vis[v])low[u]=<span class="built_in">min</span>(low[u],dfn[v]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> fa)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  dep[u]=dep[fa]+<span class="number">1</span>;f[u][<span class="number">0</span>]=fa;dfn[u]=++tot;</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">19</span>;i++)f[u][i]=f[f[u][i<span class="number">-1</span>]][i<span class="number">-1</span>];</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;g[u].<span class="built_in">size</span>();i++)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="type">int</span> v=g[u][i];</span><br><span class="line">    <span class="keyword">if</span>(v==fa)<span class="keyword">continue</span>;</span><br><span class="line">    <span class="built_in">dfs</span>(v,u);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">lca</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(dep[u]&lt;dep[v])<span class="built_in">swap</span>(u,v);</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">19</span>;i&gt;=<span class="number">0</span>;i--)<span class="keyword">if</span>(dep[f[u][i]]&gt;=dep[v])u=f[u][i];</span><br><span class="line">  <span class="keyword">if</span>(u==v)<span class="keyword">return</span> u;</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">19</span>;i&gt;=<span class="number">0</span>;i--)<span class="keyword">if</span>(f[u][i]!=f[v][i])u=f[u][i],v=f[v][i];</span><br><span class="line">  <span class="keyword">return</span> f[u][<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs2</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> fa)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  siz[u]=vis[u];mx[u]=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;G[u].<span class="built_in">size</span>();i++)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="type">int</span> v=G[u][i];</span><br><span class="line">    <span class="keyword">if</span>(v==fa)<span class="keyword">continue</span>;</span><br><span class="line">    <span class="built_in">dfs2</span>(v,u);siz[u]+=siz[v];mx[u]=<span class="built_in">max</span>(mx[u],siz[v]);</span><br><span class="line">  &#125;</span><br><span class="line">  mx[u]=<span class="built_in">max</span>(mx[u],sum-siz[u]);</span><br><span class="line">  <span class="keyword">if</span>(mx[u]&lt;mx[rt])rt=u;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">cmp</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> y)</span></span>&#123;<span class="keyword">return</span> dfn[x]&lt;dfn[y];&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">dis</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> v)</span></span>&#123;<span class="keyword">return</span> dep[u]+dep[v]<span class="number">-2</span>*dep[<span class="built_in">lca</span>(u,v)];&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">jump</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> d)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">19</span>;i&gt;=<span class="number">0</span>;i--)<span class="keyword">if</span>(dep[f[u][i]]&gt;=d)u=f[u][i];</span><br><span class="line">  <span class="keyword">return</span> u;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">freopen</span>(<span class="string">&quot;capital.in&quot;</span>,<span class="string">&quot;r&quot;</span>,stdin);</span><br><span class="line">  <span class="built_in">freopen</span>(<span class="string">&quot;capital.out&quot;</span>,<span class="string">&quot;w&quot;</span>,stdout);</span><br><span class="line">  cin.<span class="built_in">tie</span>(<span class="number">0</span>)-&gt;<span class="built_in">sync_with_stdio</span>(<span class="number">0</span>);</span><br><span class="line">  cin&gt;&gt;n&gt;&gt;m&gt;&gt;q;</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=m;i++)cin&gt;&gt;u&gt;&gt;v,<span class="built_in">add</span>(u,v),<span class="built_in">add</span>(v,u);</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)<span class="keyword">if</span>(!Tarjan::dfn[i])Tarjan::<span class="built_in">tarjan</span>(i);</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=num;i++)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;c[i].<span class="built_in">size</span>();j++)</span><br><span class="line">    &#123;</span><br><span class="line">      g[n+i].<span class="built_in">emplace_back</span>(c[i][j]);</span><br><span class="line">      g[c[i][j]].<span class="built_in">emplace_back</span>(n+i);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  tot=<span class="number">0</span>;<span class="built_in">dfs</span>(<span class="number">1</span>,<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">while</span>(q--)</span><br><span class="line">  &#123;</span><br><span class="line">    cin&gt;&gt;k;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=k;i++)cin&gt;&gt;a[i],b[i]=a[i],vis[b[i]]++;</span><br><span class="line">    <span class="built_in">sort</span>(a+<span class="number">1</span>,a+k+<span class="number">1</span>,cmp);<span class="type">int</span> tot=k;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;k;i++)a[++tot]=<span class="built_in">lca</span>(a[i],a[i+<span class="number">1</span>]);a[++tot]=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">sort</span>(a+<span class="number">1</span>,a+tot+<span class="number">1</span>,cmp);</span><br><span class="line">    tot=<span class="built_in">unique</span>(a+<span class="number">1</span>,a+tot+<span class="number">1</span>)-a<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=tot;i++)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="type">int</span> x=<span class="built_in">lca</span>(a[i],a[i<span class="number">-1</span>]);</span><br><span class="line">      G[x].<span class="built_in">emplace_back</span>(a[i]);G[a[i]].<span class="built_in">emplace_back</span>(x);</span><br><span class="line">    &#125;</span><br><span class="line">    mx[rt=<span class="number">0</span>]=<span class="number">0x3f3f3f3f</span>;sum=k;<span class="built_in">dfs2</span>(a[<span class="number">1</span>],<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span>(rt&gt;n)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="type">int</span> pos=<span class="number">0</span>;val[<span class="number">0</span>]=<span class="number">0</span>;</span><br><span class="line">      <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;G[rt].<span class="built_in">size</span>();i++)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="type">int</span> v=G[rt][i];</span><br><span class="line">        <span class="keyword">if</span>(dep[v]&lt;dep[rt])</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="type">int</span> now=f[rt][<span class="number">0</span>];</span><br><span class="line">          val[now]=sum-siz[rt];</span><br><span class="line">          <span class="keyword">if</span>(val[now]&gt;val[pos])pos=now;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> </span><br><span class="line">        &#123;</span><br><span class="line">          <span class="type">int</span> now=<span class="built_in">jump</span>(v,dep[rt]+<span class="number">1</span>);</span><br><span class="line">          val[now]=siz[v];</span><br><span class="line">          <span class="keyword">if</span>(val[now]&gt;val[pos])pos=now;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      rt=pos;</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans=<span class="number">0</span>,val=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=k;i++)ans+=n<span class="number">-1</span>,val+=<span class="built_in">dis</span>(b[i],rt);</span><br><span class="line">    ans-=val/<span class="number">2</span>;cout&lt;&lt;ans&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=tot;i++)G[a[i]].<span class="built_in">clear</span>();</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=k;i++)vis[b[i]]=<span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>GraphTA</category>
+      </categories>
+      <tags>
+        <tag>图论</tag>
+        <tag>圆方树</tag>
+        <tag>树的重心</tag>
+        <tag>虚树</tag>
       </tags>
   </entry>
 </search>
