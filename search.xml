@@ -7255,6 +7255,123 @@ P)\)</span>。</p>
     <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P3266">P3266 [JLOI2015]
 骗我呢</a></p>
 <span id="more"></span>
+<p>计数小trick。</p>
+<p>对于每一行，值域 <span class="math inline">\([0,m]\)</span>，<span
+class="math inline">\(m\)</span> 个数，那就只有一个数没有出现过。</p>
+<p>也就是说，必须严格递增，单次增加 <span class="math inline">\(\le
+2\)</span> 而且有且仅有一个为 <span
+class="math inline">\(2\)</span>。</p>
+<p>发现只要知道没出现的数是啥，就能确定一整行数，这是关键的状态设计方法。</p>
+<p>设 <span class="math inline">\(f[i][j]\)</span> 为第 <span
+class="math inline">\(i\)</span> 行没出现过的数是 <span
+class="math inline">\(j\)</span> 的方案数，显然有 <span
+class="math inline">\(f[i][j]=\sum_{k=0}^{j+1}f[i-1][k]\)</span>。</p>
+<p>关于 <span class="math inline">\(j+1\)</span>
+的上界：手模一下第二个限制，发现大于 <span
+class="math inline">\(j+1\)</span> 就不合法了。</p>
+<p>和式的转移方法，可以观察相邻的两个差了多少，然后尝试类似前缀和的转移。</p>
+<p>发现 <span
+class="math inline">\(f[i][j]-f[i][j-1]=f[i-1][j+1]\)</span>，得到 <span
+class="math inline">\(f[i][j]=f[i][j-1]+f[i-1][j+1]\)</span>，状态设计不变。</p>
+<p>对于这种式子，套路的，转成二维平面上路径计数。</p>
+<figure>
+<img src="https://s1.ax1x.com/2018/10/18/iwUEt0.png" alt="sample1" />
+<figcaption aria-hidden="true">sample1</figcaption>
+</figure>
+<p>实际上是在数上图的左上到右下的路径个数。</p>
+<p>看起来很丑，变换一下基向量，别忘了要<strong>对图形的边界一起变换</strong>。</p>
+<p>最终再对称一下，变成：</p>
+<figure>
+<img src="https://s1.ax1x.com/2018/10/18/iwUt1O.png" alt="sample2" />
+<figcaption aria-hidden="true">sample2</figcaption>
+</figure>
+<p>只能向上或向右走，数左下到右上，且不能碰到左右两条直线的路径个数。</p>
+<p>（第二个图左边的虚线是第一个图最左侧竖着的那一列线段）</p>
+<p>精准一点，是从 <span class="math inline">\((0,0)\)</span> 到 <span
+class="math inline">\((n+m+1,n)\)</span>，且不触碰 <span
+class="math inline">\(A:y=x+1\)</span>，<span
+class="math inline">\(B:y=x-(m+2)\)</span> 的路径条数。</p>
+<p>如果只有一条线，可以像我们的经典问题：求卡特兰数递推式那样做一个对称然后简单求个组合数。</p>
+<p>具体的，如果只有 <span class="math inline">\(A\)</span>，做出 <span
+class="math inline">\((n+m+1,n)\)</span> 关于 <span
+class="math inline">\(A\)</span> 的对称点 <span
+class="math inline">\(P\)</span>，那么 <span
+class="math inline">\((0,0)\)</span> 到 <span
+class="math inline">\((n+m+1,n)\)</span> 的路径个数减去 <span
+class="math inline">\((0,0)\)</span> 到 <span
+class="math inline">\(P\)</span> 的个数就是答案。容易发现任何一个 <span
+class="math inline">\((0,0)\)</span> 到 <span
+class="math inline">\(P\)</span> 的路径都代表碰到过直线到达 <span
+class="math inline">\((n+m+1,n)\)</span> 的一个方案。</p>
+<p>但是两条线很难直接算。</p>
+<p>将触碰（或穿过）直线的序列写出来，形如 <code>AAABBAABBB</code>。</p>
+<p>但是这样还要考虑具体碰了几次，比较麻烦。</p>
+<p>把极长连续段缩一下，变成
+<code>ABAB</code>，直接对着接触直线的“本质次数”，或者说交换的次数来做计数。</p>
+<p>发现卡特兰数的递推式推导过程中，减去的部分本质上是求缩完连续段后，<strong>最后一个触碰的直线为
+<span class="math inline">\(A\)</span></strong>
+的方案数（因为是对终点做对称，容易理解），只不过只有一条线，最后还是最前无所谓了。</p>
+<p>所以在两条线的情况下，只数 <span
+class="math inline">\((n+m+1,n)\)</span> 关于 <span
+class="math inline">\(A\)</span> 的对称点 <span
+class="math inline">\(P\)</span> 的方案的话，求出来的是序列以
+<code>A</code> 结尾的，吗？</p>
+<p>并不是，因为我们完全忽略了直线 <span
+class="math inline">\(B\)</span>，其实是以 <code>A</code> 或
+<code>AB</code> 结尾的，容易发现会计算上除了序列 <code>B</code>
+之外的所有情况。</p>
+<p>就算只有单单一个 <code>B</code> 也很难算，因为做关于 <span
+class="math inline">\(B\)</span>
+的对称点也是同理的，需要考虑容斥，具体来说是对序列的前缀容斥。</p>
+<p>设 <span class="math inline">\(c(q)\)</span> 为序列 <span
+class="math inline">\(q\)</span>
+<strong>本身</strong>（不是前后缀）的方案数，<span
+class="math inline">\(g(x)\)</span> 为序列长度 <span
+class="math inline">\(\ge x\)</span> 的全部方案数，<span
+class="math inline">\(h(x,y)\)</span> 为 <span
+class="math inline">\((0,0)\)</span> 到 <span
+class="math inline">\((x,y)\)</span>
+的<strong>无限制</strong>方案数，就是一个简单组合数。</p>
+<p>根据前面说的，有 <span
+class="math inline">\(h(P)=c(\textrm{A})+g(2)\)</span>。</p>
+<p>设 <span class="math inline">\((n+m+1,n)\)</span> 关于 <span
+class="math inline">\(B\)</span> 与 <span
+class="math inline">\(Q\)</span> 对称，容易得到 <span
+class="math inline">\(h(Q)=c(\textrm{B})+g(2)\)</span>。</p>
+<p>两式相加，有 <span
+class="math inline">\(h(P)+h(Q)=c(\textrm{A})+c(\textrm{B})+2g(2)\)</span>。</p>
+<p>根据定义， <span
+class="math inline">\(g(1)=c(A)+c(B)+g(2)\)</span>，所以有 <span
+class="math inline">\(g(1)=h(P)+h(Q)-g(2)\)</span>。</p>
+<p>对于 <span class="math inline">\(h\)</span>，无限制情况下，<span
+class="math inline">\((0,0)\)</span> 到 <span
+class="math inline">\((x,y)\)</span> 的路径数是 <span
+class="math inline">\(\dbinom{x+y}{x}\)</span>，所以说 <span
+class="math inline">\(h(x,y)=\dbinom{x+y}{x}\)</span>，容易计算。</p>
+<p>对于 <span
+class="math inline">\(g\)</span>，发现变成了另一个子问题，递归解决。</p>
+<p>容易证明，<span class="math inline">\(P,Q\)</span>
+的对称性在组合意义上是可以叠加（递归）的，如果 <span
+class="math inline">\(P\)</span> 再对 <span
+class="math inline">\(B\)</span> 对称得到 <span
+class="math inline">\(P&#39;\)</span>，那么 <span
+class="math inline">\(P&#39;\)</span> 就代表以 <code>BA</code> 或
+<code>BAB</code> 结尾的方案数，<span
+class="math inline">\(Q&#39;\)</span> 同理，代表以 <code>AB</code> 或
+<code>ABA</code> 结尾的方案数。</p>
+<p>易得：<span
+class="math inline">\(h(P&#39;)=c(\textrm{AB})+g(3),h(Q&#39;)=c(\textrm{BA})+g(3),g(2)=h(P&#39;)+h(Q&#39;)-g(3)\)</span>。</p>
+<p>代换 <span
+class="math inline">\(g(1)=h(P)+h(Q)-h(P&#39;)-h(Q&#39;)+g(3)\)</span>，容易发现
+<span class="math inline">\(g(x)\)</span> 的容斥系数为 <span
+class="math inline">\((-1)^{x+1}\)</span>。</p>
+<p>直接算就完事了，看代码就行，代码是对 <span
+class="math inline">\(h(P),h(Q)\)</span> 分开算的，比较好写。</p>
+<p>注意到 <span class="math inline">\(P,Q\)</span> 必须时刻保持 <span
+class="math inline">\(\ge
+0\)</span>，每次对称都至少会向外走一步，所以复杂度有保证。</p>
+<p>总复杂度 <span class="math inline">\(O(n+m)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">3e6</span>+<span class="number">5</span>,mod=<span class="number">1e9</span>+<span class="number">7</span>;</span><br><span class="line"><span class="type">int</span> n,m,ifac[N],fac[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    ifac[<span class="number">0</span>]=fac[<span class="number">0</span>]=ifac[<span class="number">1</span>]=fac[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i,<span class="number">2</span>,n)&#123;</span><br><span class="line">        ifac[i]=<span class="number">1ll</span>*(mod-mod/i)*ifac[mod%i]%mod;</span><br><span class="line">        fac[i]=<span class="number">1ll</span>*fac[i<span class="number">-1</span>]*i%mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(i,n)ifac[i]=<span class="number">1ll</span>*ifac[i<span class="number">-1</span>]*ifac[i]%mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">path</span><span class="params">(<span class="type">int</span> n,<span class="type">int</span> m)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n&lt;<span class="number">0</span>||m&lt;<span class="number">0</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1ll</span>*fac[n+m]*ifac[n]%mod*ifac[m]%mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">flip1</span><span class="params">(<span class="type">int</span> &amp;x,<span class="type">int</span> &amp;y)</span></span>&#123;</span><br><span class="line">    <span class="built_in">swap</span>(x,y);</span><br><span class="line">    x--,y++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">flip2</span><span class="params">(<span class="type">int</span> &amp;x,<span class="type">int</span> &amp;y)</span></span>&#123;</span><br><span class="line">    <span class="built_in">swap</span>(x,y);</span><br><span class="line">    x+=m+<span class="number">2</span>,y-=m+<span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">init</span>(<span class="number">3e6</span>);</span><br><span class="line">    <span class="built_in">read</span>(n,m);</span><br><span class="line">    <span class="type">int</span> x=n+m+<span class="number">1</span>,y=n,ans=<span class="built_in">path</span>(x,y);</span><br><span class="line">    <span class="keyword">while</span>(x&gt;=<span class="number">0</span>&amp;&amp;y&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">flip1</span>(x,y);</span><br><span class="line">        ans=(ans-<span class="built_in">path</span>(x,y)+mod)%mod;</span><br><span class="line">        <span class="built_in">flip2</span>(x,y);</span><br><span class="line">        ans=(ans+<span class="built_in">path</span>(x,y))%mod;</span><br><span class="line">    &#125;</span><br><span class="line">    x=n+m+<span class="number">1</span>,y=n;</span><br><span class="line">    <span class="keyword">while</span>(x&gt;=<span class="number">0</span>&amp;&amp;y&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">flip2</span>(x,y);</span><br><span class="line">        ans=(ans-<span class="built_in">path</span>(x,y)+mod)%mod;</span><br><span class="line">        <span class="built_in">flip1</span>(x,y);</span><br><span class="line">        ans=(ans+<span class="built_in">path</span>(x,y))%mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>题解</category>
