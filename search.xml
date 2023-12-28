@@ -7425,4 +7425,211 @@ class="math inline">\(\frac{P_e}{1-P_e}\)</span>
         <tag>高斯消元</tag>
       </tags>
   </entry>
+  <entry>
+    <title>P3350</title>
+    <url>/2023/12/28/P3350/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P3350">P3350 [ZJOI2016]
+旅行者</a></p>
+<span id="more"></span>
+<p>问题很抽象，考虑离线询问，分治。</p>
+<p>设当前是在 <span class="math inline">\(x\in
+[xl,xr],y\in[yl,yr]\)</span> 这个范围的点中，处理 <span
+class="math inline">\(q\in[ql,qr]\)</span> 的询问。</p>
+<p>类似于 <span
+class="math inline">\(\textrm{KD-Tree}\)</span>，每次在长边上分治，将矩形切成两个小矩形，做跨过中间分割线的询问，将完全在小矩形内的询问递归下去。</p>
+<p>对于跨过分割线的询问，枚举分割线上的点，钦定这个点为中转点，跑从这个点到两边小矩形的最短路，贡献答案。</p>
+<p>最短路有一个小优化：因为边权 <span class="math inline">\(\ge
+1\)</span>，初始化时，如果 <code>dis</code>
+数组在上一次求最短路的时候就是曼哈顿距离（真最短路）的话，就不覆盖为
+<span class="math inline">\(+\infty\)</span>，直接加上距离。</p>
+<p>整体的复杂度分析：</p>
+<p>容易发现，形状为正方形，且每次向下传询问都传到底的时候，复杂度最高。</p>
+<p>设 <span class="math inline">\(T(n,m,q)\)</span> 为短边长为 <span
+class="math inline">\(n\)</span>，长边长为 <span
+class="math inline">\(m\)</span> 的长方形内有 <span
+class="math inline">\(q\)</span> 个询问（初始时 <span
+class="math inline">\(n=m\)</span>），得到答案的复杂度。不妨假设每次分治向下各自传递一半的询问，这样可以全部传到底。
+<span class="math display">\[
+\begin{aligned}
+T(n,m,q)&amp;=n\times nm\log(nm)+nq+2T(\tfrac{m}{2},n,\tfrac{q}{2})\\
+&amp;=n^2m\log(nm)+nq+2((\tfrac{m}{2})^2n\log
+(\tfrac{nm}{2})+\tfrac{mq}{4})+4T(\tfrac{n}{2},\tfrac{m}{2},\tfrac{q}{4})\\
+\end{aligned}
+\]</span> 一次递归两层来使 <span class="math inline">\(n,m\)</span>
+平衡，发现递归到了另一个 <span class="math inline">\(n=m\)</span>
+的子问题，设 <span class="math inline">\(T(n,q)\)</span> 边长为 <span
+class="math inline">\(n\)</span> 的正方形中 <span
+class="math inline">\(q\)</span> 个询问的复杂度。 <span
+class="math display">\[
+\begin{aligned}
+T(n,q)&amp;=n^3\log
+(n^2)+nq+2(\tfrac{n^3}{4}\log(\tfrac{n^2}{2})+\tfrac{nq}{4})+4T(\tfrac{n}{2},\tfrac{q}{4})\\
+&amp;=n^3\log
+(n^2)+nq+\tfrac{n^3}{2}(\log(n^2)-1)+\tfrac{nq}{2}+4T(\tfrac{n}{2},\tfrac{q}{4})\\
+&amp;=3n^3\log
+n+\tfrac{3}{2}nq-\tfrac{n^3}{2}+4T(\tfrac{n}{2},\tfrac{q}{4})\\
+&amp;=3n^3\log n+\tfrac{3}{2}nq+4T(\tfrac{n}{2},\tfrac{q}{4})
+\end{aligned}
+\]</span> 设 <span class="math inline">\(C(n,q)=3n^3\log
+n+\tfrac{3}{2}nq\)</span>，有： <span class="math display">\[
+\begin{aligned}
+T(n,q)&amp;=C(n,q)+4T(\tfrac{n}{2},\tfrac{q}{4})\\
+&amp;=C(n,q)+4(C(\tfrac{n}{2},\tfrac{q}{4})+4T(\tfrac{n}{4},\tfrac{q}{16}))\\
+&amp;=C(n,q)+4C(\tfrac{n}{2},\tfrac{q}{4})+16T(\tfrac{n}{4},\tfrac{q}{16})
+\end{aligned}
+\]</span> 可以观察到： <span class="math display">\[
+\begin{aligned}
+T(n,q)&amp;=\sum_{i=1}^{\log
+n}2^{2(i-1)}C(\tfrac{n}{2^{i-1}},\tfrac{q}{2^{2(i-1)}})\\
+&amp;=\sum_{i=1}^{\log
+n}2^{2(i-1)}\left(\tfrac{3}{2^{3(i-1)}}n^3\log(\tfrac{n}{2^{i-1}})+\tfrac{3nq}{2^{3i-2}}\right)\\
+&amp;=\sum_{i=1}^{\log
+n}\tfrac{3}{2^{i-1}}n^3\log(\tfrac{n}{2^{i-1}})+\tfrac{3nq}{2^i}\\
+&amp;=\sum_{i=1}^{\log n}\frac{n^3\log n-n^3i+3nq}{2^i}\\
+&amp;=\sum_{i=1}^{\log n}\frac{n^3\log n+nq}{2^i}\\
+&amp;=(n^3\log n+nq)\times \left(\sum_{i=1}^{\log n}\frac{1}{2^i}\right)
+\end{aligned}
+\]</span> 因为 <span class="math inline">\(i\le \log n\)</span>，所以
+<span class="math inline">\(-n^3i\)</span> 数量级和 <span
+class="math inline">\(n^3\log n\)</span> 持平，可以去掉。</p>
+<p>易得 <span class="math inline">\(\sum_{i=1}^{\log
+n}\frac{1}{2^i}=\frac{2(n-1)}{n}=O(1)\)</span>。</p>
+<p>带入，得： <span class="math display">\[
+\begin{aligned}
+T(n,q)&amp;=(n^3\log n+nq)\times O(1)\\
+&amp;=O(n^3\log n+qn)
+\end{aligned}
+\]</span> 推导过程中忽略了一些常数和数量级较低的项。</p>
+<p>设面积为 <span class="math inline">\(S=n^2\)</span>，复杂度为 <span
+class="math inline">\(O(S\sqrt{S}\log S+q\sqrt{S})\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">2e4</span>+<span class="number">5</span>,Q=<span class="number">1e5</span>+<span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n,m,qn,bcnt;</span><br><span class="line">pii bas[N];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Edge</span>&#123;</span><br><span class="line">    <span class="type">int</span> to,w,nxt;</span><br><span class="line">&#125;e[Q*<span class="number">2</span>];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Qry</span>&#123;</span><br><span class="line">    <span class="type">int</span> x1,y1,x2,y2,id;</span><br><span class="line">&#125;q[Q],buc[Q];</span><br><span class="line"><span class="type">int</span> head[N],ecnt;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">id</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (x<span class="number">-1</span>)*m+y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> ans[Q],dis[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ae</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> v,<span class="type">int</span> w)</span></span>&#123;</span><br><span class="line">    e[++ecnt].to=v;</span><br><span class="line">    e[ecnt].w=w;</span><br><span class="line">    e[ecnt].nxt=head[u];</span><br><span class="line">    head[u]=ecnt;</span><br><span class="line">&#125;</span><br><span class="line">priority_queue&lt;pii,vector&lt;pii&gt;,greater&lt;pii&gt; &gt; que;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dij</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> xl,<span class="type">int</span> xr,<span class="type">int</span> yl,<span class="type">int</span> yr,<span class="type">int</span> h)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> d=dis[u];</span><br><span class="line">    <span class="built_in">rep</span>(i,xl,xr)<span class="built_in">rep</span>(j,yl,yr)&#123;</span><br><span class="line">        dis[<span class="built_in">id</span>(i,j)]=h?dis[<span class="built_in">id</span>(i,j)]+d:inf;</span><br><span class="line">    &#125;</span><br><span class="line">    dis[u]=<span class="number">0</span>;</span><br><span class="line">    que.<span class="built_in">push</span>(&#123;<span class="number">0</span>,u&#125;);</span><br><span class="line">    <span class="type">int</span> f=<span class="number">0</span>,v=<span class="number">0</span>,x=<span class="number">0</span>,y=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(!que.<span class="built_in">empty</span>())&#123;</span><br><span class="line">        <span class="built_in">tie</span>(f,u)=que.<span class="built_in">top</span>();</span><br><span class="line">        que.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">if</span>(dis[u]!=f)<span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">nx</span>(i,u)&#123;</span><br><span class="line">            v=e[i].to;</span><br><span class="line">            <span class="built_in">tie</span>(x,y)=bas[v];</span><br><span class="line">            <span class="keyword">if</span>(x&lt;xl||xr&lt;x||y&lt;yl||yr&lt;y)&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(dis[v]&gt;dis[u]+e[i].w)&#123;</span><br><span class="line">                dis[v]=dis[u]+e[i].w;</span><br><span class="line">                que.<span class="built_in">push</span>(&#123;dis[v],v&#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">(<span class="type">int</span> xl,<span class="type">int</span> xr,<span class="type">int</span> yl,<span class="type">int</span> yr,<span class="type">int</span> ql,<span class="type">int</span> qr)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(ql&gt;qr)<span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span>(xr-xl&gt;yr-yl)&#123;</span><br><span class="line">        <span class="type">int</span> mid=(xl+xr)/<span class="number">2</span>;</span><br><span class="line">        <span class="built_in">rep</span>(i,yl,yr)&#123;</span><br><span class="line">            <span class="built_in">dij</span>(<span class="built_in">id</span>(mid,i),xl,xr,yl,yr,i-yl);</span><br><span class="line">            <span class="built_in">rep</span>(j,ql,qr)&#123;</span><br><span class="line">                ans[q[j].id]=<span class="built_in">min</span>(ans[q[j].id],dis[<span class="built_in">id</span>(q[j].x1,q[j].y1)]+dis[<span class="built_in">id</span>(q[j].x2,q[j].y2)]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> l=ql<span class="number">-1</span>,r=qr+<span class="number">1</span>;</span><br><span class="line">        <span class="built_in">rep</span>(i,ql,qr)&#123;</span><br><span class="line">            <span class="keyword">if</span>(q[i].x1&lt;mid&amp;&amp;q[i].x2&lt;mid)buc[++l]=q[i];</span><br><span class="line">            <span class="keyword">if</span>(q[i].x1&gt;mid&amp;&amp;q[i].x2&gt;mid)buc[--r]=q[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">rep</span>(i,ql,l)q[i]=buc[i];</span><br><span class="line">        <span class="built_in">rep</span>(i,r,qr)q[i]=buc[i];</span><br><span class="line">        <span class="built_in">solve</span>(xl,mid<span class="number">-1</span>,yl,yr,ql,l);</span><br><span class="line">        <span class="built_in">solve</span>(mid+<span class="number">1</span>,xr,yl,yr,r,qr);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="type">int</span> mid=(yl+yr)/<span class="number">2</span>;</span><br><span class="line">        <span class="built_in">rep</span>(i,xl,xr)&#123;</span><br><span class="line">            <span class="built_in">dij</span>(<span class="built_in">id</span>(i,mid),xl,xr,yl,yr,i-xl);</span><br><span class="line">            <span class="built_in">rep</span>(j,ql,qr)&#123;</span><br><span class="line">                ans[q[j].id]=<span class="built_in">min</span>(ans[q[j].id],dis[<span class="built_in">id</span>(q[j].x1,q[j].y1)]+dis[<span class="built_in">id</span>(q[j].x2,q[j].y2)]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> l=ql<span class="number">-1</span>,r=qr+<span class="number">1</span>;</span><br><span class="line">        <span class="built_in">rep</span>(i,ql,qr)&#123;</span><br><span class="line">            <span class="keyword">if</span>(q[i].y1&lt;mid&amp;&amp;q[i].y2&lt;mid)buc[++l]=q[i];</span><br><span class="line">            <span class="keyword">if</span>(q[i].y1&gt;mid&amp;&amp;q[i].y2&gt;mid)buc[--r]=q[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">rep</span>(i,ql,l)q[i]=buc[i];</span><br><span class="line">        <span class="built_in">rep</span>(i,r,qr)q[i]=buc[i];</span><br><span class="line">        <span class="built_in">solve</span>(xl,xr,yl,mid<span class="number">-1</span>,ql,l);</span><br><span class="line">        <span class="built_in">solve</span>(xl,xr,mid+<span class="number">1</span>,yr,r,qr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n,m);</span><br><span class="line">    <span class="built_in">re</span>(i,n)<span class="built_in">re</span>(j,m)&#123;</span><br><span class="line">        bas[++bcnt]=&#123;i,j&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> x=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)<span class="built_in">re</span>(j,m<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="built_in">read</span>(x);</span><br><span class="line">        <span class="built_in">ae</span>(<span class="built_in">id</span>(i,j),<span class="built_in">id</span>(i,j+<span class="number">1</span>),x);</span><br><span class="line">        <span class="built_in">ae</span>(<span class="built_in">id</span>(i,j+<span class="number">1</span>),<span class="built_in">id</span>(i,j),x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(i,n<span class="number">-1</span>)<span class="built_in">re</span>(j,m)&#123;</span><br><span class="line">        <span class="built_in">read</span>(x);</span><br><span class="line">        <span class="built_in">ae</span>(<span class="built_in">id</span>(i,j),<span class="built_in">id</span>(i+<span class="number">1</span>,j),x);</span><br><span class="line">        <span class="built_in">ae</span>(<span class="built_in">id</span>(i+<span class="number">1</span>,j),<span class="built_in">id</span>(i,j),x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">read</span>(qn);</span><br><span class="line">    <span class="built_in">re</span>(i,qn)&#123;</span><br><span class="line">        <span class="built_in">read</span>(q[i].x1,q[i].y1,q[i].x2,q[i].y2);</span><br><span class="line">        q[i].id=i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">memset</span>(ans,<span class="number">0x3f</span>,<span class="built_in">sizeof</span>(ans));</span><br><span class="line">    <span class="built_in">solve</span>(<span class="number">1</span>,n,<span class="number">1</span>,m,<span class="number">1</span>,qn);</span><br><span class="line">    <span class="built_in">re</span>(i,qn)&#123;</span><br><span class="line">        <span class="built_in">write</span>(ans[i],<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>DSs</category>
+      </categories>
+      <tags>
+        <tag>图论</tag>
+        <tag>分治</tag>
+        <tag>最短路</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P4931</title>
+    <url>/2023/12/28/P4931/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P4931">P4931 [MtOI2018]
+情侣？给我烧了！（加强版）</a></p>
+<span id="more"></span>
+<p>记 <span class="math inline">\(f(n)\)</span> 为 <span
+class="math inline">\(n\)</span>
+对情侣全都<strong>不配对</strong>的方案数。</p>
+<p>要计算<strong>恰好</strong> <span class="math inline">\(k\)</span>
+对配对，男女分别 <span class="math inline">\(\dbinom{n}{k}\)</span>
+种方案，<span class="math inline">\(k\)</span>
+对随便排列，两排还能随意互换，剩下的需要全部不配对。</p>
+<p>所以答案为 <span
+class="math inline">\(\dbinom{n}{k}^2k!2^kf(n-k)\)</span>，现在问题在于怎么求
+<span class="math inline">\(f(x),x\in[0,n]\)</span>。</p>
+<p>组合意义，太强大。</p>
+<p>对于 <span class="math inline">\(f(x)\)</span>，有 <span
+class="math inline">\(x\)</span>
+排座位，考虑其中一排，这一排一共三种情况：两男，两女，一男一女但是不配对。</p>
+<ul>
+<li><p>两男：顺次选两男的方案是 <span
+class="math inline">\(x(x-1)\)</span>，这个要先乘上。然后考虑他们的配偶在之后的配对情况。</p>
+<p>如果不配对，那么就要将这两男<strong>看作是配对了</strong>，即有一对不再是不配对，方案为
+<span class="math inline">\(f(x-1)\)</span>。</p>
+<p>如果配对，那么这两个都不再是不配对，分别剩下的 <span
+class="math inline">\(x-1\)</span>
+排中选一排，且两人顺序可以交换，方案为 <span
+class="math inline">\(2(x-1)f(x-2)\)</span>。</p></li>
+<li><p>两女：和两男同理。</p></li>
+<li><p>一男一女：可以发现其实和两男还是一样：要么这一男一女自己配上了，方案
+<span
+class="math inline">\(f(x-1)\)</span>；要么分别和另一女一男配对，<span
+class="math inline">\(2(x-1)f(x-2)\)</span>。注意一男一女也可以是一女一男，系数是
+<span class="math inline">\(2x(x-1)\)</span>。</p></li>
+</ul>
+<p>综上，<span
+class="math inline">\(f(x)=4x(x-1)(f(x-1)+2(x-1)f(x-2))\)</span>。</p>
+<p>边界：易得，<span class="math inline">\(f(0)=1,f(1)=0\)</span>。</p>
+<p>直接预处理就做完了。</p>
+<p>有生成函数写法，比较抽象而且暴力，正赛不考，没啥学的价值。</p>
+<p>时间复杂度 <span class="math inline">\(O(n+T)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">5e6</span>+<span class="number">5</span>,mod=<span class="number">998244353</span>;</span><br><span class="line"><span class="type">int</span> n,fac[N],ifac[N],pw[N],f[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">A</span><span class="params">(<span class="type">int</span> n,<span class="type">int</span> m)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1ll</span>*fac[n]*ifac[n-m]%mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">C</span><span class="params">(<span class="type">int</span> n,<span class="type">int</span> m)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1ll</span>*fac[n]*ifac[n-m]%mod*ifac[m]%mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> i=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">read</span>(n,i);</span><br><span class="line">    <span class="built_in">write</span>(<span class="number">1ll</span>*<span class="built_in">C</span>(n,i)*<span class="built_in">A</span>(n,i)%mod*pw[i]%mod*f[n-i]%mod,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    fac[<span class="number">0</span>]=ifac[<span class="number">0</span>]=fac[<span class="number">1</span>]=ifac[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">    f[<span class="number">0</span>]=<span class="number">1</span>,f[<span class="number">1</span>]=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i,<span class="number">2</span>,N<span class="number">-5</span>)&#123;</span><br><span class="line">        fac[i]=<span class="number">1ll</span>*fac[i<span class="number">-1</span>]*i%mod;</span><br><span class="line">        ifac[i]=<span class="number">1ll</span>*(mod-mod/i)*ifac[mod%i]%mod;</span><br><span class="line">        f[i]=<span class="number">4ll</span>*i*(i<span class="number">-1</span>)%mod*(f[i<span class="number">-1</span>]+<span class="number">2ll</span>*(i<span class="number">-1</span>)*f[i<span class="number">-2</span>]%mod)%mod;</span><br><span class="line">    &#125;</span><br><span class="line">    pw[<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,N<span class="number">-5</span>)&#123;</span><br><span class="line">        ifac[i]=<span class="number">1ll</span>*ifac[i<span class="number">-1</span>]*ifac[i]%mod;</span><br><span class="line">        pw[i]=pw[i<span class="number">-1</span>]*<span class="number">2</span>%mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> T=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">read</span>(T);</span><br><span class="line">    <span class="keyword">while</span>(T--)<span class="built_in">Main</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>随机过程与计数</category>
+      </categories>
+      <tags>
+        <tag>组合</tag>
+        <tag>生成函数</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P6620</title>
+    <url>/2023/12/28/P6620/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P6620">P6620 [省选联考 2020
+A 卷] 组合数问题</a></p>
+<span id="more"></span>
+<p>双倍经验：CF932E。</p>
+<p>有组合意义的思路，但是没有普世价值，不写了。</p>
+<blockquote>
+<p>组合意义天地灭，代数推导保平安。</p>
+</blockquote>
+<p>没啥头绪，先把 <span class="math inline">\(f\)</span> 拆了。 <span
+class="math display">\[
+\begin{aligned}
+&amp;\sum_{k=0}^nf(k)\times x^k\times \binom{n}{k}\\
+=&amp;\sum_{k=0}^n\sum_{i=0}^ma_ik^i\times x^k\times \binom{n}{k}\\
+=&amp;\sum_{i=0}^ma_i\sum_{k=0}^nk^ix^k\binom{n}{k}
+\end{aligned}
+\]</span> 考虑如何计算第二个和式。</p>
+<p>先看 <span class="math inline">\(k^i\times
+\dbinom{n}{k}\)</span>。<del>众所周知</del>，第二类斯特林数有一个性质：
+<span class="math display">\[
+k^i=\sum_{j=0}^i{i\brace j}k^{\underline j}
+\]</span> 可以对第二个和式做推导。 <span class="math display">\[
+\begin{aligned}
+&amp;\sum_{k=0}^nk^ix^k\binom{n}{k}\\
+=&amp;\sum_{k=0}^nx^k\binom{n}{k}\sum_{j=0}^i{i\brace j}k^{\underline
+j}\\
+=&amp;\sum_{j=0}^i{i\brace j}\sum_{k=0}^n\binom{n}{k}k^{\underline
+j}x^k\\
+=&amp;\sum_{j=0}^i{i\brace j}\sum_{k=0}^n\binom{n}{k}\binom{k}{j}j!x^k\\
+=&amp;\sum_{j=0}^i{i\brace
+j}j!\sum_{k=0}^n\binom{n}{j}\binom{n-j}{k-j}x^k\\
+=&amp;\sum_{j=0}^i{i\brace
+j}\binom{n}{j}j!\sum_{k=0}^n\binom{n-j}{k-j}x^k\\
+=&amp;\sum_{j=0}^i{i\brace j}n^{\underline
+j}x^j\sum_{k=0}^{n-j}\binom{n-j}{k}x^k\\
+=&amp;\sum_{j=0}^i{i\brace j}n^{\underline j}x^j(x+1)^{n-j}
+\end{aligned}
+\]</span>
+最后一步是二项式定理，中间有一些众所周知的组合数变换，可以自行推推式子，不再赘述。</p>
+<p>代回原式。 <span class="math display">\[
+\begin{aligned}
+\sum_{k=0}^nf(k)\times x^k\times \binom{n}{k}
+=\sum_{i=0}^ma_i\sum_{j=0}^i{i\brace j}n^{\underline j}x^j(x+1)^{n-j}
+\end{aligned}
+\]</span> 第二类斯特林数递推式： <span class="math display">\[
+{i\brace j}=j{i-1\brace j}+{i-1\brace j-1}
+\]</span> 多做点预处理，省掉快速幂的 <span
+class="math inline">\(\log\)</span>，复杂度 <span
+class="math inline">\(O(m^2)\)</span>。</p>
+<p>如果模数 <span class="math inline">\(p\)</span>
+为质数，可以写多项式快速幂达到 <span class="math inline">\(O(m\log
+m)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1005</span>;</span><br><span class="line"><span class="type">int</span> n, x, P, m;</span><br><span class="line"><span class="type">int</span> a[N], S[N][N], px1[N], px2[N], J[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qpow</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> a)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (a &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> ret = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (a)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (a &amp; <span class="number">1</span>)</span><br><span class="line">            ret = ret * <span class="number">1ll</span> * x % P;</span><br><span class="line">        x = x * <span class="number">1ll</span> * x % P, a &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CIOO;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; x &gt;&gt; P &gt;&gt; m;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, m)</span><br><span class="line">    &#123;</span><br><span class="line">        cin &gt;&gt; a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    S[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, m)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">re</span>(j, i)</span><br><span class="line">        &#123;</span><br><span class="line">            S[i][j] = (S[i - <span class="number">1</span>][j - <span class="number">1</span>] + j * <span class="number">1ll</span> * S[i - <span class="number">1</span>][j] % P) % P;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, m)</span><br><span class="line">    &#123;</span><br><span class="line">        px1[i] = <span class="built_in">qpow</span>(x, i);</span><br><span class="line">        px2[i] = <span class="built_in">qpow</span>(x + <span class="number">1</span>, n - i);</span><br><span class="line">    &#125;</span><br><span class="line">    J[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, m)</span><br><span class="line">    &#123;</span><br><span class="line">        J[i] = J[i - <span class="number">1</span>] * <span class="number">1ll</span> * (n - i + <span class="number">1</span>) % P;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, m)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">rep</span>(j, <span class="number">0</span>, i)</span><br><span class="line">        &#123;</span><br><span class="line">            res = (res + S[i][j] * <span class="number">1ll</span> * J[j] % P * px2[j] % P * px1[j]) % P;</span><br><span class="line">        &#125;</span><br><span class="line">        ans = (ans + res * <span class="number">1ll</span> * a[i]) % P;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>随机过程与计数</category>
+      </categories>
+      <tags>
+        <tag>组合</tag>
+        <tag>斯特林数</tag>
+      </tags>
+  </entry>
 </search>
