@@ -7752,7 +7752,7 @@ class="math inline">\(\dfrac{\binom{A-x+B-y+C-z}{A-x,B-y,C-z}}{3^{A-x+B-y+C-z}}\
 <p>根据期望的线性性，分别计算撞到每面墙的期望（哪个坐标为 <span
 class="math inline">\(0\)</span>）。</p>
 <p>设 <span class="math inline">\(F(A,B,C)\)</span>：终点是 <span
-class="math inline">\((A,B,C)\)</span>，<strong>撞到墙</strong>的答案。以墙
+class="math inline">\((A,B,C)\)</span>，最后一步<strong>撞到墙</strong>的答案。以墙
 <span class="math inline">\(z=0\)</span> 为例： <span
 class="math display">\[
 \begin{aligned}
@@ -7760,7 +7760,11 @@ F(A,B,C)&amp;=\frac{1}{3}\sum_{x=0}^A\sum_{y=0}^B\dfrac{\dbinom{A-x+B-y+C}{A-x,B
 &amp;=\sum_{t=0}^{A+B}\frac{(A+B-t)^k}{3^{C+t+1}}\sum_{x=t-B}^{A}\dbinom{t+C}{t-x,x,C}\\
 &amp;=\sum_{t=0}^{A+B}\frac{(A+B-t)^k}{3^{C+t+1}}\dbinom{C+t}{C}\sum_{x=t-B}^{A}\dbinom{t}{x}\\
 \end{aligned}
-\]</span> 拆多重组合数的过程就不再赘述。</p>
+\]</span> 这里乘 <span class="math inline">\(\frac{1}{3}\)</span> 就是从
+<span class="math inline">\((x,y,0)\)</span> 走到了 <span
+class="math inline">\((x,y,-1)\)</span>，撞墙了。</p>
+<p><span class="math inline">\(t\)</span> 是在枚举 <span
+class="math inline">\(A-x+B-y\)</span>，拆多重组合数的过程就不再赘述。</p>
 <p>考虑如何计算第二个和式，做整式递推。 <span class="math display">\[
 \begin{aligned}
 G(t)&amp;=\sum_{x=t-B}^A\binom{t}{x}\\
@@ -7769,7 +7773,7 @@ G(t-1)&amp;=\sum_{x=t-1-B}^A\binom{t-1}{x}\\
 G(t)&amp;=G(t-1)-\binom{t-1}{t-1-B}+\sum_{x=t-B}^A\binom{t-1}{x-1}\\
 &amp;=G(t-1)-\binom{t-1}{B}+\sum_{x=t-1-B}^{A-1}\binom{t-1}{x}\\
 &amp;=2G(t-1)-\binom{t-1}{B}-\binom{t-1}{A}
-\end{aligned}即可。
+\end{aligned}
 \]</span> 最终形式为： <span class="math display">\[
 \begin{aligned}
 &amp;F(A,B,C)=\sum_{t=0}^{A+B}\frac{(A+B-t)^k}{3^{C+t+1}}\binom{C+t}{C}G(t)\\
