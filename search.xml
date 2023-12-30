@@ -7246,6 +7246,7 @@ P)\)</span>。</p>
       <tags>
         <tag>图论</tag>
         <tag>生成树</tag>
+        <tag>最短路</tag>
         <tag>倍增</tag>
       </tags>
   </entry>
@@ -7740,9 +7741,10 @@ n)\)</span>，细节见代码。</p>
 <p>注意：是 <span class="math inline">\(k\)</span>
 次方的期望值，不是期望值的 <span class="math inline">\(k\)</span>
 次方，不要看错了。</p>
-<p>考虑从 <span class="math inline">\((A,B,C)\)</span> 走到 <span
+<p>发现撞墙只是最后一次操作的事情，所以考虑从 <span
+class="math inline">\((A,B,C)\)</span> 走到 <span
 class="math inline">\((x,y,z)\)</span>
-且<strong>不撞墙</strong>的概率。</p>
+且<strong>不撞墙</strong>的概率，只要会算这个，最后再撞一步就好了。</p>
 <p>一共有 <span class="math inline">\(3^{A-x+B-y+C-z}\)</span>
 种方案，而到达 <span class="math inline">\((x,y,z)\)</span> 的方案数为
 <span
@@ -7751,21 +7753,21 @@ class="math inline">\(\dbinom{A-x+B-y+C-z}{A-x,B-y,C-z}\)</span>.</p>
 class="math inline">\(\dfrac{\binom{A-x+B-y+C-z}{A-x,B-y,C-z}}{3^{A-x+B-y+C-z}}\)</span>。</p>
 <p>根据期望的线性性，分别计算撞到每面墙的期望（哪个坐标为 <span
 class="math inline">\(0\)</span>）。</p>
-<p>设 <span class="math inline">\(F(A,B,C)\)</span>：终点是 <span
-class="math inline">\((A,B,C)\)</span>，最后一步<strong>撞到墙</strong>的答案。以墙
+<p>设 <span class="math inline">\(F(A,B,C)\)</span>：起点是 <span
+class="math inline">\((A,B,C)\)</span>，走到某个位置，<strong>撞到墙</strong>的答案。以墙
 <span class="math inline">\(z=0\)</span> 为例： <span
 class="math display">\[
 \begin{aligned}
 F(A,B,C)&amp;=\frac{1}{3}\sum_{x=0}^A\sum_{y=0}^B\dfrac{\dbinom{A-x+B-y+C}{A-x,B-y,C}(x+y)^k}{3^{A-x+B-y+C}}\\
-&amp;=\sum_{t=0}^{A+B}\frac{(A+B-t)^k}{3^{C+t+1}}\sum_{x=t-B}^{A}\dbinom{t+C}{t-x,x,C}\\
-&amp;=\sum_{t=0}^{A+B}\frac{(A+B-t)^k}{3^{C+t+1}}\dbinom{C+t}{C}\sum_{x=t-B}^{A}\dbinom{t}{x}\\
+&amp;=\sum_{t=0}^{A+B}\frac{(A+B-t)^k}{3^{t+C+1}}\sum_{x=t-B}^{A}\dbinom{t+C}{t-x,x,C}\\
+&amp;=\sum_{t=0}^{A+B}\frac{(A+B-t)^k}{3^{t+C+1}}\dbinom{t+C}{C}\sum_{x=t-B}^{A}\dbinom{t}{x}\\
 \end{aligned}
 \]</span> 这里乘 <span class="math inline">\(\frac{1}{3}\)</span> 就是从
 <span class="math inline">\((x,y,0)\)</span> 走到了 <span
 class="math inline">\((x,y,-1)\)</span>，撞墙了。</p>
 <p><span class="math inline">\(t\)</span> 是在枚举 <span
 class="math inline">\(A-x+B-y\)</span>，拆多重组合数的过程就不再赘述。</p>
-<p>考虑如何计算第二个和式，做整式递推。 <span class="math display">\[
+<p>考虑如何计算第二个和式，做递推。 <span class="math display">\[
 \begin{aligned}
 G(t)&amp;=\sum_{x=t-B}^A\binom{t}{x}\\
 &amp;=\sum_{x=t-B}^A\binom{t-1}{x}+\binom{t-1}{x-1}\\
@@ -7776,7 +7778,7 @@ G(t)&amp;=G(t-1)-\binom{t-1}{t-1-B}+\sum_{x=t-B}^A\binom{t-1}{x-1}\\
 \end{aligned}
 \]</span> 最终形式为： <span class="math display">\[
 \begin{aligned}
-&amp;F(A,B,C)=\sum_{t=0}^{A+B}\frac{(A+B-t)^k}{3^{C+t+1}}\binom{C+t}{C}G(t)\\
+&amp;F(A,B,C)=\sum_{t=0}^{A+B}\frac{(A+B-t)^k}{3^{t+C+1}}\binom{t+C}{C}G(t)\\
 &amp;G(t)=2G(t-1)-\binom{t-1}{B}-\binom{t-1}{A}
 \end{aligned}
 \]</span> <span class="math inline">\((A+B-t)^k\)</span>
@@ -7786,7 +7788,7 @@ G(t)&amp;=G(t-1)-\binom{t-1}{t-1-B}+\sum_{x=t-B}^A\binom{t-1}{x-1}\\
 class="math inline">\(F(B,C,A)+F(A,C,B)+F(A,B,C)\)</span>，要算每一维作为
 <span class="math inline">\(z\)</span> 轴，接触 <span
 class="math inline">\(z=0\)</span> 的答案。</p>
-<p>时间复杂度 <span class="math inline">\(O(n)\)</span>。</p>
+<p>时间复杂度 <span class="math inline">\(O(A+B+C)\)</span>。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">1.5e7</span>+<span class="number">5</span>,mod=<span class="number">998244353</span>,i3=<span class="number">332748118</span>;</span><br><span class="line"><span class="type">int</span> A,B,C,k;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qpow</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> res=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(b)&#123;</span><br><span class="line">        <span class="keyword">if</span>(b&amp;<span class="number">1</span>)res=<span class="number">1ll</span>*res*a%mod;</span><br><span class="line">        a=<span class="number">1ll</span>*a*a%mod;</span><br><span class="line">        b&gt;&gt;=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> pw[N],np[N],fac[N],ifac[N],G[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">(<span class="type">int</span> lim)</span></span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; prm;</span><br><span class="line">    pw[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i,<span class="number">2</span>,lim)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!np[i])&#123;</span><br><span class="line">            pw[i]=<span class="built_in">qpow</span>(i,k);</span><br><span class="line">            prm.<span class="built_in">pb</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j:prm)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i*j&gt;lim)<span class="keyword">break</span>;</span><br><span class="line">            np[i*j]=<span class="number">1</span>,pw[i*j]=<span class="number">1ll</span>*pw[i]*pw[j]%mod;</span><br><span class="line">            <span class="keyword">if</span>(i%j==<span class="number">0</span>)<span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    fac[<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,lim)fac[i]=<span class="number">1ll</span>*fac[i<span class="number">-1</span>]*i%mod;</span><br><span class="line">    ifac[lim]=<span class="built_in">qpow</span>(fac[lim],mod<span class="number">-2</span>);</span><br><span class="line">    <span class="built_in">per</span>(i,lim<span class="number">-1</span>,<span class="number">0</span>)ifac[i]=<span class="number">1ll</span>*ifac[i+<span class="number">1</span>]*(i+<span class="number">1</span>)%mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">binom</span><span class="params">(<span class="type">int</span> n,<span class="type">int</span> m)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(m&lt;<span class="number">0</span>||m&gt;n)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1ll</span>*fac[n]*ifac[m]%mod*ifac[n-m]%mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">F</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b,<span class="type">int</span> c)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> ans=<span class="number">0</span>,i3p=<span class="built_in">qpow</span>(i3,c);</span><br><span class="line">    G[<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">rep</span>(t,<span class="number">0</span>,a+b)&#123;</span><br><span class="line">        i3p=<span class="number">1ll</span>*i3p*i3%mod;</span><br><span class="line">        <span class="type">int</span> mul=<span class="number">1ll</span>*i3p*pw[a+b-t]%mod*<span class="built_in">binom</span>(c+t,c)%mod;</span><br><span class="line">        <span class="keyword">if</span>(t)G[t]=((<span class="number">2</span>*G[t<span class="number">-1</span>]-<span class="built_in">binom</span>(t<span class="number">-1</span>,a)-<span class="built_in">binom</span>(t<span class="number">-1</span>,b))%mod+mod)%mod;</span><br><span class="line">        ans=(ans+<span class="number">1ll</span>*mul*G[t]%mod)%mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(A,B,C,k);</span><br><span class="line">    <span class="built_in">init</span>(N<span class="number">-5</span>);</span><br><span class="line">    <span class="built_in">write</span>((<span class="number">1ll</span>*<span class="built_in">F</span>(B,C,A)+<span class="built_in">F</span>(A,C,B)+<span class="built_in">F</span>(A,B,C))%mod,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
