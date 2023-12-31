@@ -7803,4 +7803,192 @@ class="math inline">\(z=0\)</span> 的答案。</p>
         <tag>筛法</tag>
       </tags>
   </entry>
+  <entry>
+    <title>ABC282Ex</title>
+    <url>/2023/12/30/ABC282Ex/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/AT_abc282_h">[ABC282Ex] Min
++ Sum</a></p>
+<span id="more"></span>
+<p>最小值很烦人，那就让最小值不变。</p>
+<p>分治。以最小值位置为分治的 <span
+class="math inline">\(mid\)</span>，处理跨过 <span
+class="math inline">\(mid\)</span>
+的区间。找最小值位置通过ST表处理。</p>
+<p>这样是一个虚拟笛卡尔树，启发式分裂，枚举短的那一边，另一边的合法个数只需要考虑
+<span class="math inline">\(\sum B\)</span>，<span
+class="math inline">\(B_i\ge
+0\)</span>，单调的，可以直接在前缀和数组上二分。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log^2
+n)\)</span>，证明不再赘述。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> s = <span class="number">0</span>, f = <span class="number">1</span>;</span><br><span class="line">  <span class="type">char</span> ch = <span class="built_in">getchar</span>();</span><br><span class="line">  <span class="keyword">while</span> (ch &lt; <span class="string">&#x27;0&#x27;</span> || ch &gt; <span class="string">&#x27;9&#x27;</span>)</span><br><span class="line">    f = (ch == <span class="string">&#x27;-&#x27;</span> ? <span class="number">-1</span> : <span class="number">1</span>), ch = <span class="built_in">getchar</span>();</span><br><span class="line">  <span class="keyword">while</span> (ch &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; ch &lt;= <span class="string">&#x27;9&#x27;</span>)</span><br><span class="line">    s = (s &lt;&lt; <span class="number">1</span>) + (s &lt;&lt; <span class="number">3</span>) + (ch ^ <span class="number">48</span>), ch = <span class="built_in">getchar</span>();</span><br><span class="line">  <span class="keyword">return</span> s * f;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="type">int</span> n, S;</span><br><span class="line"><span class="type">int</span> a[<span class="number">200005</span>], b[<span class="number">200005</span>], s[<span class="number">200005</span>];</span><br><span class="line"><span class="type">int</span> pos[<span class="number">200005</span>][<span class="number">20</span>];</span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="keyword">define</span> pw(x) (1 &lt;&lt; (x))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> merge(x, y, i) (a[pos[x][i]] &lt; a[pos[y][i]] ? pos[x][i] : pos[y][i])</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    pos[i][<span class="number">0</span>] = i;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; <span class="built_in">pw</span>(j) &lt;= n; j++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i + <span class="built_in">pw</span>(j) - <span class="number">1</span> &lt;= n; i++)</span><br><span class="line">      pos[i][j] = <span class="built_in">merge</span>(i, i + <span class="built_in">pw</span>(j - <span class="number">1</span>), j - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qry</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> i = <span class="built_in">log</span>(r - l + <span class="number">1</span>) / <span class="built_in">log</span>(<span class="number">2</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">merge</span>(l, r - <span class="built_in">pw</span>(i) + <span class="number">1</span>, i);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">calcl</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> L, <span class="type">int</span> R, <span class="type">int</span> S)</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> l = L - <span class="number">1</span>, r = R + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span> (r - l &gt; <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="type">int</span> mid = (l + r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (s[mid] - s[x - <span class="number">1</span>] &lt;= S)</span><br><span class="line">      l = mid;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      r = mid;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> l;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">calcr</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> L, <span class="type">int</span> R, <span class="type">int</span> S)</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> l = L - <span class="number">1</span>, r = R + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span> (r - l &gt; <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="type">int</span> mid = (l + r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (s[x] - s[mid - <span class="number">1</span>] &lt;= S)</span><br><span class="line">      r = mid;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      l = mid;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Solve</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (l &gt; r)</span><br><span class="line">    <span class="keyword">return</span> ;</span><br><span class="line">  <span class="type">int</span> mid = <span class="built_in">qry</span>(l, r);</span><br><span class="line">  <span class="keyword">if</span> (mid - l &lt; r - mid)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = l; i &lt;= mid; i++)</span><br><span class="line">      ans += <span class="built_in">calcl</span>(i, mid, r, S - a[mid]) - mid + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = mid; i &lt;= r; i++)</span><br><span class="line">      ans += mid + <span class="number">1</span> - <span class="built_in">calcr</span>(i, l, mid, S - a[mid]);</span><br><span class="line">  <span class="built_in">Solve</span>(l, mid - <span class="number">1</span>), <span class="built_in">Solve</span>(mid + <span class="number">1</span>, r);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  n = <span class="built_in">read</span>(), S = <span class="built_in">read</span>();</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    a[i] = <span class="built_in">read</span>();</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    b[i] = <span class="built_in">read</span>(), s[i] = s[i - <span class="number">1</span>] + b[i];</span><br><span class="line">  <span class="built_in">build</span>();</span><br><span class="line">  <span class="built_in">Solve</span>(<span class="number">1</span>, n);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%lld&quot;</span>, ans);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>笛卡尔树</tag>
+        <tag>分治</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P8058</title>
+    <url>/2023/12/31/P8058/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P8058">P8058 [BalkanOI2003]
+Farey 序列</a></p>
+<span id="more"></span>
+<p>两个写法，写法一复杂度优一些。</p>
+<p>看起来很离谱的第 <span class="math inline">\(k\)</span>
+小问题，求值转判定，二分。</p>
+<h2 id="写法一">写法一</h2>
+<p>假设目前要判断 <span
+class="math inline">\(\frac{x}{y}\)</span>，那么序列中比它小的数的个数为：
+<span class="math display">\[
+\sum_{i=1}^n\sum_{j=1}^i[i\perp j][\frac{j}{i}&lt;\frac{x}{y}]
+\]</span> 对于互质判断，套路的，用莫比乌斯反演消掉。 <span
+class="math display">\[
+\begin{aligned}
+&amp;\sum_{i=1}^n\sum_{j=1}^i[i\perp j][\frac{j}{i}&lt;\frac{x}{y}]\\
+=&amp;\sum_{i=1}^n\sum_{j=1}^i[\gcd(i,j)=1][\frac{j}{i}&lt;\frac{x}{y}]\\
+=&amp;\sum_{i=1}^n\sum_{j=1}^i\sum_{d|\gcd(i,j)}\mu(d)[\frac{j}{i}&lt;\frac{x}{y}]\\
+=&amp;\sum_{d}\mu(d)\sum_{i=1}^{\lfloor\frac{n}{d}\rfloor}\sum_{j=1}^i[\frac{j}{i}&lt;\frac{x}{y}]
+\end{aligned}
+\]</span> <span
+class="math inline">\([\frac{j}{i}&lt;\frac{x}{y}]\)</span> 变为 <span
+class="math inline">\([j&lt;\frac{ix}{y}]\)</span>，式子变成： <span
+class="math display">\[
+\sum_{d}\mu(d)\sum_{i=1}^{\lfloor\frac{n}{d}\rfloor}\left\lfloor\frac{ix}{y}\right\rfloor
+\]</span> 对于第一个和式，杜教筛套整除分块，对于每个有贡献的上界 <span
+class="math inline">\(\lfloor\frac{n}{d}\rfloor\)</span>
+和式，加上系数。</p>
+<p>对于第二个和式，类欧板子。</p>
+<p>我们记这一整个式子为 <span
+class="math inline">\(f(\frac{x}{y})\)</span>。</p>
+<p>现在可以写 <code>check</code> 了，但是要怎么二分一个最简真分数 <span
+class="math inline">\(\frac{x}{y}\)</span> 呢？</p>
+<p>考虑一个叫 Stern-Brocot 树的东西，大概长这样：</p>
+<figure>
+<img src="https://cdn.luogu.com.cn/upload/image_hosting/oeqik4ed.png"
+alt="sample" />
+<figcaption aria-hidden="true">sample</figcaption>
+</figure>
+<p>以下全部内容都只看左半边的真分数部分，也就是 <span
+class="math inline">\(\frac{1}{2}\)</span> 的子树。</p>
+<p>这张图的每一行是这棵二叉树遍历深度不超过当前行的中序遍历序列。</p>
+<p>假设我们已经得到了只遍历前 <span class="math inline">\(i-1\)</span>
+层的中序遍历序列，其中 <span
+class="math inline">\(\frac{a}{b},\frac{c}{d}\)</span>
+是相邻的两项，那么将 <span
+class="math inline">\(\frac{a+c}{b+d}\)</span>
+插入它们之间，得到的就是只遍历前 <span class="math inline">\(i\)</span>
+层的中序遍历序列。</p>
+<p>有建树的伪代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">build</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c, <span class="type">int</span> d)</span> </span>&#123;</span><br><span class="line">  tr[++ndnum].p = a + c; tr[ndnum].q = b + d;</span><br><span class="line">  tr[ndnum].ls = <span class="built_in">build</span>(a, b, a + c, b + d);</span><br><span class="line">  tr[ndnum].rs = <span class="built_in">build</span>(a + c, b + d, c, d);</span><br><span class="line">  <span class="keyword">return</span> ndnum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>显然不能真建出树来，这棵树是无限大的。</p>
+<p>对于这棵树，有结论：</p>
+<ul>
+<li>中序遍历序列一定单增</li>
+<li>中序遍历序列一定都是最简真分数</li>
+</ul>
+<p>证明：考虑归纳法。</p>
+<p>单增：若 <span class="math inline">\(\frac{a}{b}&lt;
+\frac{c}{d}\)</span>，显然 <span
+class="math inline">\(\frac{a}{b}&lt;\frac{a+c}{b+d}&lt;\frac{c}{d}\)</span>。</p>
+<p>最简真分数：</p>
+<p>先证明：若 <span
+class="math inline">\(\frac{a}{b},\frac{c}{d}\)</span> 是第 <span
+class="math inline">\(i\)</span> 层中序遍历序列中相邻两项，那么 <span
+class="math inline">\(\frac{c}{d}-\frac{a}{b}=\frac{1}{bd}\)</span>，最开始的几行是满足要求的。</p>
+<p>假设前 <span class="math inline">\(i-1\)</span> 层满足条件，对于
+<span class="math inline">\(i-1\)</span> 层的相邻两项，有 <span
+class="math inline">\(\frac{c}{d}-\frac{a}{b}=\frac{1}{bd}=\frac{bc-ad}{bd}\)</span>，得到
+<span class="math inline">\(bc-ad=1\)</span>。</p>
+<p>到第 <span class="math inline">\(i\)</span> 层之后，相邻三个分别为
+<span
+class="math inline">\(\frac{a}{b},\frac{a+c}{b+d},\frac{c}{d}\)</span>，列出两个式子：
+<span class="math display">\[
+\begin{aligned}
+&amp;\frac{a+c}{b+d}-\frac{a}{b}=\frac{ab+bc-ab-ad}{b(b+d)}=\frac{bc-bd}{b(b+d)}=\frac{1}{b(b+d)}\\
+&amp;\frac{c}{d}-\frac{a+c}{b+d}=\frac{bc+dc-ad-cd}{(b+d)d}=\frac{bc-ad}{(b+d)d}=\frac{1}{(b+d)d}
+\end{aligned}
+\]</span> 式子形式满足要求。也就是说，<span
+class="math inline">\(bc-ad=1\)</span> 恒成立。</p>
+<p>根据裴蜀定理的逆定理：</p>
+<blockquote>
+<p>设 <span class="math inline">\(a,b\)</span> 是不全为 <span
+class="math inline">\(0\)</span> 的整数，若 <span
+class="math inline">\(d&gt;0\)</span> 是 <span
+class="math inline">\(a,b\)</span> 的公因数，且存在 <span
+class="math inline">\(x,\,y\)</span> 使得 <span
+class="math inline">\(ax+by=d\)</span>，则 <span
+class="math inline">\(d=\gcd(a,b)\)</span>。</p>
+</blockquote>
+<p>容易发现，<span class="math inline">\(bc-ad=1\)</span> 有解，当且仅当
+<span class="math inline">\(a\perp b,\,c\perp
+d\)</span>。互质显然都是最简真分数，得证。</p>
+<p>现在有一个naive的想法，在 <span
+class="math inline">\(x=1,\,y=2\)</span> 处开始树上二分，如果 <span
+class="math inline">\(f(\frac{x}{y})=k\)</span> 就是答案，<span
+class="math inline">\(f(\frac{x}{y})&lt;k\)</span>
+就走到右儿子，否则就走到左儿子。</p>
+<p>但是 <span class="math inline">\(k=1\)</span> 的时候会一直走 <span
+class="math inline">\(n\)</span> 次左儿子，考虑如何加速树上移动。</p>
+<p>显然每次可以移动多步，重点在于方向的拐点。</p>
+<p>设 <span class="math inline">\(F(n)\)</span> 为拐 <span
+class="math inline">\(n\)</span>
+次能走到的分数中最小的分母，构造显然是不停拐 <span
+class="math inline">\(n\)</span> 次，容易发现，拐 <span
+class="math inline">\(n-1\)</span> 次和 <span
+class="math inline">\(n-2\)</span> 次到达的位置，正好是中序遍历中拐
+<span class="math inline">\(n\)</span>
+次到达位置的左右两个相邻的位置，那么拐 <span
+class="math inline">\(n\)</span> 次的分母就是之前写的 <span
+class="math inline">\(b+d\)</span>，所以有 <span
+class="math inline">\(F(n)=F(n-1)+F(n-2)\)</span>，拐的次数就是 <span
+class="math inline">\(F^{-1}(n)=O(\log n)\)</span>。</p>
+<p>我们可以在每次跳儿子的时候，倍增方向上需要跳多远，快速走到下一个拐点。</p>
+<p>时间复杂度大概是 <span
+class="math inline">\(O(n^{\frac{2}{3}}+\sqrt{n}\log^3
+n)\)</span>，不想分析了，跑不满。</p>
+<h2 id="写法二">写法二</h2>
+<p>一样是二分。</p>
+<p>设 <span class="math inline">\(H(x)\)</span> 为 Farey 数列中小于
+<span class="math inline">\(x\)</span> 的个数，<span
+class="math inline">\(F(i)\)</span> 表示小于 <span
+class="math inline">\(x\)</span> 且分母为 <span
+class="math inline">\(i\)</span> 的个数。</p>
+<p>显然有： <span class="math display">\[
+\begin{aligned}
+&amp;H(x)=\sum_{i=1}^nF(i)\\
+&amp;F(i)=\lfloor ix\rfloor-\sum_{d|i}F(d)
+\end{aligned}
+\]</span> 做一点预处理。</p>
+<p>设 <span class="math inline">\(G(i)\)</span> 为 <span
+class="math inline">\(\lfloor ix\rfloor\)</span> 的系数，观察 <span
+class="math inline">\(F\)</span>
+的递推式，容易发现，存在一个像是容斥系数不断取反一样的关系，可以得到：
+<span class="math display">\[
+G(i)=1-\sum_{i|t}G(t)
+\]</span> 二分答案的部分就直接二分一个实数，比较暴力。</p>
+<p>总复杂度 <span class="math inline">\(O(n\log V)\)</span>。</p>
+<h2 id="代码">代码</h2>
+<p>写法一：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">5000000</span>;</span><br><span class="line">unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; mem;</span><br><span class="line"><span class="type">int</span> n, prm[N + <span class="number">5</span>], np[N + <span class="number">5</span>], pcnt, smu[N + <span class="number">5</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sieve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    smu[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">2</span>, N) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!np[i]) prm[++pcnt] = i, smu[i] = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= pcnt &amp;&amp; prm[j] * i &lt;= N; j++) &#123;</span><br><span class="line">            np[i * prm[j]] = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (i % prm[j] == <span class="number">0</span>) &#123;</span><br><span class="line">                smu[i * prm[j]] = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            smu[i * prm[j]] = <span class="number">-1</span> * smu[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">2</span>, N) smu[i] += smu[i - <span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">calcsmu</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= N) <span class="keyword">return</span> smu[n];</span><br><span class="line">    <span class="keyword">if</span> (mem.<span class="built_in">find</span>(n) != mem.<span class="built_in">end</span>()) <span class="keyword">return</span> mem[n];</span><br><span class="line">    ll rt = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> l = <span class="number">2</span>, r; l &lt;= n; l = r + <span class="number">1</span>) &#123;</span><br><span class="line">        r = n / (n / l);</span><br><span class="line">        rt -= (r - l + <span class="number">1</span>) * <span class="built_in">calcsmu</span>(n / l);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mem[n] = rt;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">frac</span> &#123;</span><br><span class="line">    <span class="type">int</span> p, q;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span>&lt;(<span class="type">const</span> frac&amp; b) <span class="type">const</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1ll</span> * p * b.q &lt; <span class="number">1ll</span> * q * b.p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">ll <span class="title">G</span><span class="params">(ll a, ll b, ll c, ll n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (a == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1ll</span> * n * (b / c);</span><br><span class="line">    <span class="keyword">if</span> (a &gt; c || b &gt; c) <span class="keyword">return</span> <span class="number">1ll</span> * n * (n + <span class="number">1</span>) / <span class="number">2</span> * (a / c) + (<span class="number">1ll</span> * (n + <span class="number">1</span>) * (b / c)) + <span class="built_in">G</span>(a % c, b % c, c, n);</span><br><span class="line">    ll m = (<span class="number">1ll</span> * a * n + b) / c;</span><br><span class="line">    <span class="keyword">return</span> (<span class="number">1ll</span> * n * m) - <span class="built_in">G</span>(c, c - b - <span class="number">1</span>, a, m - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ll <span class="title">F</span><span class="params">(frac a)</span> </span>&#123;</span><br><span class="line">    ll res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> l = <span class="number">1</span>, r; l &lt;= n; l = r + <span class="number">1</span>) &#123;</span><br><span class="line">        r = n / (n / l);</span><br><span class="line">        res += <span class="number">1ll</span> * (<span class="built_in">calcsmu</span>(r) - <span class="built_in">calcsmu</span>(l - <span class="number">1</span>)) * <span class="built_in">G</span>(a.p, <span class="number">0</span>, a.q, n / l);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">sieve</span>();</span><br><span class="line">    ll k = <span class="number">0</span>, lim = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">read</span>(n, k);</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">2</span> * lim &lt;= n) lim *= <span class="number">2</span>;</span><br><span class="line">    frac l, r, a, b;</span><br><span class="line">    l.p = <span class="number">0</span>, l.q = <span class="number">1</span>, r.p = <span class="number">1</span>, r.q = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">        a.p = l.p + r.p, a.q = l.q + r.q;</span><br><span class="line">        ll t = <span class="built_in">F</span>(a);</span><br><span class="line">        <span class="keyword">if</span> (t == k) &#123;</span><br><span class="line">            <span class="built_in">write</span>(a.p, <span class="string">&#x27; &#x27;</span>, a.q, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (t &lt; k) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = lim; i; i &gt;&gt;= <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> ((n - l.q) / r.q &lt; i) <span class="keyword">continue</span>;</span><br><span class="line">                b.p = l.p + <span class="number">1ll</span> * i * r.p;</span><br><span class="line">                b.q = l.q + <span class="number">1ll</span> * i * r.q;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">F</span>(b) &lt; k) l = b;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = lim; i; i &gt;&gt;= <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> ((n - r.q) / l.q &lt; i) <span class="keyword">continue</span>;</span><br><span class="line">                b.p = r.p + <span class="number">1ll</span> * i * l.p;</span><br><span class="line">                b.q = r.q + <span class="number">1ll</span> * i * l.q;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">F</span>(b) &gt; k) r = b;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>写法二：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> eps 1e-9</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n,k,c[<span class="number">100005</span>];</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">S</span><span class="params">(<span class="type">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)	c[i]=<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=n;i&gt;=<span class="number">1</span>;i--)</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> t=i*<span class="number">2</span>;t&lt;=n;t+=i)</span><br><span class="line">      c[i]-=c[t];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">int</span> <span class="title">C</span><span class="params">(<span class="type">double</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="type">int</span> ans=<span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)	ans+=c[i]*<span class="built_in">int</span>(x*i);</span><br><span class="line">  <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">find</span><span class="params">(<span class="type">double</span> x,<span class="type">int</span> &amp;p,<span class="type">int</span> &amp;q)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    p=<span class="number">0</span>,q=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">  &#123;</span><br><span class="line">        <span class="type">int</span> tmp=x*i;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">abs</span>(<span class="built_in">double</span>(p)/<span class="built_in">double</span>(q)-x)&gt;<span class="built_in">abs</span>(<span class="built_in">double</span>(tmp)/<span class="built_in">double</span>(i)-x))</span><br><span class="line">            p=tmp,q=i;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">int</span> <span class="title">read</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="type">int</span> x=<span class="number">0</span>,f=<span class="number">1</span>;<span class="type">char</span> c=<span class="built_in">getchar</span>();</span><br><span class="line">  <span class="keyword">while</span>(c&lt;<span class="string">&#x27;0&#x27;</span>||c&gt;<span class="string">&#x27;9&#x27;</span>)&#123;<span class="keyword">if</span>(c==<span class="string">&#x27;-&#x27;</span>)f=-f;c=<span class="built_in">getchar</span>();&#125;</span><br><span class="line">  <span class="keyword">while</span>(c&gt;=<span class="string">&#x27;0&#x27;</span>&amp;&amp;c&lt;=<span class="string">&#x27;9&#x27;</span>)&#123;x=x*<span class="number">10</span>+c-<span class="string">&#x27;0&#x27;</span>;c=<span class="built_in">getchar</span>();&#125;</span><br><span class="line">  <span class="keyword">return</span> x*f;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    n=<span class="built_in">read</span>(),k=<span class="built_in">read</span>();</span><br><span class="line">    <span class="built_in">S</span>(n);</span><br><span class="line">    <span class="type">double</span> l=<span class="number">0</span>,r=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(r-l&gt;eps)</span><br><span class="line">  &#123;</span><br><span class="line">        <span class="type">double</span> mid=(l+r)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">C</span>(mid)&lt;k)  l=mid;</span><br><span class="line">    <span class="keyword">else</span> r=mid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> p,q;</span><br><span class="line">    <span class="built_in">find</span>(r,p,q);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d %d\n&quot;</span>,p,q);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>数论</category>
+      </categories>
+      <tags>
+        <tag>整除分块</tag>
+        <tag>反演</tag>
+        <tag>数论</tag>
+        <tag>倍增</tag>
+        <tag>筛法</tag>
+        <tag>莫比乌斯反演</tag>
+        <tag>Stern-Brocot树</tag>
+        <tag>类欧几里得算法</tag>
+      </tags>
+  </entry>
 </search>
