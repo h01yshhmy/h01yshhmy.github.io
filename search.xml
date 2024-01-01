@@ -8036,4 +8036,70 @@ class="math inline">\(u,v\)</span> 方向上的边可以树上倍增解决。</p
         <tag>基环树</tag>
       </tags>
   </entry>
+  <entry>
+    <title>P6624</title>
+    <url>/2024/01/01/P6624/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P6624">P6624 [省选联考 2020
+A 卷] 作业题</a></p>
+<span id="more"></span>
+<p>二合一题。</p>
+<p>在数论无关的地方出现了 <span
+class="math inline">\(\gcd\)</span>。</p>
+<p>众所周知： <span class="math display">\[
+\varphi*1=\textrm{id}
+\]</span> 做欧拉反演，变式子，有： <span class="math display">\[
+\begin{aligned}
+&amp;\sum_{T}\left(\sum_{i=1}^{n-1}w_{e_i}\right)\times
+\gcd(w_{e_1},\cdots,w_{e_{n-1}})\\
+=&amp;\sum_{T}\left(\sum_{i=1}^{n-1}w_{e_i}\right)\times
+\sum_{d|w_{e_1},\cdots,d|w_{e_{n-1}}}\varphi(d)\\
+=&amp;\sum_{d}\varphi(d)\sum_{T,\;d|w_{e_1},\cdots,d|w_{e_{n-1}}}\left(\sum_{i=1}^{n-1}w_{e_i}\right)
+\end{aligned}
+\]</span> 考虑内层如何计算。</p>
+<p>矩阵树定理所计算的是： <span class="math display">\[
+\sum_{T}\prod_{e\in E}w_e
+\]</span> 我们需要的是： <span class="math display">\[
+\sum_{T}\sum_{e\in E}w_e
+\]</span> 如何在乘法中找加法？需要借用生成函数的思想。</p>
+<p>这里将边权 <span class="math inline">\(w\)</span>
+变成一个多项式，或是向量，怎么理解都行。</p>
+<p>对于 <span class="math inline">\(F(x)=w_ex+1\)</span>，容易发现：
+<span class="math display">\[
+[x^1]\prod_{e\in E} F(x)=\sum_{e\in E}w_e
+\]</span> 所以维护一个多项式（实际上就两项）矩阵，算任意 <span
+class="math inline">\(n-1\)</span>
+阶主子式的行列式，取出一次项系数即可。</p>
+<p>对于多项式加减，直接对应加减。</p>
+<p>多项式乘：<span
+class="math inline">\((a+bx)(c+dx)=ac+(ad+bc)x\)</span>。</p>
+<p>多项式除：<span
+class="math inline">\(\dfrac{a+bx}{c+dx}=\dfrac{a}{c}+\dfrac{bc-ad}{c^2}x\)</span>。</p>
+<p>直接求逆元就行。</p>
+<p>回到外层的约束。</p>
+<p>枚举 <span class="math inline">\(d\)</span>，将满足 <span
+class="math inline">\(d|w_e\)</span> 的 <span
+class="math inline">\(e\)</span>
+加入矩阵，算出答案后全部加起来就好。</p>
+<p>注意处理 <span class="math inline">\(|E|&lt;n-1\)</span>
+的情况，也就是图一定不连通的情况，这样就不用跑矩阵树了（贡献肯定是 <span
+class="math inline">\(0\)</span>），时间得到优化。</p>
+<p>可以预处理一下每个 <span class="math inline">\(d\)</span> 对应的
+<span class="math inline">\(|E|\)</span>，根号的复杂度。</p>
+<p>时间复杂度上界为 <span
+class="math inline">\(O(n\sqrt{w}+\frac{\sum\sigma_0(w)}{n-1}\times
+n^3)=O(n^2\sum\sigma_0(w))\)</span>，实际比较快。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">35</span>,mod=<span class="number">998244353</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qpow</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> res=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(b)&#123;</span><br><span class="line">        <span class="keyword">if</span>(b&amp;<span class="number">1</span>)res=<span class="number">1ll</span>*res*a%mod;</span><br><span class="line">        a=<span class="number">1ll</span>*a*a%mod;</span><br><span class="line">        b&gt;&gt;=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">poly</span>&#123;</span><br><span class="line">    <span class="type">int</span> x,y;</span><br><span class="line">    <span class="built_in">poly</span>(<span class="type">int</span> _x=<span class="number">0</span>,<span class="type">int</span> _y=<span class="number">0</span>)&#123;x=_x,y=_y;&#125;</span><br><span class="line">    poly <span class="keyword">operator</span>+(<span class="type">const</span> poly&amp; b)<span class="type">const</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">poly</span>((x+b.x)%mod,(y+b.y)%mod);</span><br><span class="line">    &#125;</span><br><span class="line">    poly <span class="keyword">operator</span>-(<span class="type">const</span> poly&amp; b)<span class="type">const</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">poly</span>((x-b.x+mod)%mod,(y-b.y+mod)%mod);</span><br><span class="line">    &#125;</span><br><span class="line">    poly <span class="keyword">operator</span>*(<span class="type">const</span> poly&amp; b)<span class="type">const</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">poly</span>(<span class="number">1ll</span>*x*b.x%mod,(<span class="number">1ll</span>*x*b.y+<span class="number">1ll</span>*y*b.x)%mod);</span><br><span class="line">    &#125;</span><br><span class="line">    poly <span class="keyword">operator</span>/(<span class="type">const</span> poly&amp; b)<span class="type">const</span>&#123;</span><br><span class="line">        <span class="type">static</span> poly c;</span><br><span class="line">        <span class="type">int</span> ix=<span class="built_in">qpow</span>(b.x,mod<span class="number">-2</span>);</span><br><span class="line">        c.x=<span class="number">1ll</span>*x*ix%mod;</span><br><span class="line">        c.y=((<span class="number">1ll</span>*y*b.x<span class="number">-1ll</span>*x*b.y)%mod+mod)%mod*ix%mod*ix%mod;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">Gauss</span><span class="params">(vector&lt;vector&lt;poly&gt;&gt; g,<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="type">bool</span> rev=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="keyword">if</span>(g[i][i].x==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">rep</span>(j,i+<span class="number">1</span>,n)&#123;</span><br><span class="line">                <span class="keyword">if</span>(g[j][i].x)&#123;</span><br><span class="line">                    rev^=<span class="number">1</span>;</span><br><span class="line">                    <span class="built_in">swap</span>(g[i],g[j]);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        poly inv=<span class="built_in">poly</span>(<span class="number">1</span>,<span class="number">0</span>)/g[i][i];</span><br><span class="line">        <span class="built_in">rep</span>(j,i+<span class="number">1</span>,n)&#123;</span><br><span class="line">            poly d=g[j][i]*inv;</span><br><span class="line">            <span class="built_in">rep</span>(k,i,n)&#123;</span><br><span class="line">                g[j][k]=g[j][k]-d*g[i][k];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">poly <span class="title">ans</span><span class="params">(<span class="number">1</span>,<span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)ans=ans*g[i][i];</span><br><span class="line">    <span class="keyword">if</span>(rev)ans=<span class="built_in">poly</span>()-ans;</span><br><span class="line">    <span class="keyword">return</span> ans.y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> n=<span class="number">0</span>,m=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">read</span>(n,m);</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">x</span><span class="params">(m+<span class="number">1</span>)</span>,<span class="title">y</span><span class="params">(m+<span class="number">1</span>)</span>,<span class="title">w</span><span class="params">(m+<span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="type">int</span> V=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,m)&#123;</span><br><span class="line">        <span class="built_in">read</span>(x[i],y[i],w[i]);</span><br><span class="line">        V=<span class="built_in">max</span>(V,w[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">cnt</span><span class="params">(V+<span class="number">1</span>,<span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> getDiv=[&amp;](<span class="type">int</span> x)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i*i&lt;=x;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(x%i==<span class="number">0</span>)&#123;</span><br><span class="line">                cnt[i]++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(i*i!=x)cnt[x/i]++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">re</span>(i,m)&#123;</span><br><span class="line">        <span class="built_in">getDiv</span>(w[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">phi</span><span class="params">(V+<span class="number">1</span>,<span class="number">0</span>)</span></span>;</span><br><span class="line">    phi[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i,<span class="number">2</span>,V)&#123;</span><br><span class="line">        <span class="keyword">if</span>(phi[i])<span class="keyword">continue</span>;</span><br><span class="line">        phi[i]=i<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=i*<span class="number">2</span>;j&lt;=V;j+=i)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!phi[j])phi[j]=j;</span><br><span class="line">            phi[j]=phi[j]/i*(i<span class="number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">auto</span> getMat=[&amp;](<span class="type">int</span> div)&#123;</span><br><span class="line">        vector&lt;vector&lt;poly&gt;&gt; <span class="built_in">g</span>(n+<span class="number">1</span>,<span class="built_in">vector</span>&lt;poly&gt;(n+<span class="number">1</span>));</span><br><span class="line">        <span class="built_in">re</span>(i,m)&#123;</span><br><span class="line">            <span class="keyword">if</span>(w[i]%div)<span class="keyword">continue</span>;</span><br><span class="line">            <span class="type">int</span> u=x[i],v=y[i];</span><br><span class="line">            g[u][u]=g[u][u]+<span class="built_in">poly</span>(<span class="number">1</span>,w[i]);</span><br><span class="line">            g[v][v]=g[v][v]+<span class="built_in">poly</span>(<span class="number">1</span>,w[i]);</span><br><span class="line">            g[u][v]=g[u][v]-<span class="built_in">poly</span>(<span class="number">1</span>,w[i]);</span><br><span class="line">            g[v][u]=g[v][u]-<span class="built_in">poly</span>(<span class="number">1</span>,w[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> g;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">re</span>(i,V)&#123;</span><br><span class="line">        <span class="keyword">if</span>(cnt[i]&lt;n<span class="number">-1</span>)<span class="keyword">continue</span>;</span><br><span class="line">        ans=(ans+<span class="number">1ll</span>*phi[i]*<span class="built_in">Gauss</span>(<span class="built_in">getMat</span>(i),n<span class="number">-1</span>)%mod)%mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>随机过程与计数</category>
+      </categories>
+      <tags>
+        <tag>计数</tag>
+        <tag>反演</tag>
+        <tag>数论</tag>
+        <tag>欧拉函数</tag>
+        <tag>矩阵树定理</tag>
+      </tags>
+  </entry>
 </search>
