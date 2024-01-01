@@ -27,7 +27,7 @@
 <meta property="og:description" content="P4452 [国家集训队] 航班安排">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-29T02:00:01.000Z">
-<meta property="article:modified_time" content="2023-12-29T02:32:15.996Z">
+<meta property="article:modified_time" content="2024-01-01T10:58:10.158Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="图论">
 <meta property="article:tag" content="网络流">
@@ -160,7 +160,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">140</span>
+          <span class="site-state-item-count">141</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -238,9 +238,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-12-29 10:00:01 / 修改时间：10:32:15" itemprop="dateCreated datePublished" datetime="2023-12-29T10:00:01+08:00">2023-12-29</time>
+      <time title="创建时间：2023-12-29 10:00:01" itemprop="dateCreated datePublished" datetime="2023-12-29T10:00:01+08:00">2023-12-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-01-01 18:58:10" itemprop="dateModified" datetime="2024-01-01T18:58:10+08:00">2024-01-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -300,7 +306,7 @@ class="math inline">\(v\)</span>，就连 <span
 class="math inline">\(up_2\to vp_1\)</span>，流量 <span
 class="math inline">\(+\infty\)</span>，价值 <span
 class="math inline">\(-f\)</span>。</p>
-<p>网络流建模一定要善用枚举，反正瓶颈一般都在求值上。不要被思维定式卡住，边不一定只能向右连，在二分图中可以通过流环去构造结构，也就是“向左”连边。</p>
+<p>网络流建模一定要善用枚举，反正瓶颈一般都在求值上。不要被思维定式卡住，边不一定只能向右连，在建模中可以通过流环去构造结构，也就是“向左”连边。</p>
 <p>注意到一共只有 <span class="math inline">\(k\)</span>
 个飞机，飞机就是流量，所以要新建一个点连向原来的源点，流量 <span
 class="math inline">\(k\)</span>，价值 <span

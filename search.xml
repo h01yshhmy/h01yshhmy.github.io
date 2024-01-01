@@ -7663,7 +7663,7 @@ class="math inline">\(v\)</span>，就连 <span
 class="math inline">\(up_2\to vp_1\)</span>，流量 <span
 class="math inline">\(+\infty\)</span>，价值 <span
 class="math inline">\(-f\)</span>。</p>
-<p>网络流建模一定要善用枚举，反正瓶颈一般都在求值上。不要被思维定式卡住，边不一定只能向右连，在二分图中可以通过流环去构造结构，也就是“向左”连边。</p>
+<p>网络流建模一定要善用枚举，反正瓶颈一般都在求值上。不要被思维定式卡住，边不一定只能向右连，在建模中可以通过流环去构造结构，也就是“向左”连边。</p>
 <p>注意到一共只有 <span class="math inline">\(k\)</span>
 个飞机，飞机就是流量，所以要新建一个点连向原来的源点，流量 <span
 class="math inline">\(k\)</span>，价值 <span
@@ -8060,21 +8060,44 @@ class="math inline">\(\gcd\)</span>。</p>
 \sum_{T}\prod_{e\in E}w_e
 \]</span> 我们需要的是： <span class="math display">\[
 \sum_{T}\sum_{e\in E}w_e
-\]</span> 如何在乘法中找加法？需要借用生成函数的思想。</p>
-<p>这里将边权 <span class="math inline">\(w\)</span>
+\]</span> 如何在乘法中找加法？</p>
+<p>我们需要一种对象，可以通过某种 “与乘法性质相同的运算” 快速获得 <span
+class="math inline">\(\sum w\)</span>。</p>
+<p>都是线性变换。将 <span class="math inline">\(\prod\)</span> 中的
+<span class="math inline">\(w\)</span>
 变成一个多项式，或是向量，怎么理解都行。</p>
 <p>对于 <span class="math inline">\(F(x)=w_ex+1\)</span>，容易发现：
 <span class="math display">\[
 [x^1]\prod_{e\in E} F(x)=\sum_{e\in E}w_e
-\]</span> 所以维护一个多项式（实际上就两项）矩阵，算任意 <span
+\]</span> 所以维护一个多项式（实际上就两项）矩阵，高斯消元算任意 <span
 class="math inline">\(n-1\)</span>
-阶主子式的行列式，取出一次项系数即可。</p>
+阶主子式的行列式，取一次项系数即可。</p>
+<p>思想上和生成函数有点像的。</p>
+<p>在多项式运算中，只需要维护前两项，也就是说，一直在 <span
+class="math inline">\(\textrm{mod}\; x^2\)</span> 意义下进行。</p>
 <p>对于多项式加减，直接对应加减。</p>
 <p>多项式乘：<span
 class="math inline">\((a+bx)(c+dx)=ac+(ad+bc)x\)</span>。</p>
 <p>多项式除：<span
 class="math inline">\(\dfrac{a+bx}{c+dx}=\dfrac{a}{c}+\dfrac{bc-ad}{c^2}x\)</span>。</p>
-<p>直接求逆元就行。</p>
+<p>多项式除的式子是怎么出来的：</p>
+<p>设 <span class="math inline">\(C+Dx=\dfrac{1}{c+dx}\)</span>，即
+<span class="math inline">\((C+Dx)(c+dx)\equiv1\mod x^2\)</span>。</p>
+<p>拆开，<span class="math inline">\(Cc+Cdx+cDx+Ddx^2\equiv1\mod
+x^2\)</span>。</p>
+<p><span class="math inline">\(1\)</span> 是不含 <span
+class="math inline">\(x\)</span> 的常数，<span
+class="math inline">\(Ddx^2\)</span> 被模掉了，易得 <span
+class="math inline">\(Cc=1,\,Cdx+cDx=0\)</span>，即 <span
+class="math inline">\(C=\dfrac{1}{c},\,Cd+cD=0\)</span>。</p>
+<p>代换，有 <span
+class="math inline">\(\dfrac{d}{c}+cD=0\)</span>，易得：<span
+class="math inline">\(D=-\dfrac{d}{c^2}\)</span>。</p>
+<p>综上，<span
+class="math inline">\(C+Dx=\dfrac{1}{c+dx}=\dfrac{1}{c}-\dfrac{dx}{c^2}\)</span>。</p>
+<p>写一下，<span
+class="math inline">\(\dfrac{a+bx}{c+dx}=(a+bx)(\dfrac{1}{c}-\dfrac{dx}{c^2})=\dfrac{a}{c}-\dfrac{adx}{c^2}+\dfrac{bx}{c}-\dfrac{bdx^2}{c^2}=\dfrac{a}{c}+\dfrac{bc-ad}{c^2}\mod
+x^2\)</span>。</p>
 <p>回到外层的约束。</p>
 <p>枚举 <span class="math inline">\(d\)</span>，将满足 <span
 class="math inline">\(d|w_e\)</span> 的 <span
@@ -8100,6 +8123,74 @@ n^3)=O(n^2\sum\sigma_0(w))\)</span>，实际比较快。</p>
         <tag>数论</tag>
         <tag>欧拉函数</tag>
         <tag>矩阵树定理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ABC138F</title>
+    <url>/2024/01/01/ABC138F/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/AT_abc138_f">[ABC138F]
+Coincidence</a></p>
+<span id="more"></span>
+<p>数位DP。</p>
+<p>思考 <span class="math inline">\(y\;\textrm{mod}\;x=x\oplus
+y\)</span> 有啥性质。</p>
+<p>对于两种毫不相关的两种运算的等式，可以先考虑一些不等关系，
+如：它们各自答案的值域，等号两侧在不同关系中的变量要求。</p>
+<p>首先，题目有约束：<span class="math inline">\(x\le y\)</span>。</p>
+<p>对于取模，很显然有 <span
+class="math inline">\(y\;\textrm{mod}\;x&lt;x\)</span>。</p>
+<p>位运算值域的约束可以考虑加减法规定界限，顺便加减法在取模上也有很好的性质：<span
+class="math inline">\((y-x)\;\textrm{mod}\;x=y\;\textrm{mod}\;x\)</span>，不过在这题没啥用。</p>
+<p>对于异或，从二进制位上考虑，显然：<span class="math inline">\(x\oplus
+y\ge y-x\)</span>。</p>
+<p>注意到，当 <span class="math inline">\(x\le y-x\)</span>
+时，取模的最大值一定小于异或最小值，有 <span
+class="math inline">\(y-x&gt;y\;\textrm{mod}\;x\)</span>。</p>
+<p>当 <span class="math inline">\(x&gt;y-x\)</span> 时，有 <span
+class="math inline">\(y-x=y\;\textrm{mod}\;x\)</span>，注意这里和上面的性质不一样，左边不是模意义。</p>
+<p>可以发现，<span class="math inline">\(x\le y-x\)</span> 时没有合法
+<span
+class="math inline">\((x,y)\)</span>，而两个条件互斥且两条件的并是全集，那就只剩第二种情况。</p>
+<p>问题转化为：找 <span class="math inline">\(y-x=x\oplus y\)</span> 的
+<span class="math inline">\((x,y)\)</span> 对数。</p>
+<p><span class="math inline">\(x&gt;y-x\)</span>，即 <span
+class="math inline">\(2x&gt;y\)</span>。</p>
+<p>由于 <span class="math inline">\(x\le
+y\)</span>，在二进制中，容易发现 <span
+class="math inline">\(x,y\)</span> 位数相同，方便我们数位 DP。</p>
+<p>满足 <span class="math inline">\(y-x=x\oplus
+y\)</span>，简单分讨可得，如果 <span class="math inline">\(y\)</span>
+在某一位上为 <span class="math inline">\(1\)</span>，<span
+class="math inline">\(x\)</span> 这一位 <span
+class="math inline">\(0,1\)</span> 均可；否则 <span
+class="math inline">\(x\)</span> 只能取 <span
+class="math inline">\(0\)</span>。</p>
+<p>这东西没法差分，那就将 <span class="math inline">\(L,R\)</span>
+的约束放进状态。</p>
+<p>设 <span class="math inline">\(F(i,down,up)\)</span> 为：<span
+class="math inline">\(x,y\)</span> 都是二进制 <span
+class="math inline">\(i\)</span> 位数，是否碰触到下边界 <span
+class="math inline">\(L\)</span> 和上边界 <span
+class="math inline">\(R\)</span> 的 <span
+class="math inline">\((x,y)\)</span> 对数，转移过程很自然。</p>
+<p>因为 <span class="math inline">\(x\)</span> 需要依照 <span
+class="math inline">\(y\)</span> 来决定自己的 <span
+class="math inline">\(0/1\)</span>，所以转移时先枚举 <span
+class="math inline">\(y\)</span> 再枚举 <span
+class="math inline">\(x\)</span>，数位 DP 经典记忆化一下即可通过。</p>
+<p>答案为 <span class="math inline">\(\sum_i
+F(i,down_0,up_0)\)</span>，<span class="math inline">\(i\)</span>
+为合法的位数。</p>
+<p>时间复杂度 <span class="math inline">\(O(AC)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> int long long</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">65</span>,mod=<span class="number">1e9</span>+<span class="number">7</span>;</span><br><span class="line"><span class="type">int</span> l,r,f[N][<span class="number">2</span>][<span class="number">2</span>];</span><br><span class="line"><span class="type">int</span> bl,br;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">DP</span><span class="params">(<span class="type">int</span> i,<span class="type">int</span> dn,<span class="type">int</span> up)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(i==<span class="number">0</span>)<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(f[i][dn][up]!=<span class="number">-1</span>)<span class="keyword">return</span> f[i][dn][up];</span><br><span class="line">    f[i][dn][up]=<span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> t1=<span class="number">0</span>,t2=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(dn)t1=(l&gt;&gt;(i<span class="number">-1</span>))&amp;<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(up)t2=(r&gt;&gt;(i<span class="number">-1</span>))&amp;<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(t1==<span class="number">1</span>&amp;&amp;t2==<span class="number">0</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(t1==t2)&#123;</span><br><span class="line">        f[i][dn][up]+=<span class="built_in">DP</span>(i<span class="number">-1</span>,dn,up);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        f[i][dn][up]+=<span class="built_in">DP</span>(i<span class="number">-1</span>,<span class="number">0</span>,up)+<span class="built_in">DP</span>(i<span class="number">-1</span>,dn,<span class="number">0</span>)+<span class="built_in">DP</span>(i<span class="number">-1</span>,dn,up);</span><br><span class="line">    &#125;</span><br><span class="line">    f[i][dn][up]%=mod;</span><br><span class="line">    <span class="keyword">return</span> f[i][dn][up];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(l,r);</span><br><span class="line">    <span class="type">int</span> tl=l,tr=r;</span><br><span class="line">    <span class="keyword">while</span>(tl)&#123;bl++,tl&gt;&gt;=<span class="number">1</span>;&#125;</span><br><span class="line">    <span class="keyword">while</span>(tr)&#123;br++,tr&gt;&gt;=<span class="number">1</span>;&#125;</span><br><span class="line">    <span class="built_in">memset</span>(f,<span class="number">-1</span>,<span class="built_in">sizeof</span>(f));</span><br><span class="line">    <span class="type">int</span> ans=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i,bl,br)&#123;</span><br><span class="line">        ans+=<span class="built_in">DP</span>(i<span class="number">-1</span>,i==bl,i==br);</span><br><span class="line">        ans%=mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>:D:P</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+        <tag>数位DP</tag>
       </tags>
   </entry>
 </search>
