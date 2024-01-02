@@ -8193,4 +8193,217 @@ F(i,down_0,up_0)\)</span>，<span class="math inline">\(i\)</span>
         <tag>数位DP</tag>
       </tags>
   </entry>
+  <entry>
+    <title>P3911</title>
+    <url>/2024/01/02/P3911/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P3911">P3911
+最小公倍数之和</a></p>
+<span id="more"></span>
+<p>记 <span class="math inline">\(C_x\)</span> 为 <span
+class="math inline">\(\sum_{i=1}^n[A_i=x]\)</span>，<span
+class="math inline">\(L\)</span> 为 <span
+class="math inline">\(\max_{i=1}^n A_i\)</span>。 <span
+class="math display">\[
+\begin{aligned}
+&amp;\sum_{i=1}^n\sum_{j=1}^n\textrm{lcm}(A_i,A_j)\\
+=&amp;\sum_{i=1}^L\sum_{j=1}^LC_iC_j\times \textrm{lcm}(i,j)\\
+=&amp;\sum_{i=1}^L\sum_{j=1}^L\frac{iC_i\times jC_j}{\gcd(i,j)}\\
+=&amp;\sum_{i=1}^L\sum_{j=1}^L\sum_{k=1}^L\frac{iC_i\times
+jC_j}{k}\times [\gcd(i,j)=k]\\
+=&amp;\sum_{k=1}^Lk^2\sum_{i=1}^{\lfloor\frac{L}{k}\rfloor}\sum_{j=1}^{\lfloor\frac{L}{k}\rfloor}\frac{iC_{ik}\times
+jC_{jk}}{k}\times [\gcd(i,j)=1]\\
+=&amp;\sum_{k=1}^L\sum_{i=1}^{\lfloor\frac{L}{k}\rfloor}\sum_{j=1}^{\lfloor\frac{L}{k}\rfloor}\sum_{d|\gcd(i,j)}\mu(d)\times
+iC_{ik}\times jC_{jk}\times k\\
+=&amp;\sum_{k=1}^Lk\sum_{d=1}^{\lfloor\frac{L}{k}\rfloor}\mu(d)\times
+d^2\sum_{i=1}^{\lfloor\frac{L}{kd}\rfloor}\sum_{j=1}^{\lfloor\frac{L}{kd}\rfloor}
+iC_{ikd}\times jC_{jkd}\\
+=&amp;\sum_{k=1}^Lkd\sum_{kd\le L}\mu(d)\times
+d\sum_{i=1}^{\lfloor\frac{L}{kd}\rfloor}\sum_{j=1}^{\lfloor\frac{L}{kd}\rfloor}
+iC_{ikd}\times jC_{jkd}\\
+=&amp;\sum_{T=1}^LT\sum_{d|T}^{L}\mu(d)\times
+d\sum_{i=1}^{\lfloor\frac{L}{T}\rfloor}\sum_{j=1}^{\lfloor\frac{L}{T}\rfloor}
+iC_{iT}\times jC_{jT}\\
+=&amp;\sum_{T=1}^LT\left(\sum_{d|T}^{L}\mu(d)\times
+d\right)\sum_{i=1}^{\lfloor\frac{L}{T}\rfloor}iC_{iT}\sum_{j=1}^{\lfloor\frac{L}{T}\rfloor}jC_{jT}\\
+=&amp;\sum_{T=1}^LT\left(\sum_{d|T}^{L}\mu(d)\times
+d\right)\left(\sum_{i=1}^{\lfloor\frac{L}{T}\rfloor}iC_{iT}\right)^2
+\end{aligned}
+\]</span> 莫反的经典套路，将枚举的两项 <span
+class="math inline">\(i,j\)</span> 拆出公因数 <span
+class="math inline">\(k,d\)</span>，然后枚举 <span
+class="math inline">\(T=kd\)</span> 并交换求和，使得枚举 <span
+class="math inline">\(d\)</span> 的部分和后面 <span
+class="math inline">\(i,j\)</span>
+部分无关，这样就可以给和式套括号分开算了。</p>
+<p>第一个括号预处理，筛出 <span
+class="math inline">\(\mu\)</span>，枚举倍数做贡献，复杂度 <span
+class="math inline">\(O(L\ln L)\)</span>。</p>
+<p>第二个括号直接暴力算，复杂度为 <span class="math inline">\(L\times
+\sum_{T=1}^L\lfloor\frac{1}{T}\rfloor=O(L\ln L)\)</span>。</p>
+<p>总复杂度 <span class="math inline">\(O(L\ln L)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">5e4</span>+<span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n,A[N],mu[N],np[N],C[N];</span><br><span class="line">ll F[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sieve</span><span class="params">(<span class="type">int</span> lim)</span></span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; prm;</span><br><span class="line">    mu[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i,<span class="number">2</span>,lim)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!np[i])&#123;</span><br><span class="line">            prm.<span class="built_in">pb</span>(i);</span><br><span class="line">            mu[i]=<span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j:prm)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i*j&gt;lim)<span class="keyword">break</span>;</span><br><span class="line">            np[i*j]=<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span>(i%j==<span class="number">0</span>)<span class="keyword">break</span>;</span><br><span class="line">            mu[i*j]=-mu[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(i,lim)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;i*j&lt;=lim;j++)&#123;</span><br><span class="line">            F[i*j]+=i*mu[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">sieve</span>(N<span class="number">-5</span>);</span><br><span class="line">    <span class="built_in">read</span>(n);</span><br><span class="line">    <span class="type">int</span> L=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="built_in">read</span>(A[i]);</span><br><span class="line">        C[A[i]]++;</span><br><span class="line">        L=<span class="built_in">max</span>(L,A[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans=<span class="number">0</span>,sum=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(T,L)&#123;</span><br><span class="line">        sum=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">re</span>(i,L/T)&#123;</span><br><span class="line">            sum+=<span class="number">1ll</span>*i*C[T*i];</span><br><span class="line">        &#125;</span><br><span class="line">        ans+=T*F[T]*sum*sum;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>数论</category>
+      </categories>
+      <tags>
+        <tag>反演</tag>
+        <tag>数论</tag>
+        <tag>莫比乌斯反演</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>240102T3</title>
+    <url>/2024/01/02/240102T3/</url>
+    <content><![CDATA[<p>没有链接，线下模拟赛题。</p>
+<span id="more"></span>
+<h2 id="题面">题面</h2>
+<p>Alice 和 Bob 在玩博弈游戏。</p>
+<p>Alice 和 Bob 分别有两个长为 <span class="math inline">\(n\)</span>
+的序列 <span class="math inline">\(a,b\)</span>。</p>
+<p>游戏过程如下：</p>
+<ul>
+<li><p>当 Alice 操作时，需要选择一个整数 <span
+class="math inline">\(x\)</span> 满足 <span class="math inline">\(x\le
+n\)</span> 且大于 Alice 上次选择的 <span
+class="math inline">\(x\)</span>，然后获得 <span
+class="math inline">\(a_x\)</span> 分。</p></li>
+<li><p>当 Bob 操作时，需要选择一个整数 <span
+class="math inline">\(x\)</span> 满足 <span class="math inline">\(x\le
+n\)</span> 且大于 Bob 上次选择的 <span
+class="math inline">\(x\)</span>，还要不小于上次 Alice
+选择的数字，然后获得 <span class="math inline">\(b_x\)</span>
+分。</p></li>
+<li><p>两人将会交替操作共 <span class="math inline">\(2k\)</span>
+次。</p></li>
+<li><p>若当前玩家无法选择任何一个数字，那么游戏提前结束，得分变为 <span
+class="math inline">\(10^{18}\)</span>。</p></li>
+<li><p>Alice 先手。</p></li>
+</ul>
+<p>和一般博弈游戏不同的是，他们需要合作使得得分总和尽量小，假设都采用最优策略，最终分数和会是多少？</p>
+<h2 id="数据范围">数据范围</h2>
+<p><span class="math inline">\(n\le 10^5;\,a_i,b_i\le
+10^9\)</span>。</p>
+<h2 id="题解">题解</h2>
+<p>官方题解在很多关键地方犯了很多关键错误，强烈谴责，不会写可以不写。</p>
+<p>显然不是博弈题。</p>
+<p>容易发现，题意对选数的约束非常网络流。</p>
+<p>考虑费用流，建立源 <span class="math inline">\(s\)</span>，汇 <span
+class="math inline">\(t\)</span>，以及 <span
+class="math inline">\(n\)</span> 个点 <span
+class="math inline">\(v_{1\cdots n}\)</span>。</p>
+<p>连边：<span class="math inline">\(s\to v_i\)</span>，流量 <span
+class="math inline">\(1\)</span>，费用 <span
+class="math inline">\(a_i\)</span>；<span class="math inline">\(v_i\to
+v_{i+1}\)</span>，流量 <span class="math inline">\(\infty\)</span>，费用
+<span class="math inline">\(0\)</span>；<span
+class="math inline">\(v_i\to t\)</span>，流量 <span
+class="math inline">\(1\)</span>，费用 <span
+class="math inline">\(b_i\)</span>。</p>
+<p>那么一个流量为 <span class="math inline">\(k\)</span> 的 <span
+class="math inline">\(s\to t\)</span>
+流对应一个方案，需要最小化的代价就是费用。</p>
+<p>应该是较为自然的。但是复杂度需要优化。</p>
+<p>使用 wqs二分+模拟费用流。</p>
+<p>设流量为 <span class="math inline">\(x\)</span>，最小费用 <span
+class="math inline">\(f(x)\)</span>
+的图像<strong>下凸</strong>（最大费用是上凸）。</p>
+<p>费用流流量都是 <span
+class="math inline">\(1\)</span>，相当于要选流量个物品，最小化权值和，模型还是比较
+wqs二分 的。</p>
+<p>无法快速计算 <span
+class="math inline">\(f(x)\)</span>，或者说只能跑标准的费用流，那就成暴力了。</p>
+<p>所以要利用 <span class="math inline">\(f(x)\)</span>
+的凸性来做，我们在过程中二分斜率 <span
+class="math inline">\(d\)</span>。</p>
+<p>考虑图像上一个切线 <span
+class="math inline">\(y=dx+c\)</span>，切到了下凸壳某个点 <span
+class="math inline">\((x,f(x))\)</span>。</p>
+<p>有 <span class="math inline">\(f(x)=dx+c\)</span>，也就是 <span
+class="math inline">\(c=f(x)-dx\)</span>。</p>
+<p><span class="math inline">\(f(x)\)</span> 的实际意义是流量为 <span
+class="math inline">\(x\)</span> 的最小费用；<span
+class="math inline">\(-dx\)</span>
+可以理解为：对每一个流量流出来的费用，都扣掉 <span
+class="math inline">\(d\)</span>。也就是说，<span
+class="math inline">\(c\)</span> 相当于对所有费用 <span
+class="math inline">\(-d\)</span>
+后的<strong>最小费用可行流</strong>的费用。</p>
+<p>这张图上的最小费用可行流可以模拟费用流优化，具体过程待会再说。</p>
+<p>为啥要凑 <span class="math inline">\(c\)</span>
+的式子？因为不能直接最小化 <span
+class="math inline">\(f(x)\)</span>，这是一个十分未知的凸函数。而对于切线
+<span class="math inline">\(y=dx+c\)</span>，相比于其他和 <span
+class="math inline">\(f(x)\)</span> 相交的 <span
+class="math inline">\(y=dx+c&#39;\)</span>，切线的 <span
+class="math inline">\(c\)</span> 一定是最小的。</p>
+<p>那么就可以利用这个性质来最小化一些值，也就是最小化 <span
+class="math inline">\(f(x)-dx\)</span>。注意到，因为流量要求恰好为 <span
+class="math inline">\(k\)</span>，最终二分出的斜率对应直线和 <span
+class="math inline">\(f(x)\)</span> 的切点一定是 <span
+class="math inline">\((k,f(k))\)</span>，所以对算出来的 <span
+class="math inline">\(c\)</span> 加上 <span
+class="math inline">\(d_{ans}\times k\)</span> 就是答案，显然 <span
+class="math inline">\(d_{ans}\times k\)</span> 是个定值。</p>
+<p>模拟费用流负责最小化 <span
+class="math inline">\(c=f(x)-dx\)</span>，并给出对于当前 <span
+class="math inline">\(d\)</span>，要多少流量（其实就是切点横坐标）；而二分是根据这个流量，来调整切
+<span class="math inline">\((k,f(k))\)</span> 的切线斜率 <span
+class="math inline">\(d\)</span>（实质上是调整切点横坐标，直到它为 <span
+class="math inline">\(k\)</span>）。</p>
+<p>对于这个调整，具体的，如果流量大于 <span
+class="math inline">\(k\)</span>，太靠右了，向左移动切点，不然就向右移动切点。对应成斜率分别是减小和增大。</p>
+<p>总的来说，二分 <span
+class="math inline">\(d\)</span>，是通过模拟费用流调整 <span
+class="math inline">\(d\)</span> 使得切点为 <span
+class="math inline">\((k,f(k))\)</span>；模拟费用流，是在不断找 <span
+class="math inline">\(c=f(x)-dx\)</span> 的最小值，并为二分提供费用为
+<span class="math inline">\(c_{\min}\)</span> 时的流量，让二分调整 <span
+class="math inline">\(d\)</span>。</p>
+<p>现在写具体怎么模拟最小费用可行流。</p>
+<p>采用动态加点的做法，假设一开始 <span class="math inline">\(v_{1\cdots
+n}\)</span> 都不在图中，依次加入 <span
+class="math inline">\(v_i\)</span>，并更新导出子图的最小费用流。加入
+<span class="math inline">\(v_i\)</span> 时，导出子图加入了 <span
+class="math inline">\((s,v_i),(v_i,t),(v_{i-1},v_i)\)</span>。考虑此时可能产生的负权增广路或环。</p>
+<ul>
+<li><span class="math inline">\(s\to v_j\to v_{j+1}\to \cdots\to v_i\to
+t\)</span>，即选一个 <span class="math inline">\(a\)</span>
+中未被选且满足：<span class="math inline">\(a_j\)</span> 最小、<span
+class="math inline">\(j\le i\)</span> 的 <span
+class="math inline">\(j\)</span>，选取 <span
+class="math inline">\(a_j,\,b_i\)</span>。</li>
+<li><span class="math inline">\(t\to v_j\to v_{j+1}\to \cdots\to v_i\to
+t\)</span>，即选中一个 <span class="math inline">\(b\)</span>
+中未被选中且满足：<span class="math inline">\(b_j\)</span> 最大、<span
+class="math inline">\(j&lt;i\)</span> 的 <span
+class="math inline">\(j\)</span>，去掉 <span
+class="math inline">\(b_j\)</span>，选取 <span
+class="math inline">\(b_i\)</span>。</li>
+</ul>
+<p>所有情况可以分为 <span class="math inline">\((v_i,t)\)</span> 不流 和
+<span class="math inline">\((v_i,t)\)</span>
+流一次这两种情况，后者又有上面两种情况，共三种，取费用最小的一种更新图的最小费用流即可。</p>
+<p>过程可以使用优先队列模拟，复杂度为 <span
+class="math inline">\(O(n\log n\log V)\)</span>。</p>
+<p><code>check</code> 中一些负数，取反，减法，是优先队列的
+<code>cmp</code> 相关，不影响思路。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1e5</span> +<span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n, m;</span><br><span class="line">ll a[N], b[N], sum;</span><br><span class="line">priority_queue&lt;ll&gt;q[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span> <span class="params">(ll lim)</span> </span>&#123;</span><br><span class="line">    sum = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, <span class="number">1</span>) <span class="keyword">while</span>(!q[i].<span class="built_in">empty</span>()) q[i].<span class="built_in">pop</span>();</span><br><span class="line">    <span class="built_in">re</span>(i, n) a[i] -= lim;</span><br><span class="line">    <span class="type">int</span> sz = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n) &#123;</span><br><span class="line">        q[<span class="number">0</span>].<span class="built_in">push</span>(-a[i]);</span><br><span class="line">        ll x = INF;</span><br><span class="line">        <span class="keyword">if</span>(!q[<span class="number">0</span>].<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            ll u = q[<span class="number">0</span>].<span class="built_in">top</span>();</span><br><span class="line">            x = b[i] - u;</span><br><span class="line">        &#125;</span><br><span class="line">        ll y = INF;</span><br><span class="line">        <span class="keyword">if</span>(!q[<span class="number">1</span>].<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            ll u = q[<span class="number">1</span>].<span class="built_in">top</span>();</span><br><span class="line">            y = b[i] - u;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">min</span>(x, y) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(x &lt; y) &#123;</span><br><span class="line">                ++sz;</span><br><span class="line">                sum += x;</span><br><span class="line">                q[<span class="number">0</span>].<span class="built_in">pop</span>();</span><br><span class="line">                q[<span class="number">1</span>].<span class="built_in">push</span>(b[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                sum += y;</span><br><span class="line">                q[<span class="number">1</span>].<span class="built_in">pop</span>();</span><br><span class="line">                q[<span class="number">1</span>].<span class="built_in">push</span>(b[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(i, n) a[i] += lim;</span><br><span class="line">    <span class="keyword">if</span>(sz &gt;= m) sum += sz - m;</span><br><span class="line">    <span class="keyword">return</span> sz &gt;= m;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span> <span class="params">()</span> </span>&#123; </span><br><span class="line">    <span class="built_in">read</span>(n), <span class="built_in">read</span>(m);</span><br><span class="line">    <span class="built_in">re</span>(i, n) <span class="built_in">read</span>(a[i]);</span><br><span class="line">    <span class="built_in">re</span>(i, n) <span class="built_in">read</span>(b[i]);</span><br><span class="line">    ll l = <span class="number">0</span>, r = <span class="number">2e9</span>, res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(l &lt;= r) &#123;</span><br><span class="line">        ll mid = (l +r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">check</span>(mid)) res = mid, r = mid - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> l = mid + <span class="number">1</span>;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="built_in">check</span>(res);</span><br><span class="line">    <span class="built_in">write</span>(sum + <span class="number">1ll</span> * m * res,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>GraphTA</category>
+      </categories>
+      <tags>
+        <tag>图论</tag>
+        <tag>网络流</tag>
+        <tag>凸包</tag>
+        <tag>二分</tag>
+        <tag>费用流</tag>
+        <tag>优先队列</tag>
+        <tag>模拟费用流</tag>
+        <tag>wqs二分</tag>
+      </tags>
+  </entry>
 </search>
