@@ -8293,16 +8293,17 @@ class="math inline">\(10^{18}\)</span>。</p></li>
 class="math inline">\(t\)</span>，以及 <span
 class="math inline">\(n\)</span> 个点 <span
 class="math inline">\(v_{1\cdots n}\)</span>。</p>
-<p>连边：<span class="math inline">\(s\to v_i\)</span>，流量 <span
+<p>连边：<span class="math inline">\((s,v_i)\)</span>，流量 <span
 class="math inline">\(1\)</span>，费用 <span
-class="math inline">\(a_i\)</span>；<span class="math inline">\(v_i\to
-v_{i+1}\)</span>，流量 <span class="math inline">\(\infty\)</span>，费用
-<span class="math inline">\(0\)</span>；<span
-class="math inline">\(v_i\to t\)</span>，流量 <span
+class="math inline">\(a_i\)</span>；<span
+class="math inline">\((v_i,v_{i+1})\)</span>，流量 <span
+class="math inline">\(\infty\)</span>，费用 <span
+class="math inline">\(0\)</span>；<span
+class="math inline">\((v_i,t)\)</span>，流量 <span
 class="math inline">\(1\)</span>，费用 <span
 class="math inline">\(b_i\)</span>。</p>
-<p>那么一个流量为 <span class="math inline">\(k\)</span> 的 <span
-class="math inline">\(s\to t\)</span>
+<p>边均为双向。那么一个流量为 <span class="math inline">\(k\)</span> 的
+<span class="math inline">\(s-t\)</span>
 流对应一个方案，需要最小化的代价就是费用。</p>
 <p>应该是较为自然的。但是复杂度需要优化。</p>
 <p>使用 wqs二分+模拟费用流。</p>
@@ -8312,12 +8313,10 @@ class="math inline">\(f(x)\)</span>
 <p>费用流流量都是 <span
 class="math inline">\(1\)</span>，相当于要选流量个物品，最小化权值和，模型还是比较
 wqs二分 的。</p>
-<p>无法快速计算 <span
-class="math inline">\(f(x)\)</span>，或者说只能跑标准的费用流，那就成暴力了。</p>
-<p>所以要利用 <span class="math inline">\(f(x)\)</span>
-的凸性来做，我们在过程中二分斜率 <span
-class="math inline">\(d\)</span>。</p>
-<p>考虑图像上一个切线 <span
+<p>钦定流量的费用流很难模拟，复杂度不行。所以要利用 <span
+class="math inline">\(f(x)\)</span> 的凸性来做，我们在过程中二分切线斜率
+<span class="math inline">\(d\)</span>。</p>
+<p>考虑 <span class="math inline">\(f(x)\)</span> 图像上一个切线 <span
 class="math inline">\(y=dx+c\)</span>，切到了下凸壳某个点 <span
 class="math inline">\((x,f(x))\)</span>。</p>
 <p>有 <span class="math inline">\(f(x)=dx+c\)</span>，也就是 <span
@@ -8331,37 +8330,33 @@ class="math inline">\(c\)</span> 相当于对所有费用 <span
 class="math inline">\(-d\)</span>
 后的<strong>最小费用可行流</strong>的费用。</p>
 <p>这张图上的最小费用可行流可以模拟费用流优化，具体过程待会再说。</p>
-<p>为啥要凑 <span class="math inline">\(c\)</span>
-的式子？因为不能直接最小化 <span
-class="math inline">\(f(x)\)</span>，这是一个十分未知的凸函数。而对于切线
-<span class="math inline">\(y=dx+c\)</span>，相比于其他和 <span
+<p>如何让只知道斜率的直线切 <span
+class="math inline">\(f(x)\)</span>？为什么要凑 <span
+class="math inline">\(c\)</span> 的式子？</p>
+<p>有性质：对于切线 <span
+class="math inline">\(y=dx+c\)</span>，相比于其他和 <span
 class="math inline">\(f(x)\)</span> 相交的 <span
 class="math inline">\(y=dx+c&#39;\)</span>，切线的 <span
 class="math inline">\(c\)</span> 一定是最小的。</p>
-<p>那么就可以利用这个性质来最小化一些值，也就是最小化 <span
-class="math inline">\(f(x)-dx\)</span>。注意到，因为流量要求恰好为 <span
+<p>所以我们用模拟费用流最小化 <span class="math inline">\(c\)</span>
+的时候，就相当于算出了切线。注意到，因为流量要求恰好为 <span
 class="math inline">\(k\)</span>，最终二分出的斜率对应直线和 <span
 class="math inline">\(f(x)\)</span> 的切点一定是 <span
 class="math inline">\((k,f(k))\)</span>，所以对算出来的 <span
 class="math inline">\(c\)</span> 加上 <span
 class="math inline">\(d_{ans}\times k\)</span> 就是答案，显然 <span
 class="math inline">\(d_{ans}\times k\)</span> 是个定值。</p>
-<p>模拟费用流负责最小化 <span
+<p>总而言之：二分 <span
+class="math inline">\(d\)</span>；模拟费用流最小化 <span
 class="math inline">\(c=f(x)-dx\)</span>，并给出对于当前 <span
-class="math inline">\(d\)</span>，要多少流量（其实就是切点横坐标）；而二分是根据这个流量，来调整切
-<span class="math inline">\((k,f(k))\)</span> 的切线斜率 <span
-class="math inline">\(d\)</span>（实质上是调整切点横坐标，直到它为 <span
-class="math inline">\(k\)</span>）。</p>
+class="math inline">\(c_{\min}\)</span>
+的费用，要多少流量（其实就是切点横坐标）；而根据这个流量，二分再去调整
+<span class="math inline">\(d\)</span>（实质上是调整切点横坐标，直到它为
+<span class="math inline">\(k\)</span>）。</p>
 <p>对于这个调整，具体的，如果流量大于 <span
 class="math inline">\(k\)</span>，太靠右了，向左移动切点，不然就向右移动切点。对应成斜率分别是减小和增大。</p>
-<p>总的来说，二分 <span
-class="math inline">\(d\)</span>，是通过模拟费用流调整 <span
-class="math inline">\(d\)</span> 使得切点为 <span
-class="math inline">\((k,f(k))\)</span>；模拟费用流，是在不断找 <span
-class="math inline">\(c=f(x)-dx\)</span> 的最小值，并为二分提供费用为
-<span class="math inline">\(c_{\min}\)</span> 时的流量，让二分调整 <span
-class="math inline">\(d\)</span>。</p>
-<p>现在写具体怎么模拟最小费用可行流。</p>
+<p>上述是 wqs二分 的原理。</p>
+<p>如何模拟最小费用可行流？</p>
 <p>采用动态加点的做法，假设一开始 <span class="math inline">\(v_{1\cdots
 n}\)</span> 都不在图中，依次加入 <span
 class="math inline">\(v_i\)</span>，并更新导出子图的最小费用流。加入
@@ -8385,6 +8380,7 @@ class="math inline">\(b_i\)</span>。</li>
 <p>所有情况可以分为 <span class="math inline">\((v_i,t)\)</span> 不流 和
 <span class="math inline">\((v_i,t)\)</span>
 流一次这两种情况，后者又有上面两种情况，共三种，取费用最小的一种更新图的最小费用流即可。</p>
+<p>本质上是反悔贪心。</p>
 <p>过程可以使用优先队列模拟，复杂度为 <span
 class="math inline">\(O(n\log n\log V)\)</span>。</p>
 <p><code>check</code> 中一些负数，取反，减法，是优先队列的
@@ -8399,10 +8395,81 @@ class="math inline">\(O(n\log n\log V)\)</span>。</p>
         <tag>图论</tag>
         <tag>网络流</tag>
         <tag>凸包</tag>
+        <tag>贪心</tag>
         <tag>二分</tag>
         <tag>费用流</tag>
         <tag>优先队列</tag>
         <tag>模拟费用流</tag>
+        <tag>wqs二分</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P5308</title>
+    <url>/2024/01/03/P5308/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P5308">P5308
+[COCI2018-2019#4] Akvizna</a></p>
+<span id="more"></span>
+<p>显然DP。</p>
+<p>有很自然的设计：</p>
+<p>设 <span class="math inline">\(f(i,j)\)</span>
+为<strong>倒数</strong>第 <span class="math inline">\(i\)</span>
+轮（倒着正着转移而已，正着比较顺手，所以倒着做了，没本质区别），当前场上还剩
+<span class="math inline">\(j\)</span> 个对手的最多奖金。注意是还剩，这
+<span class="math inline">\(j\)</span> 个对手要留着。 <span
+class="math display">\[
+f(i,j)=\max_{p=0}^{j-1}f(i-1,p)+\frac{j-p}{j}
+\]</span> <span class="math inline">\(p\)</span>
+是枚举这一轮剩下多少。直接做是 <span
+class="math inline">\(O(n^2k)\)</span> 的。</p>
+<p>观察转移式，容易发现，<span
+class="math inline">\(\frac{j-p}{j}\)</span> 对于固定的 <span
+class="math inline">\(j\)</span> 来说有单调性。</p>
+<p>对于决策 <span class="math inline">\(0\le q&lt;p\le j-1\)</span>，有
+<span class="math inline">\(p\)</span> 优于 <span
+class="math inline">\(q\)</span>，即： <span class="math display">\[
+\begin{aligned}
+f(i,p)+\frac{j-p}{j}&amp;&gt;f(i,q)+\frac{j-q}{j}\\
+f(i,p)-f(i,q)&amp;&gt;\frac{p-q}{j}\\
+\frac{f(i,p)-f(i,q)}{p-q}&amp;&gt;\frac{1}{j}
+\end{aligned}
+\]</span> 斜率形式。</p>
+<p>单调队列维护这个上凸壳。使队头最优，保证队列中斜率 <span
+class="math inline">\(\le \frac{1}{j}\)</span>
+且单减。容易发现满足我们的需求。</p>
+<p>复杂度 <span class="math inline">\(O(nk)\)</span>，还是不行。</p>
+<p>恰好 <span class="math inline">\(k\)</span>，想到 wqs二分。</p>
+<p>设 <span class="math inline">\(g(i)\)</span> 为恰好 <span
+class="math inline">\(i\)</span> 轮的最优解，就是前面的第一维。</p>
+<p>容易发现 <span class="math inline">\(g(i)\)</span>
+是个<strong>上凸壳</strong>（打表或者瞪眼法或者注意到或者搞成费用流，凭感觉吧）。</p>
+<p>按照套路，用斜率为 <span class="math inline">\(d\)</span> 的直线
+<span class="math inline">\(l\)</span> 去切 <span
+class="math inline">\(g(i)\)</span> 图像。切点为 <span
+class="math inline">\((k,g(k))\)</span> 时满足恰好 <span
+class="math inline">\(k\)</span> 个。</p>
+<p>找切线还需要截距。有 <span
+class="math inline">\(dx+b=g(x)\)</span>，变形，得 <span
+class="math inline">\(g(x)-dx=b\)</span>。</p>
+<p><span class="math inline">\(g(x)-dx\)</span>
+的实际意义就是对每一轮的贡献都减去 <span
+class="math inline">\(d\)</span>。</p>
+<p>上凸壳的切线截距一定是所有斜率相同的有交点的直线中最大的。DP最大化
+<span class="math inline">\(g(x)-dx\)</span>
+就可以求出截距，过程中算出需要多少轮（切点横坐标）。</p>
+<p>不断二分直到直线切 <span class="math inline">\((k,g(k))\)</span>
+即可，答案为 <span class="math inline">\(b_{ans}+d_{ans}\times
+k\)</span>。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log V)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> eps 1e-12</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n, k, cnt[N];</span><br><span class="line"><span class="type">int</span> q[N], head, tail;</span><br><span class="line">ld f[N];</span><br><span class="line"><span class="function"><span class="keyword">inline</span> ld <span class="title">slope</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (f[x] - f[y]) / (x - y);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">check</span><span class="params">(ld d)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    q[head = tail = <span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (; head &lt; tail &amp;&amp; <span class="built_in">slope</span>(q[head], q[head + <span class="number">1</span>]) - <span class="number">1.0</span> / i &gt; eps; ++head);</span><br><span class="line">        f[i] = f[q[head]] + (ld)(i - q[head]) / i - d;</span><br><span class="line">        cnt[i] = cnt[q[head]] + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (; head &lt; tail &amp;&amp; <span class="built_in">slope</span>(q[tail - <span class="number">1</span>], q[tail]) - <span class="built_in">slope</span>(q[tail], i) &lt; -eps; --tail);</span><br><span class="line">        q[++tail] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> cnt[n] &gt;= k;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; k;</span><br><span class="line">    ld l = <span class="number">0</span>, r = <span class="number">1</span>, mid = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, <span class="number">200</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">check</span>(mid))</span><br><span class="line">            l = mid;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            r = mid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">check</span>(l);</span><br><span class="line">    cout &lt;&lt; fixed &lt;&lt; <span class="built_in">setprecision</span>(<span class="number">9</span>) &lt;&lt; f[n] + k * mid &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>DP的优化</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+        <tag>单调队列</tag>
+        <tag>斜率优化</tag>
         <tag>wqs二分</tag>
       </tags>
   </entry>
