@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"h01yshhmy.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="P3345 [ZJOI2015] 幻想乡战略游戏">
+<meta property="og:type" content="article">
+<meta property="og:title" content="P3345">
+<meta property="og:url" content="https://h01yshhmy.github.io/2023/12/04/P3345/index.html">
+<meta property="og:site_name" content="h01yshhmy">
+<meta property="og:description" content="P3345 [ZJOI2015] 幻想乡战略游戏">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-12-04T04:08:08.000Z">
+<meta property="article:modified_time" content="2023-12-04T07:19:49.211Z">
+<meta property="article:author" content="Untitled-1">
+<meta property="article:tag" content="图论">
+<meta property="article:tag" content="点分治">
+<meta property="article:tag" content="点分树">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://h01yshhmy.github.io/2023/12/04/P3345/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://h01yshhmy.github.io/2023/12/04/P3345/","path":"2023/12/04/P3345/","title":"P3345"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>P3345 | h01yshhmy</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">h01yshhmy</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">OI Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Untitled-1"
+      src="/images/1.png">
+  <p class="site-author-name" itemprop="name">Untitled-1</p>
+  <div class="site-description" itemprop="description">学生 OIer Gamer</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">162</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">114</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/h01yshhmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;h01yshhmy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/416442" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;416442" rel="noopener me" target="_blank">Luogu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://h01yshhmy.github.io/2023/12/04/P3345/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.png">
+      <meta itemprop="name" content="Untitled-1">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="h01yshhmy">
+      <meta itemprop="description" content="学生 OIer Gamer">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="P3345 | h01yshhmy">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          P3345
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-12-04 12:08:08 / 修改时间：15:19:49" itemprop="dateCreated datePublished" datetime="2023-12-04T12:08:08+08:00">2023-12-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">题解</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3345">P3345 [ZJOI2015]
+幻想乡战略游戏</a></p>
+<span id="more"></span>
+<p>其实整道题从头到尾都是在容斥。</p>
+<p>题意：维护带点权，边权的树，<span class="math inline">\(m\)</span>
+次单点点权加，<span
+class="math inline">\(f(x)=\sum\limits_{i=1}^ndis(x,i)\times
+w_i\)</span>，<span class="math inline">\(dis\)</span> 为带权距离，<span
+class="math inline">\(w\)</span> 为点权。求每次修改后的 <span
+class="math inline">\(\min\limits_{x\in tree} f(x)\)</span>。</p>
+<p>没有头绪，跳过 怎么求 <span class="math inline">\(f\)</span>
+这个问题，直接考虑：假设当前暂定答案为 <span
+class="math inline">\(f(x)\)</span>，如何确定 <span
+class="math inline">\(y\in son(x)\)</span> 是否满足 <span
+class="math inline">\(f(y)&lt;f(x)\)</span>。</p>
+<p>直接做差，设 <span class="math inline">\(s(x)\)</span> 为 <span
+class="math inline">\(x\)</span> 为根的子树点权之和，因为 <span
+class="math inline">\(dis(x,y)&gt;0\)</span>，有</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\Delta=f(y)-f(x)=(s(x)-2s(y))\times dis(x,y)\\
+&amp;\Delta &lt;0\,\Leftrightarrow s(x)&lt;2s(y)
+\end{aligned}
+\]</span></p>
+<p>这一步画个图很好理解。显然对于某个 <span
+class="math inline">\(x\)</span>，这样的 <span
+class="math inline">\(y\)</span> 至多存在一个。</p>
+<p>可以想到一个暴力：每次询问从根开始向下跑，不断从 <span
+class="math inline">\(x\)</span> 递归到 <span
+class="math inline">\(y\)</span> 内，找不到 <span
+class="math inline">\(y\)</span> 说明 <span
+class="math inline">\(f(x)\)</span> 就是答案。</p>
+<p>但还需要证明一步：如果 <span
+class="math inline">\(f(y)&gt;f(x)\)</span>，那么 <span
+class="math inline">\(\forall y^\prime\in
+son(y),f(y^\prime)&gt;f(x)\)</span> 也一定成立。</p>
+<p>证明：假设 <span class="math inline">\(y^\prime\)</span> 比 <span
+class="math inline">\(x\)</span> 更优，那么有 <span
+class="math inline">\(s(x)&lt;2s(y^\prime),s(x)\ge 2s(y)\)</span>，得到
+<span
+class="math inline">\(s(y^\prime)&gt;s(y)\)</span>，因为点权非负，有
+<span class="math inline">\(s(y^\prime)\le s(y)\)</span>
+，矛盾，得证。</p>
+<p>易得，如果 <span class="math inline">\(\exists
+y,f(y)&lt;f(x)\)</span>，那么最优点一定在 以 <span
+class="math inline">\(y\)</span> 子树内，否则最优点为 <span
+class="math inline">\(x\)</span>。</p>
+<p>所以上面那个暴力是对的，就是太慢了。</p>
+<p>这种子树里找点的算法要马上想到点分治，此题带修，建点分树。</p>
+<p>但是点分树上的儿子并不是原图中儿子，不能直接跳儿子……吗？</p>
+<p>其实完全可以，只不过找 <span class="math inline">\(y\)</span>
+不能在点分树上找，要找原图中的 <span class="math inline">\(y\in
+son(x)\)</span>，如果有更优的 <span
+class="math inline">\(y\)</span>，跳到 <span
+class="math inline">\(y\)</span>
+为根的子树的重心节点在点分树上的位置——就是 <span
+class="math inline">\(x\)</span> 在点分树上的某个对应的儿子。</p>
+<p>容易证明这是对的，因为没有错过子树中的任何一个部分，只是从重心分治了一下而已。</p>
+<p>在树中找儿子是有复杂度保证的，题面一定要看完：</p>
+<blockquote>
+<p>非常神奇的是，对于所有数据，这棵树上的点的度数都不超过 <span
+class="math inline">\(20\)</span>。</p>
+</blockquote>
+<p>显然，点分树上度数也不超过 <span
+class="math inline">\(20\)</span>。</p>
+<p>回到如何求出 <span class="math inline">\(f\)</span>
+的问题，这似乎是个套路（我草写这题的时候被我忘了），注意下文的 <span
+class="math inline">\(fa_x\)</span> 是 <span
+class="math inline">\(x\)</span>
+在<strong>点分树</strong>上的父亲，所有和树结构相关的东西也都是在<strong>点分树</strong>上的。</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;g(x)=\sum_{i\in subtree(x)}dis(x,i)\times A_i\\
+&amp;h(x)=\sum_{i\in subtree(x)}dis(fa_x,i)\times A_i\\
+\end{aligned}
+\]</span></p>
+<p>设 <span class="math inline">\(A\)</span> 为 <span
+class="math inline">\(x\)</span>
+的所有根以外的祖先组成的点集，则有：</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(x)=g(x)+\sum\limits_{i\in
+A}g(fa_i)-h(i)+dis(x,fa_i)\times(s(fa_i)-s(i))
+\end{aligned}
+\]</span></p>
+<p>画图感受一下这个式子，<span class="math inline">\(h,g\)</span>
+代表的这种思想比较有启发意义。</p>
+<p><span class="math inline">\(h\)</span> 实质上是 <span
+class="math inline">\(g\)</span> 中每个系数都加一的结果，设 <span
+class="math inline">\(D\)</span>：<span
+class="math inline">\(fa_i\)</span> 为根子树（除了以 <span
+class="math inline">\(i\)</span> 为根子树部分）构成的点集。</p>
+<p><span class="math inline">\(g(fa_i)-h(i)\)</span> 也就等于 <span
+class="math inline">\(\sum\limits_{u\in D}dis(fa_i,u)\times
+A_u\)</span>。</p>
+<p>加上 <span
+class="math inline">\(dis(x,fa_i)\times(s(fa_i)-s(i))\)</span>，补齐了从
+<span class="math inline">\(dis(fa_i,u)\)</span> 到 <span
+class="math inline">\(dis(x,u)\)</span>
+的系数区别，然后枚举祖先，就可以求出全部 <span
+class="math inline">\(D\)</span> 并起来的答案，也就是 <span
+class="math inline">\(f(x)\)</span> 了。</p>
+<p><span class="math inline">\(|A|\)</span> 是 <span
+class="math inline">\(O(\log n)\)</span> 的，复杂度正确。</p>
+<p>修改就直接在点分树上暴力上跳，改 <span
+class="math inline">\(s,h,g\)</span> 即可。</p>
+<p>用 <span class="math inline">\(O(n\log n)-O(1)\)</span>
+的<code>RMQ</code> 求 <code>LCA</code>，时间复杂度最坏 <span
+class="math inline">\(O(m\times 20\log^2 n)\)</span>，很难卡满。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">const</span> <span class="type">int</span> <span class="title">N</span><span class="params">(<span class="number">1e5</span>+<span class="number">5</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> n,m,x,y,z,siz[N],tot;</span><br><span class="line"><span class="type">int</span> head[N],sum,rt,f[N],vis[N],par[N],cnt,lg[N&lt;&lt;<span class="number">2</span>];</span><br><span class="line">ll dis1[N],dis2[N],sumv[N];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Edge</span>&#123;<span class="type">int</span> u,v,next,w;&#125;G[<span class="number">2</span>*N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Addedge</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> v,<span class="type">int</span> w)</span></span>&#123;</span><br><span class="line">    G[++tot].u=u;G[tot].v=v;G[tot].w=w;G[tot].next=head[u];head[u]=tot;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Orinal_Tree</span>&#123;</span><br><span class="line">    <span class="type">int</span> head[N],cnt,tot;</span><br><span class="line">    <span class="type">int</span> st[N&lt;&lt;<span class="number">2</span>][<span class="number">21</span>],dis[N],tpos[N&lt;&lt;<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">edge</span>&#123;<span class="type">int</span> u,v,next,w;&#125;E[<span class="number">2</span>*N];</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">addedge</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> v,<span class="type">int</span> w)</span></span>&#123;</span><br><span class="line">        E[++tot].u=u;E[tot].v=v;E[tot].w=w;E[tot].next=head[u];head[u]=tot;</span><br><span class="line">        E[++tot].u=v;E[tot].v=u;E[tot].w=w;E[tot].next=head[v];head[v]=tot;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="type">int</span> <span class="title">getdis</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> v)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(tpos[u]&gt;tpos[v])<span class="built_in">swap</span>(u,v);</span><br><span class="line">        <span class="type">int</span> k=lg[tpos[v]-tpos[u]+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">return</span> dis[u]+dis[v]<span class="number">-2</span>*<span class="built_in">min</span>(st[tpos[u]][k],st[tpos[v]-(<span class="number">1</span>&lt;&lt;k)+<span class="number">1</span>][k]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> fa)</span></span>&#123;</span><br><span class="line">        st[++cnt][<span class="number">0</span>]=dis[u];tpos[u]=cnt;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=head[u];i;i=E[i].next)&#123;</span><br><span class="line">            <span class="type">int</span> v=E[i].v;<span class="keyword">if</span>(v==fa)<span class="keyword">continue</span>;</span><br><span class="line">            dis[v]=dis[u]+E[i].w;</span><br><span class="line">            <span class="built_in">dfs</span>(v,u);</span><br><span class="line">            st[++cnt][<span class="number">0</span>]=dis[u];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">initrmq</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="built_in">memset</span>(tpos,<span class="number">0</span>,<span class="built_in">sizeof</span>(tpos));cnt=<span class="number">0</span>;tot=<span class="number">0</span>;dis[<span class="number">1</span>]=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(<span class="number">1</span>,<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;(<span class="number">1</span>&lt;&lt;j)&lt;=cnt;j++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i+(<span class="number">1</span>&lt;&lt;j)<span class="number">-1</span>&lt;=cnt&amp;&amp;i&lt;=cnt;i++)</span><br><span class="line">        st[i][j]=<span class="built_in">min</span>(st[i][j<span class="number">-1</span>],st[i+(<span class="number">1</span>&lt;&lt;(j<span class="number">-1</span>))][j<span class="number">-1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;T;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">getroot</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> fa)</span></span>&#123;</span><br><span class="line">    siz[u]=<span class="number">1</span>;f[u]=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=T.head[u];i;i=T.E[i].next)&#123;</span><br><span class="line">        <span class="type">int</span> v=T.E[i].v;<span class="keyword">if</span>(vis[v]||v==fa)<span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">getroot</span>(v,u);siz[u]+=siz[v];</span><br><span class="line">        f[u]=<span class="built_in">max</span>(f[u],siz[v]);</span><br><span class="line">    &#125;</span><br><span class="line">    f[u]=<span class="built_in">max</span>(f[u],sum-siz[u]);</span><br><span class="line">    <span class="keyword">if</span>(f[u]&lt;f[rt])rt=u;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> fa)</span></span>&#123;</span><br><span class="line">    vis[u]=<span class="number">1</span>;par[u]=fa;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=T.head[u];i;i=T.E[i].next)&#123;</span><br><span class="line">        <span class="type">int</span> v=T.E[i].v;<span class="keyword">if</span>(vis[v])<span class="keyword">continue</span>;</span><br><span class="line">        sum=siz[v];f[<span class="number">0</span>]=siz[v];rt=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">getroot</span>(v,<span class="number">0</span>);<span class="built_in">Addedge</span>(u,rt,v);</span><br><span class="line">        <span class="built_in">work</span>(rt,u);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">ins</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> val)</span></span>&#123;</span><br><span class="line">    sumv[u]+=val;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=u;par[i];i=par[i])&#123;</span><br><span class="line">        <span class="type">int</span> dist=T.<span class="built_in">getdis</span>(par[i],u);</span><br><span class="line">        dis1[par[i]]+=(ll)dist*val;</span><br><span class="line">        dis2[i]+=(ll)dist*val;</span><br><span class="line">        sumv[par[i]]+=val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> ll <span class="title">calc</span><span class="params">(<span class="type">int</span> u)</span></span>&#123;</span><br><span class="line">    ll ans=dis1[u];</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=u;par[i];i=par[i])&#123;</span><br><span class="line">        <span class="type">int</span> dist=T.<span class="built_in">getdis</span>(par[i],u);</span><br><span class="line">        ans+=dis1[par[i]]-dis2[i];</span><br><span class="line">        ans+=dist*(sumv[par[i]]-sumv[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ll <span class="title">query</span><span class="params">(<span class="type">int</span> u)</span></span>&#123;</span><br><span class="line">    ll ans=<span class="built_in">calc</span>(u);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=head[u];i;i=G[i].next)&#123;</span><br><span class="line">        ll tmp=<span class="built_in">calc</span>(G[i].w);</span><br><span class="line">        <span class="keyword">if</span>(tmp&lt;ans)<span class="keyword">return</span> <span class="built_in">query</span>(G[i].v);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(dis1,<span class="number">0</span>,<span class="built_in">sizeof</span>(dis1));</span><br><span class="line">    <span class="built_in">memset</span>(dis2,<span class="number">0</span>,<span class="built_in">sizeof</span>(dis2));</span><br><span class="line">    <span class="built_in">memset</span>(sumv,<span class="number">0</span>,<span class="built_in">sizeof</span>(sumv));</span><br><span class="line">    lg[<span class="number">0</span>]=<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">1</span>;i&lt;(N&lt;&lt;<span class="number">2</span>);i++)lg[i]=lg[i&gt;&gt;<span class="number">1</span>]+<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">read</span>(n,m);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">1</span>;i&lt;n;i++)</span><br><span class="line">    <span class="built_in">read</span>(x,y,z),T.<span class="built_in">addedge</span>(x,y,z);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">init</span>();T.<span class="built_in">initrmq</span>();sum=n;f[<span class="number">0</span>]=n;</span><br><span class="line">    rt=<span class="number">0</span>;<span class="built_in">getroot</span>(<span class="number">1</span>,<span class="number">0</span>);</span><br><span class="line">    <span class="type">int</span> LastOrder=rt;<span class="built_in">work</span>(rt,<span class="number">0</span>);rt=LastOrder;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=m;i++)&#123;</span><br><span class="line">        <span class="built_in">read</span>(x,y);</span><br><span class="line">        <span class="built_in">ins</span>(x,y);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%lld\n&quot;</span>,<span class="built_in">query</span>(rt));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag"># 图论</a>
+              <a href="/tags/%E7%82%B9%E5%88%86%E6%B2%BB/" rel="tag"># 点分治</a>
+              <a href="/tags/%E7%82%B9%E5%88%86%E6%A0%91/" rel="tag"># 点分树</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/12/04/P3703/" rel="prev" title="P3703">
+                  <i class="fa fa-angle-left"></i> P3703
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/12/04/P3676/" rel="next" title="P3676">
+                  P3676 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Untitled-1</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+
+  <a href="https://github.com/h01yshhmy" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

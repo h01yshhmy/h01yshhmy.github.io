@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"h01yshhmy.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="[ABC332G] Not Too Many Balls">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ABC332G">
+<meta property="og:url" content="https://h01yshhmy.github.io/2023/12/11/ABC332G/index.html">
+<meta property="og:site_name" content="h01yshhmy">
+<meta property="og:description" content="[ABC332G] Not Too Many Balls">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-12-11T05:39:41.000Z">
+<meta property="article:modified_time" content="2023-12-11T23:55:32.862Z">
+<meta property="article:author" content="Untitled-1">
+<meta property="article:tag" content="图论">
+<meta property="article:tag" content="DP">
+<meta property="article:tag" content="最大流最小割">
+<meta property="article:tag" content="网络流">
+<meta property="article:tag" content="二分图">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://h01yshhmy.github.io/2023/12/11/ABC332G/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://h01yshhmy.github.io/2023/12/11/ABC332G/","path":"2023/12/11/ABC332G/","title":"ABC332G"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ABC332G | h01yshhmy</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">h01yshhmy</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">OI Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Untitled-1"
+      src="/images/1.png">
+  <p class="site-author-name" itemprop="name">Untitled-1</p>
+  <div class="site-description" itemprop="description">学生 OIer Gamer</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">162</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">114</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/h01yshhmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;h01yshhmy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/416442" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;416442" rel="noopener me" target="_blank">Luogu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://h01yshhmy.github.io/2023/12/11/ABC332G/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.png">
+      <meta itemprop="name" content="Untitled-1">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="h01yshhmy">
+      <meta itemprop="description" content="学生 OIer Gamer">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ABC332G | h01yshhmy">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ABC332G
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-12-11 13:39:41" itemprop="dateCreated datePublished" datetime="2023-12-11T13:39:41+08:00">2023-12-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-12-12 07:55:32" itemprop="dateModified" datetime="2023-12-12T07:55:32+08:00">2023-12-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">题解</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%A2%98%E8%A7%A3/GraphTA/" itemprop="url" rel="index"><span itemprop="name">GraphTA</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/AT_abc332_g">[ABC332G] Not
+Too Many Balls</a></p>
+<span id="more"></span>
+<p>题意：<span class="math inline">\(n\)</span> 种颜色，有 <span
+class="math inline">\(A_i\)</span> 个颜色为 <span
+class="math inline">\(i\)</span> 的球，<span
+class="math inline">\(m\)</span> 个盒子，第 <span
+class="math inline">\(j\)</span> 个盒子最多能放 <span
+class="math inline">\(B_j\)</span> 个球，且第 <span
+class="math inline">\(j\)</span> 个盒子最多只能放 <span
+class="math inline">\(i\times j\)</span> 个颜色为 <span
+class="math inline">\(i\)</span> 的球，最多能放多少个球。</p>
+<p>颜色和盒子之间的配对/所属关系，考虑二分图，球转化成网络中的流量，变成了最大流问题。</p>
+<p>关于连边：设 <span class="math inline">\(x_i\)</span> 为第 <span
+class="math inline">\(i\)</span> 种颜色编号，<span
+class="math inline">\(y_j\)</span> 为第 <span
+class="math inline">\(j\)</span> 个盒子编号。</p>
+<ul>
+<li><span class="math inline">\(1\)</span> 类边：从源点 <span
+class="math inline">\(s\)</span> 到 <span
+class="math inline">\(x_i\)</span> 连容量为 <span
+class="math inline">\(A_i\)</span> 的边。</li>
+<li><span class="math inline">\(2\)</span> 类边：从 <span
+class="math inline">\(y_j\)</span> 到汇点 <span
+class="math inline">\(t\)</span> 连容量为 <span
+class="math inline">\(B_j\)</span> 的边。</li>
+<li><span class="math inline">\(3\)</span> 类边：从 <span
+class="math inline">\(x_i\)</span> 到 <span
+class="math inline">\(y_j\)</span> 连容量为 <span
+class="math inline">\(i\times j\)</span> 的边。</li>
+</ul>
+<p>边数为 <span class="math inline">\(O(nm)\)</span> 量级，跑不动。</p>
+<p>发现很难直接优化这个边数，<span class="math inline">\(i\times
+j\)</span> 的容量不太有性质。</p>
+<p>将求最大流换成求最小割，事实上部分容量有规律的二分图最小割可以通过
+<code>DP</code> 或其他最优化算法优化。</p>
+<p>形式化最小割的式子。</p>
+<p>设 <span
+class="math inline">\(X=\{x_i|i\in[1,n]\},Y=\{y_j|j\in[1,m]\}\)</span>，<span
+class="math inline">\(s-t\)</span> 的一个割等价于：</p>
+<p>选点集 <span class="math inline">\(P\subseteq X,Q\subseteq
+Y\)</span>，不失一般性的，对于 <span class="math inline">\(1\)</span>
+类边，<span class="math inline">\(s\to u\)</span>，将 <span
+class="math inline">\(u\)</span> 不属于 <span
+class="math inline">\(P\)</span> 的边割掉；对于 <span
+class="math inline">\(2\)</span> 类边，<span class="math inline">\(u\to
+v\)</span>，将 <span class="math inline">\(u\)</span> 属于 <span
+class="math inline">\(P\)</span>，<span class="math inline">\(v\)</span>
+不属于 <span class="math inline">\(Q\)</span> 的边割掉；对于 <span
+class="math inline">\(3\)</span> 类边，<span class="math inline">\(v\to
+t\)</span>，将 <span class="math inline">\(v\)</span> 属于 <span
+class="math inline">\(Q\)</span> 的边割掉。</p>
+<p>“左右反过来”同理（在左边留下 <span class="math inline">\(P\)</span>
+或在右边留下 <span class="math inline">\(Q\)</span>），怎么写都行。</p>
+<p>写出式子。</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\min_{P\subseteq X}\min_{Q\subseteq Y}\left(\sum_{x_i\in
+X\backslash P}A_i+\sum_{x_i\in P}\sum_{y_i\in Y\backslash
+Q}ij+\sum_{y_i\in Q}B_j\right)\\
+&amp;\min_{P\subseteq X}\left(\sum_{x_i\in X\backslash
+P}A_i+\min_{Q\subseteq Y}\left(\sum_{x_i\in P}i\sum_{y_i\in Y\backslash
+Q}j+\sum_{y_i\in Q}B_j\right)\right)
+\end{aligned}
+\]</span></p>
+<p>十分关键的，设 <span class="math inline">\(k=\sum_{x_i\in
+P}i\)</span>，<span
+class="math inline">\(S=\binom{n}{2}\)</span>，并枚举 <span
+class="math inline">\(k\)</span>。</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\min_{0\le k\le S}\left(\min_{P\subseteq X}\sum_{x_i\in X\backslash
+P}A_i+\min_{Q\subseteq Y}\left(\sum_{y_i\in Y\backslash
+Q}jk+\sum_{y_i\in Q}B_j\right)\right)
+\end{aligned}
+\]</span></p>
+<p>发现最后一个 <span class="math inline">\(\min\)</span> 本质上是将
+<span class="math inline">\(Y\)</span>
+分成各自可以为空的两部分，写成：</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\min_{0\le k\le S}\left(\min_{P\subseteq X}\sum_{x_i\in X\backslash
+P}A_i+\sum_{y_i\in Y}\min(jk,B_j)\right)\\
+\end{aligned}
+\]</span></p>
+<p>对这两个式子，前者可以通过 <span
+class="math inline">\(O(nS)=O(n^3)\)</span> 的<code>DP</code>解决：设
+<span class="math inline">\(f[i][j]\)</span> 为 <span
+class="math inline">\(X\)</span> 中前 <span
+class="math inline">\(i\)</span> 个数，<span
+class="math inline">\(k=j\)</span> 时的最小值，<span
+class="math inline">\(f[i][j]\)</span> 可以通过 <span
+class="math inline">\(f[i-1][j]+A[i]\)</span> 和 <span
+class="math inline">\(f[i-1][j-i]\)</span> 更新——各自是将 <span
+class="math inline">\(A[i]\)</span> 不放进 <span
+class="math inline">\(P\)</span> 内，或放进 <span
+class="math inline">\(P\)</span> 内，注意这里是补集，是反过来的。<span
+class="math inline">\(n^3\)</span>
+空间稍大，可以滚动数组滚掉第一维。</p>
+<p>对于后者，继续变式。</p>
+<p>将 <span class="math inline">\(B_j\le jk\)</span>
+中下标相同的放在一起，得到 <span
+class="math inline">\(k\ge\frac{B_j}{j}\)</span>，不等号右边是一个定值，枚举的
+<span class="math inline">\(k\)</span> 是递增的，<span
+class="math inline">\(B\)</span> 没有什么顺序要求，可以将 <span
+class="math inline">\(B\)</span> 根据 <span
+class="math inline">\(\frac{B_j}{j}\)</span> 排序，在排序后，两者之中
+<span class="math inline">\(B_j\)</span> 更小的位置就是 <span
+class="math inline">\(B\)</span>
+上的一个前缀，而且这个前缀只会不断变长，用指针维护这个前缀，记一下当前答案即可。</p>
+<p>总复杂度：做<code>DP</code>，对 <span
+class="math inline">\(B\)</span> 排序，枚举 <span
+class="math inline">\(k\)</span>，扫指针，总复杂度为 <span
+class="math inline">\(n^3+m\log m+n^2+m=O(n^3+m\log m)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">const</span> <span class="type">int</span> <span class="title">N</span><span class="params">(<span class="number">505</span>)</span>,<span class="title">M</span><span class="params">(<span class="number">5e5</span>+<span class="number">5</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> n,m,ord[M];</span><br><span class="line">ll a[N],b[M],f[<span class="number">2</span>][N*N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n,m);</span><br><span class="line">    <span class="built_in">re</span>(i,n)<span class="built_in">read</span>(a[i]);</span><br><span class="line">    <span class="built_in">re</span>(i,m)<span class="built_in">read</span>(b[i]);</span><br><span class="line">    <span class="built_in">memset</span>(f,<span class="number">0x3f</span>,<span class="built_in">sizeof</span>(f));</span><br><span class="line">    f[<span class="number">0</span>][<span class="number">0</span>]=<span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> S=n*(n+<span class="number">1</span>)/<span class="number">2</span>,o=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="built_in">memset</span>(f[o],<span class="number">0x3f</span>,<span class="built_in">sizeof</span>(f[o]));</span><br><span class="line">        <span class="built_in">rep</span>(j,<span class="number">0</span>,S)&#123;</span><br><span class="line">            f[o][j]=<span class="built_in">min</span>(f[o][j],f[o^<span class="number">1</span>][j]+a[i]);</span><br><span class="line">            f[o][j+i]=<span class="built_in">min</span>(f[o][j+i],f[o^<span class="number">1</span>][j]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">rep</span>(j,<span class="number">0</span>,S)f[o^<span class="number">1</span>][j]=f[o][j];</span><br><span class="line">        o^=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(i,m)ord[i]=i;</span><br><span class="line">    <span class="built_in">sort</span>(ord+<span class="number">1</span>,ord+m+<span class="number">1</span>,[](<span class="type">int</span> x,<span class="type">int</span> y)&#123;</span><br><span class="line">        <span class="keyword">return</span> b[x]/x&lt;b[y]/y;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="type">int</span> ptr=<span class="number">0</span>;</span><br><span class="line">    ll Sj=<span class="number">1ll</span>*m*(m+<span class="number">1</span>)/<span class="number">2</span>,Sb=<span class="number">0</span>,ans=INF;</span><br><span class="line">    <span class="built_in">rep</span>(k,<span class="number">0</span>,S)&#123;</span><br><span class="line">        <span class="keyword">while</span>(ptr&lt;m&amp;&amp;b[ord[ptr+<span class="number">1</span>]]&lt;=<span class="number">1ll</span>*k*ord[ptr+<span class="number">1</span>])&#123;</span><br><span class="line">            <span class="type">int</span> x=ord[++ptr];</span><br><span class="line">            Sb+=b[x];</span><br><span class="line">            Sj-=x;</span><br><span class="line">        &#125;</span><br><span class="line">        ans=<span class="built_in">min</span>(ans,f[o][k]+Sb+Sj*k);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag"># 图论</a>
+              <a href="/tags/DP/" rel="tag"># DP</a>
+              <a href="/tags/%E6%9C%80%E5%A4%A7%E6%B5%81%E6%9C%80%E5%B0%8F%E5%89%B2/" rel="tag"># 最大流最小割</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E6%B5%81/" rel="tag"># 网络流</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E5%9B%BE/" rel="tag"># 二分图</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/12/11/P7453/" rel="prev" title="P7453">
+                  <i class="fa fa-angle-left"></i> P7453
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/12/11/P4001/" rel="next" title="P4001">
+                  P4001 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Untitled-1</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+
+  <a href="https://github.com/h01yshhmy" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
