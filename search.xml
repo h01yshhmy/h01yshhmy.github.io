@@ -293,6 +293,7 @@ class="math inline">\((l,r)\)</span> 产生贡献。</p>
 看作点，就是二维数点的形式，每次数矩形 <span
 class="math inline">\((L,L),(R,R)\)</span>（副对角线）
 内带权点个数，我们记为 <span class="math inline">\(w(L,R)\)</span>。</p>
+<p>注意到没有对这个二维坐标系的任何修改，不需要树套树，主席树即可。</p>
 <p>注：有个小优化，主席树的时间轴上约束 <span
 class="math inline">\(r\)</span> 而不是 <span
 class="math inline">\(l\)</span>，因为有 <span
@@ -302,7 +303,6 @@ class="math inline">\([l,r]\)</span> 的点，所以不需要差分，直接查�
 <span class="math inline">\(r\)</span> 棵树的 <span
 class="math inline">\([l,r]\)</span> 区间和就是 <span
 class="math inline">\(w(l,r)\)</span>。</p>
-<p>注意到没有对这个二维坐标系的任何修改，不需要树套树，主席树即可。</p>
 <p>现在考虑区间覆盖怎么做。</p>
 <p>划分颜色段，做区间覆盖，容易想到珂朵莉树。</p>
 <p>重点在于对贡献的处理，需要一些珂朵莉树的“熟练度”。</p>
@@ -9583,6 +9583,117 @@ class="math inline">\(v_3\)</span>
         <tag>图论</tag>
         <tag>最短路</tag>
         <tag>斜率优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P4081</title>
+    <url>/2024/01/17/P4081/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P4081">P4081 [USACO17DEC]
+Standing Out from the Herd P</a></p>
+<span id="more"></span>
+<p>两种做法。</p>
+<h2 id="sa">SA</h2>
+<p>将 <span class="math inline">\(n\)</span>
+个串用互不相同的分隔符拼起来，求出 <span
+class="math inline">\(sa,height\)</span>。</p>
+<p>但是先别急，有弱化版 <a
+href="https://www.luogu.com.cn/problem/P2408">P2408
+不同子串个数</a>，回忆一下弱化版。</p>
+<p>答案是： <span class="math display">\[
+\frac{(|S|+1)|S|}{2}-\sum_{i=2}^{|S|}height_i
+\]</span> <span class="math inline">\(sa\)</span> 数组有性质：对于某个
+<span class="math inline">\(sa_p\)</span>，<span
+class="math inline">\(\textrm{LCP}(sa_p,sa_i)\)</span> 和 <span
+class="math inline">\(|p-i|\)</span> 相关，<span
+class="math inline">\(p\)</span> 到 <span
+class="math inline">\(i\)</span> 的距离越长，<span
+class="math inline">\(\textrm{LCP}\)</span> 越短。<span
+class="math inline">\(f_p(i)=\textrm{LCP}(sa_i,sa_p)\)</span>
+是一个“单峰”的函数（所谓离散单峰）。</p>
+<p>考虑 <span class="math inline">\(sa_p\)</span> 的贡献。容易发现，如果
+<span class="math inline">\(\textrm{LCP}(sa_p,sa_i)=T\)</span>，那么
+<span class="math inline">\(T\)</span>
+的任何一个前缀（包括自身）都出现在了 <span
+class="math inline">\(sa_p,sa_i\)</span> 内，共有 <span
+class="math inline">\(|T|\)</span> 个。这些需要减去，对于 <span
+class="math inline">\(p\)</span> 来说，显然要减去最大 <span
+class="math inline">\(|T|\)</span>。又因为 <span
+class="math inline">\(f_p(i)\)</span> 是单峰的，所以减去相邻的 <span
+class="math inline">\(\textrm{LCP}\)</span>（也就是 <span
+class="math inline">\(height\)</span>）即可。</p>
+<p>注意这里只需要考虑 <span
+class="math inline">\(\textrm{LCP}(sa_{i-1},sa_i)\)</span> 而不需要
+<span
+class="math inline">\(\textrm{LCP}(sa_i,sa_{i+1})\)</span>。是一种“出现一个删一个”的思想，只关注当前
+<span class="math inline">\(sa_i\)</span> 和 <span
+class="math inline">\(sa_{i-1}\)</span>
+产生了多少新非法串，后面的交给后人的智慧。</p>
+<p>回到此题，增加了“只属于当前串”的限制。</p>
+<p>其实和“本质不同”的限制本质相同。为什么这么说呢？</p>
+<p>考虑将 <span class="math inline">\(sa\)</span>
+数组按照属于哪个字符串划分成若干个段。</p>
+<p>设当前段是 <span
+class="math inline">\([L,R]\)</span>，根据前文“单峰”部分的性质，对于任意
+<span class="math inline">\(i\in [L,R]\)</span>，<span
+class="math inline">\(\max\limits_{j\not\in[L,R]}f_i(sa_j)\)</span>
+的值一定是 <span class="math inline">\(j=L-1\)</span> 或 <span
+class="math inline">\(j=R+1\)</span> 取到的。</p>
+<p>容易发现，对子串的约束仍然是：设 <span
+class="math inline">\(T=\max\limits_{j\not\in[L,R]}f_i(sa_j)\)</span>，<span
+class="math inline">\(T\)</span> 的任意一个前缀都不能做贡献，共有 $|T| $
+个。</p>
+<p>所以只需要分别求出 <span
+class="math inline">\(g(i)=\max\limits_{j&gt; R_i}f_i(sa_j)\)</span> 和
+<span
+class="math inline">\(q(i)=\max\limits_{j&lt;L_i}f_i(sa_j)\)</span>，又是根据单峰性质，<span
+class="math inline">\(g(i)=f_i(sa_{R+1}),q(i)=f_i(sa_{L-1})\)</span>，这样直接扫一遍就可以预处理了，求
+<span class="math inline">\(f_i\)</span> 通过 <span
+class="math inline">\(height\)</span> 性质，用 ST 表求区间 <span
+class="math inline">\(\min\)</span>。</p>
+<p>将 <span class="math inline">\(g,q\)</span> 拼成 <span
+class="math inline">\(|T|\)</span> 后再和原有的 <span
+class="math inline">\(height_i\)</span> 约束取 <span
+class="math inline">\(\max\)</span> 即可。</p>
+<p>初始答案为 <span
+class="math inline">\(\frac{(|s_i|+1)|s_i|}{2}\)</span>，每次给对应字符串的答案减去
+<span
+class="math inline">\(\max\{g(i),q(i),height_i\}\)</span>。有个小优化，还是根据单峰的性质，发现
+<span class="math inline">\(q(i)\le height_i\)</span>，所以就不用求
+<span class="math inline">\(q(i)\)</span> 了。</p>
+<p>设 <span class="math inline">\(L=\sum |s_i|\)</span>，时间复杂度
+<span class="math inline">\(O(L\log L)\)</span>。</p>
+<h2 id="广义sam">广义SAM</h2>
+<p>思路更加无脑暴力，复杂度反而更优？唉，SAM。</p>
+<p>多模式串，本质不同串个数，且只在一个模式串中出现过。</p>
+<p>对 <span class="math inline">\(n\)</span>
+个串建立广义后缀自动机。</p>
+<p>对于一个串 <span class="math inline">\(s_i\)</span>，从对应点 <span
+class="math inline">\(u\)</span> 开始在 <span
+class="math inline">\(parent\)</span> 树上跳，然后打标记 <span
+class="math inline">\(i\)</span>。</p>
+<p>因为如果 <span class="math inline">\(u\)</span> 有标记，<span
+class="math inline">\(link(u)\)</span> 也要有标记，只要是 <span
+class="math inline">\(s_i\)</span> 子串就行。</p>
+<p>打标记的时候记录是否有多个标记，如果有多个标记，贡献答案的时候就跳过。</p>
+<p>最后给对应字符串贡献上 <span
+class="math inline">\(len(i)-len(link(i))\)</span>，这是弱化版中的式子，不再解释，基础内容。</p>
+<p>设 <span class="math inline">\(L=\sum |s_i|\)</span>，时间复杂度
+<span class="math inline">\(O(L)\)</span>。</p>
+<h2 id="代码">代码</h2>
+<p>SA：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">2e5</span>+<span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> cnt,n,len[N],id[N];</span><br><span class="line"><span class="type">char</span> in[N];</span><br><span class="line"><span class="type">int</span> s[N],sa[N],sa2[N],bin[N],rk[N],rk2[N],h[N],m;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Bsort</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">re</span>(i,m)bin[i]=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)bin[rk[i]]++;</span><br><span class="line">    <span class="built_in">re</span>(i,m)bin[i]+=bin[i<span class="number">-1</span>];</span><br><span class="line">    <span class="built_in">pe</span>(i,n)sa[bin[rk[sa2[i]]]--]=sa2[i];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">getSA</span><span class="params">()</span></span>&#123;</span><br><span class="line">    m=<span class="number">100100</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)rk[i]=s[i],sa2[i]=i;</span><br><span class="line">    <span class="built_in">Bsort</span>();</span><br><span class="line">    <span class="type">int</span> cur=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> k=<span class="number">1</span>;k&lt;n;k&lt;&lt;=<span class="number">1</span>)&#123;</span><br><span class="line">        cur=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">rep</span>(i,n-k+<span class="number">1</span>,n)sa2[++cur]=i;</span><br><span class="line">        <span class="built_in">re</span>(i,n)<span class="keyword">if</span>(sa[i]&gt;k)sa2[++cur]=sa[i]-k;</span><br><span class="line">        <span class="built_in">Bsort</span>();</span><br><span class="line">        rk2[sa[<span class="number">1</span>]]=cur=<span class="number">1</span>;</span><br><span class="line">        <span class="built_in">rep</span>(i,<span class="number">2</span>,n)&#123;</span><br><span class="line">            <span class="keyword">if</span>(rk[sa[i]]!=rk[sa[i<span class="number">-1</span>]]||rk[sa[i]+k]!=rk[sa[i<span class="number">-1</span>]+k])&#123;</span><br><span class="line">                cur++;</span><br><span class="line">            &#125;</span><br><span class="line">            rk2[sa[i]]=cur;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">swap</span>(rk,rk2);</span><br><span class="line">        <span class="keyword">if</span>(cur==n)<span class="keyword">break</span>;</span><br><span class="line">        m=cur;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> k=<span class="number">0</span>,j=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="keyword">if</span>(rk[i]==<span class="number">1</span>)&#123;</span><br><span class="line">            k=h[<span class="number">1</span>]=<span class="number">0</span>;<span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(k)k--;</span><br><span class="line">        j=sa[rk[i]<span class="number">-1</span>];</span><br><span class="line">        <span class="keyword">while</span>(i+k&lt;=n&amp;&amp;j+k&lt;=n&amp;&amp;s[i+k]==s[j+k])k++;</span><br><span class="line">        h[rk[i]]=k;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> f[N][<span class="number">21</span>],lg[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">ask</span><span class="params">(<span class="type">int</span> l,<span class="type">int</span> r)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(l&gt;r||r&gt;n)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> p=lg[r-l+<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">min</span>(f[l][p],f[r-(<span class="number">1</span>&lt;&lt;p)+<span class="number">1</span>][p]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> g[N],q[N];</span><br><span class="line">ll ans[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin&gt;&gt;cnt;</span><br><span class="line">    <span class="built_in">re</span>(i,cnt)&#123;</span><br><span class="line">        cin&gt;&gt;(in+<span class="number">1</span>);</span><br><span class="line">        len[i]=<span class="built_in">strlen</span>(in+<span class="number">1</span>);</span><br><span class="line">        <span class="built_in">re</span>(j,len[i])&#123;</span><br><span class="line">            s[++n]=in[j]-<span class="string">&#x27;a&#x27;</span>+<span class="number">1</span>;</span><br><span class="line">            id[n]=i;</span><br><span class="line">        &#125;</span><br><span class="line">        s[++n]=<span class="number">26</span>+i;</span><br><span class="line">    &#125;</span><br><span class="line">    s[n--]=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">getSA</span>();</span><br><span class="line">    <span class="built_in">rep</span>(i,<span class="number">2</span>,n)lg[i]=lg[i/<span class="number">2</span>]+<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        f[i][<span class="number">0</span>]=h[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(j,<span class="number">20</span>)&#123;</span><br><span class="line">        <span class="built_in">re</span>(i,n-(<span class="number">1</span>&lt;&lt;(j<span class="number">-1</span>)))&#123;</span><br><span class="line">            f[i][j]=<span class="built_in">min</span>(f[i][j<span class="number">-1</span>],f[i+(<span class="number">1</span>&lt;&lt;(j<span class="number">-1</span>))][j<span class="number">-1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> pos=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">pe</span>(i,n)&#123;</span><br><span class="line">        <span class="keyword">if</span>(id[sa[i]]!=id[sa[i+<span class="number">1</span>]])&#123;</span><br><span class="line">            pos=i+<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        g[i]=<span class="built_in">ask</span>(i+<span class="number">1</span>,pos);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> tmp=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,cnt)&#123;</span><br><span class="line">        ans[i]=<span class="number">1ll</span>*len[i]*(len[i]+<span class="number">1</span>)/<span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        ans[id[sa[i]]]-=<span class="built_in">max</span>(g[i],h[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(i,cnt)&#123;</span><br><span class="line">        cout&lt;&lt;ans[i]&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>广义 SAM：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> ll;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1e5</span> + <span class="number">5</span>;</span><br><span class="line">string s[N];</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">SAM</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> tot, last, fa[N &lt;&lt; <span class="number">1</span>], len[N &lt;&lt; <span class="number">1</span>], t[N &lt;&lt; <span class="number">1</span>][<span class="number">26</span>];</span><br><span class="line">    <span class="type">int</span> num[N &lt;&lt; <span class="number">1</span>], ans[N &lt;&lt; <span class="number">1</span>];</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="title">SAM</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        tot = last = <span class="number">0</span>;</span><br><span class="line">        fa[<span class="number">0</span>] = <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">insert</span><span class="params">(<span class="type">char</span> c)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        c -= <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line">        <span class="type">int</span> cur = ++tot;</span><br><span class="line">        len[cur] = len[last] + <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> p = last;</span><br><span class="line">        last = cur;</span><br><span class="line">        <span class="keyword">while</span> (~p &amp;&amp; !t[p][c])</span><br><span class="line">            t[p][c] = cur, p = fa[p];</span><br><span class="line">        <span class="keyword">if</span> (!~p)</span><br><span class="line">        &#123;</span><br><span class="line">            fa[cur] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> x = t[p][c];</span><br><span class="line">        <span class="keyword">if</span> (len[p] + <span class="number">1</span> == len[x])</span><br><span class="line">            fa[cur] = x;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            len[++tot] = len[p] + <span class="number">1</span>;</span><br><span class="line">            fa[tot] = fa[x];</span><br><span class="line">            <span class="built_in">memcpy</span>(t[tot], t[x], <span class="built_in">sizeof</span>(t[x]));</span><br><span class="line">            <span class="keyword">while</span> (~p &amp;&amp; t[p][c] == x)</span><br><span class="line">                t[p][c] = tot, p = fa[p];</span><br><span class="line">            fa[x] = fa[cur] = tot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">update</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> id)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (~x &amp;&amp; ~num[x] &amp;&amp; num[x] != id)</span><br><span class="line">        &#123;</span><br><span class="line">            num[x] = num[x] ? <span class="number">-1</span> : id;</span><br><span class="line">            x = fa[x];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">solve</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">int</span> p = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++, p = <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">char</span> c : s[i])</span><br><span class="line">                <span class="built_in">update</span>(p = t[p][c - <span class="string">&#x27;a&#x27;</span>], i);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= tot; i++)</span><br><span class="line">            <span class="keyword">if</span> (~num[i] &amp;&amp; ~fa[i])</span><br><span class="line">                ans[num[i]] += len[i] - len[fa[i]];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">            cout &lt;&lt; ans[i] &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; sam;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="literal">nullptr</span>);</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        cin &gt;&gt; s[i];</span><br><span class="line">        sam.last = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">char</span> c : s[i])</span><br><span class="line">            sam.<span class="built_in">insert</span>(c);</span><br><span class="line">    &#125;</span><br><span class="line">    sam.<span class="built_in">solve</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>Strin</category>
+      </categories>
+      <tags>
+        <tag>SA</tag>
+        <tag>SAM</tag>
+        <tag>ST表</tag>
+        <tag>广义SAM</tag>
       </tags>
   </entry>
 </search>
