@@ -9852,4 +9852,115 @@ c\)</span>，而深度最浅原因显然，不能太靠下了。</p>
         <tag>SAM</tag>
       </tags>
   </entry>
+  <entry>
+    <title>P4770</title>
+    <url>/2024/01/18/P4770/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P4770">P4770 [NOI2018]
+你的名字</a></p>
+<span id="more"></span>
+<p>又是带限制的子串计数问题。</p>
+<p>不妨先考虑前 <span class="math inline">\(17\)</span>
+个点的特殊性质：<span class="math inline">\(l=1,r=|S|\)</span>。</p>
+<p>首先对 <span class="math inline">\(S\)</span>
+建立后缀自动机，对于每次询问的 <span class="math inline">\(T\)</span>
+我们也建立后缀自动机。</p>
+<p>根据 SAM 性质，所有节点代表的字符串的集合之并代表 <span
+class="math inline">\(T\)</span> 的全部子串，因此我们可以考虑 <span
+class="math inline">\(T\)</span>
+后缀自动机上的每个状态代表的字符串中有多少是 <span
+class="math inline">\(S\)</span> 的子串。</p>
+<p>对于 <span class="math inline">\(T\)</span> 的每个前缀 <span
+class="math inline">\(T[:i]\)</span>，求出满足是 <span
+class="math inline">\(S\)</span> 子串的最长后缀，设为 <span
+class="math inline">\(match(i)\)</span>，感觉这是这篇题解最关键的部分。</p>
+<p><span class="math inline">\(match\)</span> 可以通过在 <span
+class="math inline">\(S\)</span> 的 SAM 上匹配 <span
+class="math inline">\(T\)</span> 得到。</p>
+<ul>
+<li>具体的，我们在 <span class="math inline">\(S\)</span> 的 SAM 建出的
+DAG 上匹配 <span class="math inline">\(T\)</span>，设当前在 SAM 上状态为
+<span class="math inline">\(p\)</span>，匹配到 <span
+class="math inline">\(T\)</span> 的第 <span
+class="math inline">\(i\)</span> 个字符，<span
+class="math inline">\(i\)</span> 从 <span
+class="math inline">\(1\)</span> 枚举到 <span
+class="math inline">\(|T|\)</span>。如果存在 <span
+class="math inline">\(\delta(p,T[i])\)</span>，就走转移边，<span
+class="math inline">\(p=\delta(p,T[i])\)</span>；否则不断 <span
+class="math inline">\(p=link(p)\)</span>，直到存在 <span
+class="math inline">\(\delta(p,T[i])\)</span>。过程很像 AC
+自动机的匹配，容易发现这是对的。过程中动态维护长度 <span
+class="math inline">\(L\)</span>，向下走 <span
+class="math inline">\(L\to L+1\)</span>，向上走 <span
+class="math inline">\(L\to len(link(p))\)</span>，每次完成当前 <span
+class="math inline">\(T[i]\)</span> 的转移，就记录 <span
+class="math inline">\(match(i)=L\)</span>。</li>
+</ul>
+<p>对于一个节点 <span class="math inline">\(p\)</span>，设 <span
+class="math inline">\(endpos(p)\)</span> 中第一个元素（位置）为 <span
+class="math inline">\(pos_p\)</span>（其实不是第一个也行，等价）。</p>
+<p>容易发现，在 <span class="math inline">\(endpos(p)\)</span>
+等价类内的串中，长度 <span
+class="math inline">\(&gt;match(pos_p)\)</span> 的都不可能和 <span
+class="math inline">\(S\)</span> 匹配，需要扣掉 <span
+class="math inline">\(\le match(pos_p)\)</span> 的部分。</p>
+<p>本来本质不同串统计的是 <span
+class="math inline">\(len(p)-len(link(p))\)</span>，代表：为保证一种串只被统计一次，长度
+<span class="math inline">\(\le len(link(p))\)</span> 的串不能在 <span
+class="math inline">\(p\)</span>
+内被统计，会在到根的链上的某个地方被统计。</p>
+<p>限制和 <span class="math inline">\(\le match(pos_p)\)</span>
+本质相同，都是扣掉一个前缀。</p>
+<p>所以说，答案统计改为 <span
+class="math inline">\(len(p)-\max(len(link(p)),match(pos_p))\)</span>
+即可，扣掉最长的前缀。</p>
+<p>现在已经可以过前 <span class="math inline">\(17\)</span> 个点了。加入
+<span class="math inline">\([l,r]\)</span> 限制怎么做？</p>
+<p><span class="math inline">\(match\)</span> 定义变为：对于 <span
+class="math inline">\(T\)</span> 的每个前缀 <span
+class="math inline">\(T[:i]\)</span>，满足是 <span
+class="math inline">\(S[l,r]\)</span> 子串的最长后缀。</p>
+<p>在走 <span class="math inline">\(\delta(p,T[i])\)</span>
+的过程中，我们忽略了 <span class="math inline">\(\delta(p,T[i])\)</span>
+代表的这些串是否有在 <span class="math inline">\([l,r]\)</span>
+内出现过的串。</p>
+<p>换句话说，是否存在 <span class="math inline">\(d\in
+endpos(\delta(p,T[i]))\)</span> 满足 <span
+class="math inline">\(d\in[l+L,r]\)</span>，只有存在 <span
+class="math inline">\(\delta(p,T[i])\)</span> 且存在这样的 <span
+class="math inline">\(d\)</span>，才能让 <span
+class="math inline">\(L\to L+1\)</span>，并向下走转移边。</p>
+<p>现在 <span class="math inline">\(L\)</span> 和判断合法性相关，只有当
+<span class="math inline">\(L=len(link(p))\)</span> 的时候才能跳 <span
+class="math inline">\(link\)</span>，不然就一直 <span
+class="math inline">\(L\to
+L-1\)</span>，相当于在当前点的等价类串长区间内遍历，容易发现不影响复杂度。</p>
+<p>那么怎么判断是否存在这样的 <span class="math inline">\(d\)</span>
+呢？<span class="math inline">\(S\)</span> 的 SAM <span
+class="math inline">\(parent\)</span> 树上线段树合并即可，相当于是在求
+<span class="math inline">\(endpos\)</span> 集合的桶线段树，有链接：<a
+href="https://h01yshhmy.github.io/2024/01/18/P4094/">P4094 |
+h01yshhmy</a>。</p>
+<p>值得一提，普通的线段树合并会销毁子树，而我们需要查询任意一个子树，所以需要用类似于“可持久化”的写法，保留每一个版本，具体见代码。</p>
+<p>统计答案部分依然不变： <span class="math display">\[
+\sum_{i\in \textrm{SAM}(T)}
+\max(0,len(i)-\max(len(link(i)),match(pos_i)))
+\]</span> 对 <span class="math inline">\(0\)</span> 取个 <span
+class="math inline">\(\max\)</span>，因为我们没有约束 <span
+class="math inline">\(match(pos_i)\)</span> 和 <span
+class="math inline">\(len(i)\)</span> 之间的大小关系，可能出现负数。</p>
+<p>时间复杂度 <span class="math inline">\(O(|S|\log
+|S|+\sum|T|)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ls(x) t[x].son[0]</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> rs(x) t[x].son[1]</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">1e6</span>+<span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n,m,qn;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; G[N];</span><br><span class="line"><span class="type">char</span> s[N];</span><br><span class="line"><span class="type">int</span> match[N];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">SAM</span>&#123;</span><br><span class="line">    <span class="type">int</span> tot,las,lnk[N*<span class="number">2</span>],len[N*<span class="number">2</span>],pos[N*<span class="number">2</span>],go[N*<span class="number">2</span>][<span class="number">26</span>];</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">clear</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="built_in">re</span>(i,tot)&#123;</span><br><span class="line">            lnk[i]=len[i]=pos[i]=<span class="number">0</span>;</span><br><span class="line">            <span class="built_in">memset</span>(go[i],<span class="number">0</span>,<span class="built_in">sizeof</span>(go[i]));</span><br><span class="line">        &#125;</span><br><span class="line">        las=tot=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">extend</span><span class="params">(<span class="type">int</span> c,<span class="type">int</span> id)</span></span>&#123;</span><br><span class="line">        <span class="type">int</span> u=++tot,p=las;</span><br><span class="line">        len[u]=len[las]+<span class="number">1</span>,pos[u]=id;</span><br><span class="line">        las=u;</span><br><span class="line">        <span class="keyword">while</span>(p&amp;&amp;!go[p][c])&#123;</span><br><span class="line">            go[p][c]=u,p=lnk[p];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(!p)&#123;</span><br><span class="line">            lnk[u]=<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> q=go[p][c];</span><br><span class="line">        <span class="keyword">if</span>(len[q]==len[p]+<span class="number">1</span>)lnk[u]=q;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="type">int</span> nowq=++tot;</span><br><span class="line">            len[nowq]=len[p]+<span class="number">1</span>,pos[nowq]=pos[q];</span><br><span class="line">            <span class="built_in">memcpy</span>(go[nowq],go[q],<span class="built_in">sizeof</span>(go[q]));</span><br><span class="line">            lnk[nowq]=lnk[q],lnk[q]=lnk[u]=nowq;</span><br><span class="line">            <span class="keyword">while</span>(p&amp;&amp;go[p][c]==q)&#123;</span><br><span class="line">                go[p][c]=nowq,p=lnk[p];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;mS,mT;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Seg</span>&#123;</span><br><span class="line">    <span class="type">int</span> son[<span class="number">2</span>],sum;</span><br><span class="line">&#125;t[N*<span class="number">30</span>];</span><br><span class="line"><span class="type">int</span> rot[N],ncnt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">insert</span><span class="params">(<span class="type">int</span> &amp;rt,<span class="type">int</span> l,<span class="type">int</span> r,<span class="type">int</span> p)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!rt)rt=++ncnt;</span><br><span class="line">    t[rt].sum++;</span><br><span class="line">    <span class="keyword">if</span>(l==r)<span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> mid=(l+r)/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(p&lt;=mid)<span class="built_in">insert</span>(<span class="built_in">ls</span>(rt),l,mid,p);</span><br><span class="line">    <span class="keyword">else</span> <span class="built_in">insert</span>(<span class="built_in">rs</span>(rt),mid+<span class="number">1</span>,r,p);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">merge</span><span class="params">(<span class="type">int</span> p,<span class="type">int</span> q,<span class="type">int</span> l,<span class="type">int</span> r)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!p||!q)<span class="keyword">return</span> p+q;</span><br><span class="line">    <span class="type">int</span> x=++ncnt;</span><br><span class="line">    t[x].sum=t[p].sum+t[q].sum;</span><br><span class="line">    <span class="keyword">if</span>(l==r)<span class="keyword">return</span> x;</span><br><span class="line">    <span class="type">int</span> mid=(l+r)/<span class="number">2</span>;</span><br><span class="line">    <span class="built_in">ls</span>(x)=<span class="built_in">merge</span>(<span class="built_in">ls</span>(p),<span class="built_in">ls</span>(q),l,mid);</span><br><span class="line">    <span class="built_in">rs</span>(x)=<span class="built_in">merge</span>(<span class="built_in">rs</span>(p),<span class="built_in">rs</span>(q),mid+<span class="number">1</span>,r);</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">query</span><span class="params">(<span class="type">int</span> rt,<span class="type">int</span> l,<span class="type">int</span> r,<span class="type">int</span> ql,<span class="type">int</span> qr)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!rt)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(ql&lt;=l&amp;&amp;r&lt;=qr)<span class="keyword">return</span> t[rt].sum;</span><br><span class="line">    <span class="type">int</span> mid=(l+r)/<span class="number">2</span>,res=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(ql&lt;=mid)res+=<span class="built_in">query</span>(<span class="built_in">ls</span>(rt),l,mid,ql,qr);</span><br><span class="line">    <span class="keyword">if</span>(qr&gt;mid)res+=<span class="built_in">query</span>(<span class="built_in">rs</span>(rt),mid+<span class="number">1</span>,r,ql,qr);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">getEndpos</span><span class="params">(<span class="type">int</span> u)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> v:G[u])&#123;</span><br><span class="line">        <span class="built_in">getEndpos</span>(v);</span><br><span class="line">        rot[u]=<span class="built_in">merge</span>(rot[u],rot[v],<span class="number">1</span>,n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">getMatch</span><span class="params">(<span class="type">char</span> *s,<span class="type">int</span> l,<span class="type">int</span> r)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> len=<span class="built_in">strlen</span>(s+<span class="number">1</span>),p=<span class="number">1</span>,L=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,len)&#123;</span><br><span class="line">        <span class="type">int</span> c=s[i]-<span class="string">&#x27;a&#x27;</span>;</span><br><span class="line">        <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(mS.go[p][c]&amp;&amp;<span class="built_in">query</span>(rot[mS.go[p][c]],<span class="number">1</span>,n,l+L,r))&#123;</span><br><span class="line">                p=mS.go[p][c];</span><br><span class="line">                L++;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(!L)<span class="keyword">break</span>;</span><br><span class="line">            L--;</span><br><span class="line">            <span class="keyword">if</span>(L==mS.len[mS.lnk[p]])&#123;</span><br><span class="line">                p=mS.lnk[p];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        match[i]=L;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    CIOO;</span><br><span class="line">    cin&gt;&gt;(s+<span class="number">1</span>);</span><br><span class="line">    n=<span class="built_in">strlen</span>(s+<span class="number">1</span>);</span><br><span class="line">    mS.<span class="built_in">clear</span>();</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        mS.<span class="built_in">extend</span>(s[i]-<span class="string">&#x27;a&#x27;</span>,i);</span><br><span class="line">        <span class="built_in">insert</span>(rot[mS.las],<span class="number">1</span>,n,i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">rep</span>(i,<span class="number">2</span>,mS.tot)&#123;</span><br><span class="line">        G[mS.lnk[i]].<span class="built_in">pb</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">getEndpos</span>(<span class="number">1</span>);</span><br><span class="line">    cin&gt;&gt;qn;</span><br><span class="line">    <span class="type">int</span> l=<span class="number">0</span>,r=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(qn--)&#123;</span><br><span class="line">        cin&gt;&gt;(s+<span class="number">1</span>)&gt;&gt;l&gt;&gt;r;</span><br><span class="line">        m=<span class="built_in">strlen</span>(s+<span class="number">1</span>);</span><br><span class="line">        mT.<span class="built_in">clear</span>();</span><br><span class="line">        <span class="built_in">re</span>(i,m)&#123;</span><br><span class="line">            mT.<span class="built_in">extend</span>(s[i]-<span class="string">&#x27;a&#x27;</span>,i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">getMatch</span>(s,l,r);</span><br><span class="line">        ll ans=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">rep</span>(i,<span class="number">2</span>,mT.tot)&#123;</span><br><span class="line">            ans+=<span class="built_in">max</span>(<span class="number">0</span>,mT.len[i]-<span class="built_in">max</span>(mT.len[mT.lnk[i]],match[mT.pos[i]]));</span><br><span class="line">        &#125;</span><br><span class="line">        cout&lt;&lt;ans&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>Strin</category>
+      </categories>
+      <tags>
+        <tag>线段树合并</tag>
+        <tag>线段树</tag>
+        <tag>SAM</tag>
+      </tags>
+  </entry>
 </search>
