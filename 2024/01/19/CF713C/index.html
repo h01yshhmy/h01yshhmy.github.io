@@ -27,10 +27,11 @@
 <meta property="og:description" content="Sonya and Problem Wihtout a Legend">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-01-19T13:14:01.000Z">
-<meta property="article:modified_time" content="2024-01-19T14:11:02.657Z">
+<meta property="article:modified_time" content="2024-01-19T17:23:48.403Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="DP">
 <meta property="article:tag" content="DP优化">
+<meta property="article:tag" content="slope-trick">
 <meta name="twitter:card" content="summary">
 
 
@@ -132,7 +133,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -145,6 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%8A%A0"><span class="nav-number">1.</span> <span class="nav-text">相加</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%BE%E6%9C%80%E5%80%BC%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">找最值点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E5%90%8E%E7%BC%80%E6%9C%80%E5%80%BC"><span class="nav-number">3.</span> <span class="nav-text">前后缀最值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B3%E7%A7%BB"><span class="nav-number">4.</span> <span class="nav-text">平移</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E8%A7%A3"><span class="nav-number">5.</span> <span class="nav-text">题解</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -159,7 +161,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">169</span>
+          <span class="site-state-item-count">170</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -170,7 +172,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">117</span>
+        <span class="site-state-item-count">118</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -237,9 +239,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2024-01-19 21:14:01 / 修改时间：22:11:02" itemprop="dateCreated datePublished" datetime="2024-01-19T21:14:01+08:00">2024-01-19</time>
+      <time title="创建时间：2024-01-19 21:14:01" itemprop="dateCreated datePublished" datetime="2024-01-19T21:14:01+08:00">2024-01-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-01-20 01:23:48" itemprop="dateModified" datetime="2024-01-20T01:23:48+08:00">2024-01-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -275,6 +283,43 @@
 Wihtout a Legend</a></p>
 <span id="more"></span>
 <p>最初的 slope trick 模板题。</p>
+<p>把常用用法放前面了。</p>
+<p>slope trick
+可以优化连续分段凸函数的<strong>相加、平移、最值</strong>等操作。</p>
+<p>一般要求每一段都是一次函数，且斜率为整数。</p>
+<p>将凸壳转化成集合和直线的过程在下文题解内。</p>
+<h2 id="相加">相加</h2>
+<p>直线的 <span class="math inline">\(k,b\)</span>
+相加，集合做合并。</p>
+<h2 id="找最值点">找最值点</h2>
+<p>下凸函数求最小值为例。</p>
+<p>也就是找斜率为 <span class="math inline">\(0\)</span>
+的线段（允许端点重合）。</p>
+<p>常用一个大根堆 <span class="math inline">\(L\)</span> 和小根堆 <span
+class="math inline">\(R\)</span> 维护拐点，<span
+class="math inline">\(L\)</span> 存目标线段左侧拐点，<span
+class="math inline">\(R\)</span>
+存目标线段右侧拐点，<code>L.top()</code> 和 <code>R.top</code>
+就是这条线段的左右端点。</p>
+<p>维护方法：始终保持 <span
+class="math inline">\(k+L.size()=0\)</span>，将多余点扔进 <span
+class="math inline">\(R\)</span>，这里的 <span
+class="math inline">\(k\)</span> 就是前面的斜率极差，原因见题解。</p>
+<p>当 <span class="math inline">\(k\)</span>（斜率）减小时，要从 <span
+class="math inline">\(R\)</span> 中取点补进 <span
+class="math inline">\(L\)</span>，再加入新点。</p>
+<h2 id="前后缀最值">前后缀最值</h2>
+<p>以前缀 <span class="math inline">\(\min\)</span> 为例。</p>
+<p>其实就是扔掉了 <span class="math inline">\(R\)</span>
+中的所有拐点，因为第一个斜率 <span class="math inline">\(0\)</span>
+的线段后面都是斜率为 <span class="math inline">\(0\)</span>
+的，不仅斜率单调，函数值也单调。</p>
+<p>实现时可以只维护 <span class="math inline">\(L\)</span>
+堆。也就是此题的维护方式。</p>
+<h2 id="平移">平移</h2>
+<p>直线直接移。集合就在堆上打 <span
+class="math inline">\(tag\)</span>。</p>
+<h2 id="题解">题解</h2>
 <p>严格递增不好做，将 <span class="math inline">\(a_i\)</span> 换成
 <span class="math inline">\(a_i-i\)</span>
 后求单调不降的答案。容易发现和原问题等价。</p>
@@ -285,9 +330,8 @@ class="math inline">\([1,i]\)</span> 不降所需要的最小操作数，有： 
 class="math display">\[
 f(i,j)=\min_{1\le k\le j}f(i-1,k)+|a_i-j|
 \]</span> 然后这样其实就过了。但是没啥含量，事实上可以继续优化。</p>
-<p>需要使用 slope trick，通常情况下，slope trick
-能够解决的是一类凸函数问题。</p>
-<p>记： <span class="math display">\[
+<p>需要使用 slope trick。这是一种依赖凸性的对最优化DP的优化手段。 <span
+class="math display">\[
 \begin{aligned}
 &amp;F_i(x)=f(i,x)\\
 &amp;G_i(x)=\min_{1\le k\le x}f(i,k)\\
@@ -300,27 +344,28 @@ F_i(x)=G_{i-1}(x)+W_i(x)
 <p>证明也不难：</p>
 <ul>
 <li>首先，<span class="math inline">\(W\)</span>
-是绝对值形式，显然下凸。</li>
-<li>那么，<span class="math inline">\(F_1,G_1\)</span> 也是下凸的。</li>
-<li>注意到 <span class="math inline">\(G_i\)</span> 是 <span
+是绝对值形式，显然下凸。那么，<span
+class="math inline">\(F_1,G_1\)</span> 也是下凸的。</li>
+<li><span class="math inline">\(G_i\)</span> 是 <span
 class="math inline">\(F_i\)</span> 的一段前缀 <span
 class="math inline">\(\min\)</span>，显然 <span
 class="math inline">\(G_i\)</span> 是凸的，或者说是单调的。</li>
 <li>然后可以归纳法，<span class="math inline">\(G_{i-1}\)</span>
 是凸的，<span class="math inline">\(W_i\)</span>
-也是凸的，两个函数相加肯定还是凸的，所以 <span
-class="math inline">\(F_i(x)\)</span> 是凸的。</li>
+也是凸的，两个凸函数相加肯定还是凸的，所以 <span
+class="math inline">\(F_i\)</span> 是凸的。</li>
 </ul>
 <p>而且有个很好的性质，斜率均是整数。因为每次加入的 <span
 class="math inline">\(W_i\)</span> 斜率是整数。</p>
 <p>然后有一个重要的维护手段，通过维护拐点来维护凸壳。</p>
 <p>可以用一个集合和一个一次函数表示一个凸壳。</p>
 <p>对于凸壳上的点 <span
-class="math inline">\(p\)</span>，如果点两边的斜率不同（也就是拐点），设斜率之差为
-<span class="math inline">\(d\)</span>，就在集合中放 <span
+class="math inline">\(p\)</span>，如果点两侧斜率不同，设斜率之差的绝对值为
+<span class="math inline">\(d\)</span>，就放 <span
 class="math inline">\(d\)</span> 个 <span
-class="math inline">\(p\)</span>，这里是在保证斜率差距最大为 <span
-class="math inline">\(1\)</span>。由于凸壳横坐标最大的点会延申出去，用一个直线描述即可。</p>
+class="math inline">\(p\)</span>（每当斜率变化 <span
+class="math inline">\(1\)</span>
+就放进去一个横坐标）。由于凸壳横坐标最大的点会延申出去，用一次函数描述延伸出的直线即可。</p>
 <p>设凸函数 <span class="math inline">\(C_1,C_2\)</span> 的集合为 <span
 class="math inline">\(S_1,S_2\)</span>，直线分别为 <span
 class="math inline">\(l_1,l_2\)</span>，则另一凸函数 <span
@@ -347,44 +392,33 @@ class="math inline">\(2\)</span>）。</p>
 class="math inline">\(p\)</span>（同时也是 <span
 class="math inline">\(F_{i-1}\)</span> 的）：</p>
 <ul>
-<li><p>若 <span class="math inline">\(a_i\ge p\)</span>，当前加入的
-<span class="math inline">\(W_i\)</span> 拐点在 <span
-class="math inline">\(p\)</span> 右边，容易发现这样可以使 <span
-class="math inline">\(p\)</span> 更低更靠右，新的 <span
-class="math inline">\(p&#39;=a_i\)</span>，不需要调整。</p></li>
-<li><p>若 <span class="math inline">\(a_i&lt; p\)</span>，<span
-class="math inline">\(a_i\)</span> 在 <span
-class="math inline">\(p\)</span> 左边，画图感受一下，<span
-class="math inline">\(W_i\)</span>
-可能会在这里加出一个“坑”，破坏了单调性。<span
-class="math inline">\(a_i\)</span> 需要调整以成为新的 <span
-class="math inline">\(p&#39;\)</span>。</p>
-<p>加 <span class="math inline">\(W_i\)</span> 的实际影响就是 <span
-class="math inline">\(a_i\)</span>
-左边的直线斜率都减一，右边都加一。本来有 <span
-class="math inline">\(p&gt;a_i\)</span>，而现在 <span
-class="math inline">\(p\)</span> 这个位置更高了，我们需要加入两个 <span
-class="math inline">\(a_i\)</span> 以保证斜率差为 <span
-class="math inline">\(1\)</span>。当然还要扔掉 <span
-class="math inline">\(p\)</span>，因为 <span
-class="math inline">\(p\)</span> 已经不是最低点了。</p>
-<p>当出现 <span class="math inline">\(a_i&lt;p\)</span> 的时候，将 <span
-class="math inline">\(p-a_i\)</span> 贡献进答案，相当于将 <span
+<li>动态维护一个 <span class="math inline">\(p\)</span> 左侧的斜率变化量
+<span class="math inline">\(k\)</span>。加上 <span
+class="math inline">\(W_i\)</span> 后，<span
+class="math inline">\(k\leftarrow k-1\)</span>，集合加入 <span
+class="math inline">\(\{a_i,a_i\}\)</span>。</li>
+<li>为了严格按照定义来，这个凸壳的集合大小必须等于 <span
+class="math inline">\(|k|\)</span>，因为斜率变动 <span
+class="math inline">\(1\)</span>
+就放一个点。所以要从右到左扔掉多余的点（就是在前面写的从 <span
+class="math inline">\(L\)</span> 放到 <span
+class="math inline">\(R\)</span>，不需要维护 <span
+class="math inline">\(R\)</span>
+就可以直接扔了），其实只会扔掉一个点。</li>
+<li>扔的时候判一下是否会对答案做贡献（要扔的 <span
+class="math inline">\(p\)</span> 满足 <span
+class="math inline">\(p&gt;a_i\)</span>，这样我们需要将 <span
 class="math inline">\(a_i\)</span> 改为 <span
-class="math inline">\(p\)</span>，<span
-class="math inline">\(a_i\)</span> 在 <span
-class="math inline">\(F_i(x)\)</span> 的横坐标上向右移动到 <span
-class="math inline">\(p\)</span>，这符合最初始的状态设计：<span
-class="math inline">\(F_i(x)=f(i,x)\)</span>，第二维的定义就是将 <span
-class="math inline">\(a_i\)</span> 改为 <span
-class="math inline">\(x\)</span>。</p></li>
+class="math inline">\(p\)</span> 满足序列单调不降，答案加 <span
+class="math inline">\(p-a_i\)</span>。</li>
+<li>整个过程中相当于让最优点从 <span class="math inline">\(p\)</span>
+转成了 <span class="math inline">\(a_i\)</span>。</li>
 </ul>
-<p>容易发现我们只需要最优点和它左边的点，也就是说那条末尾延申的直线和凸壳中斜率为正的部分可以不管。</p>
-<p>总的来说就是动态加入 <span class="math inline">\(a_i\)</span>
-维护整体价值最优点。凸壳斜率的正负包含一种优劣性的偏序关系，和斜率优化虽然不是一个东西但是思路我觉得挺像的。</p>
+<p>容易发现我们只需要最优点和它左边的点，也就是说那条末尾延申的直线和凸壳中斜率为正（<span
+class="math inline">\(p\)</span> 右边）的部分可以不管。</p>
 <p>代码十分简略。</p>
 <p>时间复杂度 <span class="math inline">\(O(n\log n)\)</span>。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">priority_queue&lt;<span class="type">int</span>&gt; q;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> n=<span class="number">0</span>,x=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">read</span>(n);</span><br><span class="line">    ll ans=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="built_in">read</span>(x);</span><br><span class="line">        x=x-i;</span><br><span class="line">        q.<span class="built_in">push</span>(x);</span><br><span class="line">        <span class="keyword">if</span>(x&lt;q.<span class="built_in">top</span>())&#123;</span><br><span class="line">            q.<span class="built_in">push</span>(x);</span><br><span class="line">            ans+=q.<span class="built_in">top</span>()-x;</span><br><span class="line">            q.<span class="built_in">pop</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">priority_queue&lt;<span class="type">int</span>&gt; q;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> n=<span class="number">0</span>,x=<span class="number">0</span>,k=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">read</span>(n);</span><br><span class="line">    ll ans=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        <span class="built_in">read</span>(x);</span><br><span class="line">        x=x-i;</span><br><span class="line">        k--;</span><br><span class="line">        q.<span class="built_in">push</span>(x),q.<span class="built_in">push</span>(x);</span><br><span class="line">        <span class="keyword">if</span>(k+q.<span class="built_in">size</span>()&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(x&lt;q.<span class="built_in">top</span>())ans+=q.<span class="built_in">top</span>()-x;</span><br><span class="line">            q.<span class="built_in">pop</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -396,6 +430,7 @@ class="math inline">\(x\)</span>。</p></li>
           <div class="post-tags">
               <a href="/tags/DP/" rel="tag"># DP</a>
               <a href="/tags/DP%E4%BC%98%E5%8C%96/" rel="tag"># DP优化</a>
+              <a href="/tags/slope-trick/" rel="tag"># slope-trick</a>
           </div>
 
         
@@ -407,6 +442,9 @@ class="math inline">\(x\)</span>。</p></li>
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2024/01/20/P4331/" rel="next" title="P4331">
+                  P4331 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
