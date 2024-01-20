@@ -10366,4 +10366,87 @@ class="math inline">\(k+L.size()=0\)</span>，再加入当前新点，原因显�
         <tag>slope-trick</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LOJ6240</title>
+    <url>/2024/01/20/LOJ6240/</url>
+    <content><![CDATA[<p><a href="https://loj.ac/p/6240">#6240. 仙人掌</a></p>
+<span id="more"></span>
+<p>奇怪期望题。</p>
+<p>先不想仙人掌，考虑树怎么做。</p>
+<p>很难想到，有一种贡献方式：枚举 <span
+class="math inline">\(u,v\)</span>，如果 <span
+class="math inline">\(u\)</span> 到 <span
+class="math inline">\(v\)</span> 的路径上第一个被删除的点是 <span
+class="math inline">\(u\)</span>，那么 <span
+class="math inline">\(u,v\)</span> 就能对答案造成 <span
+class="math inline">\(1\)</span> 的贡献。设 <span
+class="math inline">\(path(u,v)\)</span> 为路径点集，容易发现 <span
+class="math inline">\((u,v)\)</span> 的贡献是 <span
+class="math inline">\(\frac{1}{|path(u,v)|}\)</span>。</p>
+<p>考虑基环树怎么做。</p>
+<p>这个倒是有题：<a href="https://www.luogu.com.cn/problem/CF235D">Graph
+Game</a>。</p>
+<p>如果 <span class="math inline">\(u,v\)</span>
+路径之间不经过环，贡献不变。</p>
+<p>否则，按照 <span class="math inline">\(u,v\)</span>
+所在的子树，将环分成 <span class="math inline">\(a,b\)</span> 两部分。记
+<span class="math inline">\(u\)</span> 到环的路径是 <span
+class="math inline">\(x\)</span>。</p>
+<p>容易发现，要么 <span class="math inline">\(x\cup a\)</span>
+中第一个被删的是 <span class="math inline">\(u\)</span>，要么 <span
+class="math inline">\(x\cup b\)</span> 中第一个被删的是 <span
+class="math inline">\(u\)</span>。</p>
+<p>不能直接加起来，需要容斥，减去 <span class="math inline">\(x\cup
+a\cup b\)</span> 中第一次被删的是 <span class="math inline">\(u\)</span>
+的概率，显然这部分被重复计数了。</p>
+<p>贡献为 <span
+class="math inline">\(\frac{1}{|x|+|a|}+\frac{1}{|x|+|b|}-\frac{1}{|x|+|a|+|b|}\)</span>。</p>
+<p>进一步加强问题，考虑仙人掌怎么做。</p>
+<p>现在图上有多个不相交的环，会出现多层的容斥，暴力的复杂度指数级。</p>
+<p>需要 DP。</p>
+<p>设 <span class="math inline">\(f(u,i)\)</span> 为：对于当前 <span
+class="math inline">\(u\)</span>，所有 <span
+class="math inline">\(u,v\)</span> 满足 <span class="math inline">\(v\in
+subtree(u)\)</span> 造成的贡献中，<span
+class="math inline">\(\frac{1}{i}\)</span> 的总贡献（容斥）系数。</p>
+<p>子树限制无所谓，正好可以不重不漏。</p>
+<p>仙人掌 DP 当然要圆方树。</p>
+<p>在圆方树上的“相邻”圆点上转移，就是隔了一个方点的圆点。</p>
+<p>容易发现，这两个圆点 <span class="math inline">\(u,v\)</span>
+要么在扔掉环后的图上相邻（树边），要么在同一个环内。</p>
+<p>将树边看作二元环，统一解法。</p>
+<p>处理出环大小，容易得到 <span class="math inline">\(u,v\)</span>
+对应在环上的 <span class="math inline">\(a,b\)</span>。</p>
+<p>做转移： <span class="math display">\[
+\begin{aligned}
+f(u,i)&amp;\to f(v,i+a)\\
+f(u,i)&amp;\to f(v,i+b)\\
+-f(u,i)&amp;\to f(v,i+a+b)
+\end{aligned}
+\]</span> 过程中枚举 <span
+class="math inline">\(i\)</span>。较容易理解，和基环树的容斥思路相同。</p>
+<p>每走到一个圆点，为答案贡献： <span class="math display">\[
+\sum_{i}\frac{f(u,i)}{i}
+\]</span> 注意这样只能统计 <span class="math inline">\(u\)</span>
+到子树内的 <span
+class="math inline">\(v\)</span>。我们在外层需要再枚举一个根，跑 <span
+class="math inline">\(n\)</span> 次上述 DP，得到全部 <span
+class="math inline">\((u,v)\)</span> 的贡献和。</p>
+<p>时间复杂度 <span class="math inline">\(O(n^3)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">805</span>, mod = <span class="number">998244353</span>;</span><br><span class="line"><span class="type">int</span> n, m, tot;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; G[N], T[N];</span><br><span class="line"><span class="type">int</span> dfn[N], low[N], col[N][N], num, sta[N], tp;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">tarjan</span><span class="params">(<span class="type">int</span> u)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dfn[u] = low[u] = ++num;</span><br><span class="line">    sta[++tp] = u;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> v : G[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!dfn[v])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">tarjan</span>(v);</span><br><span class="line">            low[u] = <span class="built_in">min</span>(low[u], low[v]);</span><br><span class="line">            <span class="keyword">if</span> (low[v] &gt;= dfn[u])</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="type">int</span> tmp = <span class="number">0</span>, d = <span class="number">0</span>;</span><br><span class="line">                tot++;</span><br><span class="line">                T[u].<span class="built_in">pb</span>(tot), T[tot].<span class="built_in">pb</span>(u);</span><br><span class="line">                col[tot][u] = d++;</span><br><span class="line">                <span class="keyword">do</span></span><br><span class="line">                &#123;</span><br><span class="line">                    tmp = sta[tp--];</span><br><span class="line">                    T[tot].<span class="built_in">pb</span>(tmp), T[tmp].<span class="built_in">pb</span>(tot);</span><br><span class="line">                    col[tot][tmp] = d++;</span><br><span class="line">                &#125; <span class="keyword">while</span> (tmp != v);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            low[u] = <span class="built_in">min</span>(low[u], dfn[v]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> f[N][N], inv[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">(<span class="type">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    inv[<span class="number">0</span>] = inv[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">2</span>, n)</span><br><span class="line">    &#123;</span><br><span class="line">        inv[i] = <span class="number">1ll</span> * (mod - mod / i) * inv[mod % i] % mod;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> siz[N], ans;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa, <span class="type">int</span> sz)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">re</span>(i, sz)</span><br><span class="line">    &#123;</span><br><span class="line">        ans = (ans + <span class="number">1ll</span> * f[u][i] * inv[i] % mod) % mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> p : T[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (p == fa)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">rep</span>(i, <span class="number">0</span>, (<span class="type">int</span>)T[p].<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i == col[p][u])</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="type">int</span> v = T[p][i], a = <span class="built_in">abs</span>(col[p][u] - col[p][v]) - <span class="number">1</span>, b = (<span class="type">int</span>)T[p].<span class="built_in">size</span>() - a - <span class="number">2</span>;</span><br><span class="line">            <span class="built_in">re</span>(j, sz)</span><br><span class="line">            &#123;</span><br><span class="line">                f[v][j + a + <span class="number">1</span>] = (f[v][j + a + <span class="number">1</span>] + f[u][j]) % mod;</span><br><span class="line">                f[v][j + b + <span class="number">1</span>] = (f[v][j + b + <span class="number">1</span>] + f[u][j]) % mod;</span><br><span class="line">                f[v][j + a + b + <span class="number">1</span>] = (f[v][j + a + b + <span class="number">1</span>] - f[u][j] + mod) % mod;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">dfs</span>(v, p, sz + a + b + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CIOO;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="built_in">init</span>(n);</span><br><span class="line">    tot = n;</span><br><span class="line">    <span class="type">int</span> u = <span class="number">0</span>, v = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, m)</span><br><span class="line">    &#123;</span><br><span class="line">        cin &gt;&gt; u &gt;&gt; v;</span><br><span class="line">        G[u].<span class="built_in">pb</span>(v), G[v].<span class="built_in">pb</span>(u);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">tarjan</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">memset</span>(f, <span class="number">0</span>, <span class="built_in">sizeof</span>(f));</span><br><span class="line">        f[i][<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(i, <span class="number">-1</span>, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>随机过程与计数</category>
+      </categories>
+      <tags>
+        <tag>图论</tag>
+        <tag>圆方树</tag>
+        <tag>DP</tag>
+        <tag>计数</tag>
+        <tag>容斥</tag>
+        <tag>概率与期望</tag>
+        <tag>双连通分量</tag>
+      </tags>
+  </entry>
 </search>
