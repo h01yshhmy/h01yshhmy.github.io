@@ -1979,6 +1979,7 @@ class="math inline">\(cnt-i+1\)</span>。</p>
 <p>三倍经验：<a
 href="https://www.luogu.com.cn/problem/CF765F">CF765F</a>，<a
 href="https://www.luogu.com.cn/problem/P5926">P5926</a>。</p>
+<p>这东西其实是支配对。</p>
 <p>首先离线全部询问，对当前右端点考虑每个左端点的答案，最后答案点对显然有两种，对前大后小和前小后大分类讨论，前者可以通过后者反转值域来做，所以只需要考虑前者。</p>
 <p>考虑对于当前的 <span class="math inline">\(a_x\)</span>
 有哪些点的答案可能发生变化，假设在 <span
@@ -2020,6 +2021,7 @@ n)\)</span>，细节见代码。</p>
         <tag>离线</tag>
         <tag>树状数组</tag>
         <tag>二分</tag>
+        <tag>支配对</tag>
       </tags>
   </entry>
   <entry>
@@ -9955,7 +9957,7 @@ class="math inline">\(S[l,r]\)</span> 子串的最长后缀。</p>
 <p>在走 <span class="math inline">\(\delta(p,T[i])\)</span>
 的过程中，我们忽略了 <span class="math inline">\(\delta(p,T[i])\)</span>
 代表的这些串是否有在 <span class="math inline">\([l,r]\)</span>
-内出现过的串。</p>
+内出现过。</p>
 <p>换句话说，是否存在 <span class="math inline">\(d\in
 endpos(\delta(p,T[i]))\)</span> 满足 <span
 class="math inline">\(d\in[l+L,r]\)</span>，只有存在 <span
@@ -10552,6 +10554,49 @@ n)\)</span>。</p>
         <tag>扫描线</tag>
         <tag>点分治</tag>
         <tag>支配对</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P7603</title>
+    <url>/2024/01/21/P7603/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P7603">P7603 [THUPC2021]
+鬼街</a></p>
+<span id="more"></span>
+<p>lxl 的奇妙 trick：减半警报器的模板题。</p>
+<p><strong>减半警报器</strong>：维护一个数据结构，初始给定一些范围，每个范围有权值，每次操作
+<span class="math inline">\((x,v)\)</span> 把包含点 <span
+class="math inline">\(x\)</span> 的范围权值都减去 <span
+class="math inline">\(v\)</span>，求每个范围被减到 <span
+class="math inline">\(\le 0\)</span> 的最早时刻。</p>
+<p>处理方式是将初始权值平均分给范围内每个点（一个点可能被多个范围分配权值），一旦有一个点的某个权值减到
+<span class="math inline">\(\le 0\)</span>
+就直接让这个权值对应的范围重新分配剩下的值。</p>
+<p>这个 trick 的理论基础是：<span class="math inline">\(\sum_{i=1}^n
+a_i=s,\max_{i=1}^n a_i\ge \dfrac{s}{n}\)</span>。</p>
+<p>设范围最大为 <span
+class="math inline">\(k\)</span>，对每个范围，每次都能至少减掉剩余权值的
+<span class="math inline">\(\frac{1}{k}\)</span>，减 <span
+class="math inline">\(\log_{\frac{k}{k-1}}\)</span> 次就能让权值 <span
+class="math inline">\(\le 0\)</span>。</p>
+<p>回到这道题。</p>
+<p>首先，注意到 <span class="math inline">\(10^5\)</span>
+内的数，质因子个数不超过 <span class="math inline">\(k=6\)</span>
+个。</p>
+<p>将每个监视器的 <span class="math inline">\(y\)</span>
+平均分配到被监视的每个位置，对于每个质因子，需要维护一个支持全局减，查询全局最小值，删除全局最小值的数据结构。</p>
+<p>开值域个优先队列即可。</p>
+<p>总元素个数是 <span class="math inline">\(kn\)</span> 的，时间复杂度
+<span
+class="math inline">\(O(kn\log_{\frac{k}{k-1}}n\log_2n)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n, qn, del[N], pos[N], all;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; fac[N];</span><br><span class="line">ll cnt[N], val[N];</span><br><span class="line"><span class="keyword">using</span> pli = pair&lt;ll, <span class="type">int</span>&gt;;</span><br><span class="line">priority_queue&lt;pli, vector&lt;pli&gt;, greater&lt;pli&gt;&gt; q[N];</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; ans;</span><br><span class="line"><span class="keyword">using</span> t3 = tuple&lt;ll, ll, ll&gt;;</span><br><span class="line">vector&lt;t3&gt; res;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">check</span><span class="params">(<span class="type">int</span> id)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (del[id])</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    ll v = val[id];</span><br><span class="line">    <span class="type">int</span> s = fac[pos[id]].<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> p : fac[pos[id]])</span><br><span class="line">    &#123;</span><br><span class="line">        v -= cnt[p];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (v &lt;= <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> ans.<span class="built_in">eb</span>(id), del[id] = <span class="number">1</span>, <span class="built_in">void</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> p : fac[pos[id]])</span><br><span class="line">    &#123;</span><br><span class="line">        res.<span class="built_in">eb</span>(t3&#123;p, (v - <span class="number">1</span>) / s + <span class="number">1</span> + cnt[p], id&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">check</span><span class="params">(<span class="type">int</span> p, ll v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cnt[p] += v;</span><br><span class="line">    <span class="keyword">while</span> (!q[p].<span class="built_in">empty</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">auto</span> [tot, id] = q[p].<span class="built_in">top</span>();</span><br><span class="line">        <span class="keyword">if</span> (tot &gt; cnt[p])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        q[p].<span class="built_in">pop</span>();</span><br><span class="line">        <span class="built_in">check</span>(id);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> [pos, tot, id] : res)</span><br><span class="line">    &#123;</span><br><span class="line">        q[pos].<span class="built_in">push</span>(&#123;tot, id&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    res.<span class="built_in">clear</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n, qn);</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">2</span>, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!fac[i].<span class="built_in">empty</span>())</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i; j &lt;= n; j += i)</span><br><span class="line">        &#123;</span><br><span class="line">            fac[j].<span class="built_in">eb</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> op = <span class="number">0</span>, x = <span class="number">0</span>, lasans = <span class="number">0</span>;</span><br><span class="line">    ll y = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (qn--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">read</span>(op, x, y);</span><br><span class="line">        y ^= lasans;</span><br><span class="line">        <span class="keyword">if</span> (op == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i : fac[x])</span><br><span class="line">                <span class="built_in">check</span>(i, y);</span><br><span class="line">            <span class="built_in">stable_sort</span>(<span class="built_in">range</span>(ans));</span><br><span class="line">            <span class="built_in">write</span>(lasans = (<span class="type">int</span>)ans.<span class="built_in">size</span>(), <span class="string">&#x27; &#x27;</span>);</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i : ans)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">write</span>(i, <span class="string">&#x27; &#x27;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">            ans.<span class="built_in">clear</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            all++;</span><br><span class="line">            pos[all] = x;</span><br><span class="line">            val[all] = y;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i : fac[x])</span><br><span class="line">            &#123;</span><br><span class="line">                val[all] += cnt[i];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">check</span>(all);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> [pos, tot, id] : res)</span><br><span class="line">            &#123;</span><br><span class="line">                q[pos].<span class="built_in">push</span>(<span class="built_in">mkp</span>(tot, id));</span><br><span class="line">            &#125;</span><br><span class="line">            res.<span class="built_in">clear</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>DSs</category>
+      </categories>
+      <tags>
+        <tag>优先队列</tag>
+        <tag>减半警报器</tag>
       </tags>
   </entry>
 </search>
