@@ -9270,7 +9270,7 @@ class="math inline">\(r_1,l_2\)</span>
 之间连边，问题转化成二分图最大独立集，众所周知，二分图最大独立集等于点数减去二分图最大匹配。</p>
 <h2 id="暴力空间优化">暴力空间优化</h2>
 <blockquote>
-<p>相信dinic与奇迹。</p>
+<p>相信 dinic 与奇迹。</p>
 </blockquote>
 <p>空间 <code>16MB</code>，直接建图会爆。</p>
 <p>发现容量只会有 <span class="math inline">\(0/1\)</span>
@@ -10654,25 +10654,27 @@ class="math inline">\(k\)</span> 的答案。 <span class="math display">\[
 &amp;g(i,j,k)\times c\to g(i+1,j-1,k+j-1)
 \end{aligned}
 \]</span> 末尾和总和不能同时在状态内。</p>
-<p>对于这样一个折线的计数，考虑记录距离起点的偏移量之和，并对<strong>起点</strong>转移。</p>
-<p>先看偏移量，也就是 <span class="math inline">\(\sum a_i-a_1=\sum
-a_i-len\times a_1\)</span>，别忘了 <span class="math inline">\(\sum
-a_i\)</span> 是 <span class="math inline">\(O(n)\)</span> 的。</p>
+<p>对于这样一个折线的计数，考虑记录距离起点的偏移量之和，并对<strong>起点</strong>转移，每次
+<span class="math inline">\(i\to i+1\)</span> 的时候，和第一种 DP
+相反，看作在整个序列的<strong>开头</strong>加入了一个数。</p>
+<p>形式化偏移量：<span class="math inline">\(\sum a_i-a_1=\sum
+a_i-i\times a_1\)</span>。</p>
 <p>设 <span class="math inline">\(g(i,j)\)</span>：前 <span
-class="math inline">\(i\)</span> 个，<span class="math inline">\(j=\sum
-a_i\)</span> 的答案，这里总和为 <span class="math inline">\(j-i\times
-a_1\)</span>。</p>
+class="math inline">\(i\)</span> 个，<span
+class="math inline">\(j=\sum_{k} a_k-a_1\)</span> 的答案。</p>
 <p>我们这里的 <span class="math inline">\(a_1\)</span>
-是最后要枚举的，所以过程中总和的变化量都要<strong>加到 <span
-class="math inline">\(j\)</span> 上</strong>。</p>
-<p>每次 <span class="math inline">\(i\to i+1\)</span> 的时候，和第一种
-DP 相反，看作在整个序列的<strong>开头</strong>加入了一个数。</p>
+是最后要枚举的（是为了不重不漏。我们需要最后钦定一个 <span
+class="math inline">\(a_1\)</span>），所以过程中的变化量都要<strong>加到
+<span class="math inline">\(j\)</span> 上</strong>。</p>
 <p>也就是，要么使 <span class="math inline">\(a&#39;_1\to
 a_1-1\)</span>，要么使 <span class="math inline">\(a&#39;_1\to
 a_1+1\)</span>，这里 <span class="math inline">\(a&#39;_1\)</span>
-是新加入的当前数。</p>
-<p>前者会使 <span class="math inline">\(j\to j+i\)</span>，后者使 <span
-class="math inline">\(j\to j-i\)</span>，有转移： <span
+是新的开头。</p>
+<p>容易发现，前者会使 <span class="math inline">\(j\to
+j+i\)</span>（每个都多偏移 <span
+class="math inline">\(1\)</span>），后者使 <span
+class="math inline">\(j\to j-i\)</span>（每个都多偏移 <span
+class="math inline">\(-1\)</span>），有转移： <span
 class="math display">\[
 \begin{aligned}
 &amp;g(i,j)\to g(i+1,j+i)\\
@@ -10699,6 +10701,116 @@ class="math inline">\(O(n)\)</span>。</p>
         <tag>DP</tag>
         <tag>计数</tag>
         <tag>根号分治</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P4156</title>
+    <url>/2024/01/23/P4156/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P4156">P4156 [WC2016]
+论战捆竹竿</a></p>
+<span id="more"></span>
+<p>对题意的初步转化较为容易，难点在后面。</p>
+<p>显然，每次可以将长度增加串的任意一个周期长度。</p>
+<p>设 <span class="math inline">\(P\)</span> 为 串的周期集合，<span
+class="math inline">\(p\)</span> 为串的周期序列（排好序的）。</p>
+<p>将全部周期列成序列 <span
+class="math inline">\(p\)</span>，竹竿长度形如 <span
+class="math inline">\(\sum_{i}p_ix_i\)</span>，满足 <span
+class="math inline">\(\forall i,x_i\ge 0\)</span>。</p>
+<p>可以用 同余最短路 通过前 6 个点，<code>bitset</code> 优化背包通过 7
+到 10~12 的测试点（没写，全是目测）。</p>
+<p>背包没啥前途，考虑优化最短路过程。</p>
+<p>退回到 <span class="math inline">\(border\)</span> 阶段。</p>
+<p>有性质：一个字符串的所有 <span class="math inline">\(border\)</span>
+排序后，至少存在一种将序列划分为若干个连续段的方案，使得每个连续段均为<strong>等差数列</strong>，且段的个数为
+<span class="math inline">\(O(\log |S|)\)</span>。</p>
+<p><del>我测还要证明吗</del>证明：</p>
+<ul>
+<li>弱周期引理应该是众所周知：若 <span class="math inline">\(p,q\in
+P\)</span> 且 <span class="math inline">\(p+q\le |S|\)</span>，有 <span
+class="math inline">\(\gcd(p,q)\in P\)</span>。</li>
+<li>考虑两个 <span class="math inline">\(|S|\)</span> 的 <span
+class="math inline">\(border\)</span>：<span
+class="math inline">\(a,b\)</span>，其中 <span
+class="math inline">\(b\)</span> 是最长 <span
+class="math inline">\(border\)</span>，<span class="math inline">\(a\ge
+\frac{|S|}{2}\)</span>。</li>
+<li>我们另 <span class="math inline">\(p,q\)</span> 为对应周期：<span
+class="math inline">\(p=|S|-a,\,q=|S|-b\)</span>。</li>
+<li>有弱周期定理，<span class="math inline">\(\gcd(p,q)\)</span> 是
+<span class="math inline">\(S\)</span> 的周期，<span
+class="math inline">\(|S|-\gcd(p,q)\)</span> 是 <span
+class="math inline">\(S\)</span> 的 <span
+class="math inline">\(border\)</span>。</li>
+<li>又因为 <span class="math inline">\(b\)</span> 是最长 <span
+class="math inline">\(border\)</span>，所以 <span
+class="math inline">\(\gcd(p,q)=q\)</span>，也就是 <span
+class="math inline">\(q|p\)</span>。</li>
+<li>由周期定义，<span class="math inline">\(k\times q\)</span> 也是
+<span class="math inline">\(S\)</span> 的周期，所以 <span
+class="math inline">\(|S|-k\times q\)</span> 都是 <span
+class="math inline">\(S\)</span> 的 <span
+class="math inline">\(border\)</span>，因此<strong>所有长度大于等于当前串一半的
+<span class="math inline">\(border\)</span> 构成等差数列</strong>。</li>
+<li>我们将当前 <span class="math inline">\(S\)</span> 的 <span
+class="math inline">\(border\)</span> 分为长度 <span
+class="math inline">\(\ge \frac{|S|}{2}\)</span>
+的和其他部分，第一部分是等差数列，第二部分继续递归。最多 <span
+class="math inline">\(\log |S|\)</span> 层，得证。</li>
+</ul>
+<p>将不同等差数列分开处理。</p>
+<p>对于 <span class="math inline">\(x,x+d,x+2d,\cdots x+kd\)</span>，设
+<span class="math inline">\(k\in[1,r]\)</span>，我们在 <span
+class="math inline">\(\bmod x\)</span> 下跑同余最短路，对于 <span
+class="math inline">\(i\in[0,x-1]\)</span> 连 <span
+class="math inline">\(i\to (i+kd)\bmod x\)</span>
+的边。容易发现，最终一定会形成环，且一共有 <span
+class="math inline">\(\gcd(x,d)\)</span> 个环，我们对每个环分开做。</p>
+<p>考虑 <span class="math inline">\(dis\)</span> 最小的点 <span
+class="math inline">\(p\)</span>，注意到<strong>不存在跨过 <span
+class="math inline">\(p\)</span> 的松弛操作</strong>（不然为啥不以 <span
+class="math inline">\(p\)</span> 为起点），因此可以在 <span
+class="math inline">\(p\)</span> 处断环为链，同时忽略跨过 <span
+class="math inline">\(p\)</span> 的边。容易发现，<strong>图变成了
+DAG</strong>，只要遵循拓扑序，就可以使用看起来并不图论的方式做松弛<del>比如单调队列</del>。</p>
+<p>对于一般的同余最短路，如果我们可以单次增长 <span
+class="math inline">\(l\)</span>，<span class="math inline">\(i\to
+(i+l)\bmod x\)</span> 的边权应为 <span
+class="math inline">\(l\)</span>，容易发现，这里<strong>第 <span
+class="math inline">\(i\)</span> 个点</strong>到<strong>第 <span
+class="math inline">\(j\)</span> 个点</strong>连边的边权应该为 <span
+class="math inline">\(x+(j-i)\times d\)</span>，注意第 <span
+class="math inline">\(i\)</span> 个点和点 <span
+class="math inline">\(i\)</span> 是有区别的。</p>
+<p>因此，对于每个 <span class="math inline">\(i\)</span>，算出 <span
+class="math inline">\(j=i-k,k\in[1,r]\)</span> 中最小的 <span
+class="math inline">\(dis(i)+(j-i)\times d+x\)</span>（<span
+class="math inline">\(dis\)</span>
+就是最短路），对于每个点找滑动窗口内最小值，只需要用单调队列维护即可。</p>
+<p>同一个等差数列内，环和环之间的信息合并是简单的，对 <span
+class="math inline">\(dis\)</span> 不断取 <span
+class="math inline">\(\min\)</span> 就行。</p>
+<p>现在考虑怎么从一个等差数列转移到另一个等差数列上，设两个等差数列分别形如
+<span class="math inline">\(a_1+kd_1\)</span> 和 <span
+class="math inline">\(a_2+kd_2\)</span>，需要用 <span
+class="math inline">\(dis(i)\)</span> 更新 <span
+class="math inline">\((dis(i)+ka_1)\bmod a_2\)</span>
+的答案，容易发现和上面环和环之间本质相同，拆成 <span
+class="math inline">\(\gcd(a_1,a_2)\)</span>
+个环，环内从最小值开始维护前缀最小值更新即可。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log n)\)</span>，<span
+class="math inline">\(\log\)</span> 来自等差数列个数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">5e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line">ll Len;</span><br><span class="line"><span class="type">char</span> s[N];</span><br><span class="line"><span class="type">int</span> nxt[N], border[N], que[N], seq[N], pos[N], tp, tot, cur;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">kmp</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(nxt, <span class="number">0</span>, <span class="built_in">sizeof</span>(nxt));</span><br><span class="line">    <span class="built_in">memset</span>(border, <span class="number">0</span>, <span class="built_in">sizeof</span>(border));</span><br><span class="line">    tot = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> p = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">2</span>, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (p &gt; <span class="number">0</span> &amp;&amp; s[p + <span class="number">1</span>] != s[i])</span><br><span class="line">            p = nxt[p];</span><br><span class="line">        <span class="keyword">if</span> (s[p + <span class="number">1</span>] == s[i])</span><br><span class="line">            p++;</span><br><span class="line">        nxt[i] = p;</span><br><span class="line">    &#125;</span><br><span class="line">    p = nxt[n];</span><br><span class="line">    <span class="keyword">while</span> (p)</span><br><span class="line">    &#123;</span><br><span class="line">        border[++tot] = n - p;</span><br><span class="line">        p = nxt[p];</span><br><span class="line">    &#125;</span><br><span class="line">    border[++tot] = n;</span><br><span class="line">&#125;</span><br><span class="line">ll dis[N], res[N], sta[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">chgmod</span><span class="params">(<span class="type">int</span> mod)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> cnt = __gcd(mod, cur);</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, cur - <span class="number">1</span>) res[i] = dis[i];</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, mod - <span class="number">1</span>) dis[i] = INF;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, cur - <span class="number">1</span>) dis[res[i] % mod] = <span class="built_in">min</span>(dis[res[i] % mod], res[i]);</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, cnt - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tp = <span class="number">0</span>;</span><br><span class="line">        que[++tp] = i;</span><br><span class="line">        <span class="type">int</span> p = (i + cur) % mod;</span><br><span class="line">        <span class="keyword">while</span> (p != que[<span class="number">1</span>])</span><br><span class="line">            que[++tp] = p, p = (p + cur) % mod;</span><br><span class="line">        <span class="built_in">rep</span>(j, tp + <span class="number">1</span>, tp * <span class="number">2</span>) que[j] = que[j - tp];</span><br><span class="line">        tp *= <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">rep</span>(j, <span class="number">2</span>, tp) dis[que[j]] = <span class="built_in">min</span>(dis[que[j]], dis[que[j - <span class="number">1</span>]] + cur);</span><br><span class="line">    &#125;</span><br><span class="line">    cur = mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">(<span class="type">int</span> now, <span class="type">int</span> dif, <span class="type">int</span> siz)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> cnt = __gcd(now, dif);</span><br><span class="line">    <span class="built_in">chgmod</span>(now);</span><br><span class="line">    <span class="keyword">if</span> (dif &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, cnt - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tp = <span class="number">0</span>;</span><br><span class="line">        que[++tp] = i;</span><br><span class="line">        <span class="type">int</span> tmp = (i + dif) % now;</span><br><span class="line">        <span class="keyword">while</span> (tmp != que[<span class="number">1</span>])</span><br><span class="line">            que[++tp] = tmp, tmp = (tmp + dif) % now;</span><br><span class="line">        <span class="type">int</span> minpos = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">re</span>(j, tp) <span class="keyword">if</span> (dis[que[j]] &lt; dis[que[minpos]]) minpos = j;</span><br><span class="line">        <span class="type">int</span> tmpcnt = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">rep</span>(j, minpos, tp) seq[++tmpcnt] = que[j];</span><br><span class="line">        <span class="built_in">re</span>(j, minpos - <span class="number">1</span>) seq[++tmpcnt] = que[j];</span><br><span class="line">        <span class="type">int</span> hd = <span class="number">1</span>, tl = <span class="number">1</span>;</span><br><span class="line">        pos[<span class="number">1</span>] = <span class="number">1</span>, sta[<span class="number">1</span>] = dis[seq[<span class="number">1</span>]] - dif;</span><br><span class="line">        <span class="built_in">rep</span>(j, <span class="number">2</span>, tp)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">while</span> (hd &lt;= tl &amp;&amp; pos[hd] + siz &lt; j)</span><br><span class="line">                hd++;</span><br><span class="line">            <span class="keyword">if</span> (hd &lt;= tl)</span><br><span class="line">                dis[seq[j]] = <span class="built_in">min</span>(dis[seq[j]], sta[hd] + j * <span class="number">1ll</span> * dif + now);</span><br><span class="line">            <span class="keyword">while</span> (hd &lt;= tl &amp;&amp; sta[tl] &gt;= dis[seq[j]] - j * <span class="number">1ll</span> * dif)</span><br><span class="line">                tl--;</span><br><span class="line">            sta[++tl] = dis[seq[j]] - j * <span class="number">1ll</span> * dif, pos[tl] = j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; Len;</span><br><span class="line">    cin &gt;&gt; (s + <span class="number">1</span>);</span><br><span class="line">    Len -= n;</span><br><span class="line">    <span class="built_in">memset</span>(dis, <span class="number">0x3f</span>, <span class="built_in">sizeof</span>(dis));</span><br><span class="line">    dis[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    cur = n;</span><br><span class="line">    <span class="built_in">kmp</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>, j = <span class="number">1</span>; i &lt;= tot; i = j)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (border[j + <span class="number">1</span>] - border[j] == border[i + <span class="number">1</span>] - border[i])</span><br><span class="line">            j++;</span><br><span class="line">        <span class="built_in">work</span>(border[i], border[i + <span class="number">1</span>] - border[i], j - i - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, cur - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (dis[i] &lt;= Len)</span><br><span class="line">        &#123;</span><br><span class="line">            ans += (Len - dis[i]) / cur + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> T = <span class="number">0</span>;</span><br><span class="line">    CIOO;</span><br><span class="line">    cin &gt;&gt; T;</span><br><span class="line">    <span class="keyword">while</span> (T--)</span><br><span class="line">        <span class="built_in">Main</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>Strin</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+        <tag>字符串</tag>
+        <tag>KMP</tag>
+        <tag>最短路</tag>
       </tags>
   </entry>
 </search>

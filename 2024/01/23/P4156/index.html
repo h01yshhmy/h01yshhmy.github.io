@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"h01yshhmy.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="P4156 [WC2016] 论战捆竹竿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="P4156">
+<meta property="og:url" content="https://h01yshhmy.github.io/2024/01/23/P4156/index.html">
+<meta property="og:site_name" content="h01yshhmy">
+<meta property="og:description" content="P4156 [WC2016] 论战捆竹竿">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-23T13:11:21.000Z">
+<meta property="article:modified_time" content="2024-01-23T14:48:21.704Z">
+<meta property="article:author" content="Untitled-1">
+<meta property="article:tag" content="DP">
+<meta property="article:tag" content="字符串">
+<meta property="article:tag" content="KMP">
+<meta property="article:tag" content="最短路">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://h01yshhmy.github.io/2024/01/23/P4156/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://h01yshhmy.github.io/2024/01/23/P4156/","path":"2024/01/23/P4156/","title":"P4156"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>P4156 | h01yshhmy</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">h01yshhmy</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">OI Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Untitled-1"
+      src="/images/1.png">
+  <p class="site-author-name" itemprop="name">Untitled-1</p>
+  <div class="site-description" itemprop="description">学生 OIer Gamer</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">176</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">120</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/h01yshhmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;h01yshhmy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/416442" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;416442" rel="noopener me" target="_blank">Luogu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://h01yshhmy.github.io/2024/01/23/P4156/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.png">
+      <meta itemprop="name" content="Untitled-1">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="h01yshhmy">
+      <meta itemprop="description" content="学生 OIer Gamer">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="P4156 | h01yshhmy">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          P4156
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-01-23 21:11:21 / 修改时间：22:48:21" itemprop="dateCreated datePublished" datetime="2024-01-23T21:11:21+08:00">2024-01-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">题解</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E9%A2%98%E8%A7%A3/Strin/" itemprop="url" rel="index"><span itemprop="name">Strin</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4156">P4156 [WC2016]
+论战捆竹竿</a></p>
+<span id="more"></span>
+<p>对题意的初步转化较为容易，难点在后面。</p>
+<p>显然，每次可以将长度增加串的任意一个周期长度。</p>
+<p>设 <span class="math inline">\(P\)</span> 为 串的周期集合，<span
+class="math inline">\(p\)</span> 为串的周期序列（排好序的）。</p>
+<p>将全部周期列成序列 <span
+class="math inline">\(p\)</span>，竹竿长度形如 <span
+class="math inline">\(\sum_{i}p_ix_i\)</span>，满足 <span
+class="math inline">\(\forall i,x_i\ge 0\)</span>。</p>
+<p>可以用 同余最短路 通过前 6 个点，<code>bitset</code> 优化背包通过 7
+到 10~12 的测试点（没写，全是目测）。</p>
+<p>背包没啥前途，考虑优化最短路过程。</p>
+<p>退回到 <span class="math inline">\(border\)</span> 阶段。</p>
+<p>有性质：一个字符串的所有 <span class="math inline">\(border\)</span>
+排序后，至少存在一种将序列划分为若干个连续段的方案，使得每个连续段均为<strong>等差数列</strong>，且段的个数为
+<span class="math inline">\(O(\log |S|)\)</span>。</p>
+<p><del>我测还要证明吗</del>证明：</p>
+<ul>
+<li>弱周期引理应该是众所周知：若 <span class="math inline">\(p,q\in
+P\)</span> 且 <span class="math inline">\(p+q\le |S|\)</span>，有 <span
+class="math inline">\(\gcd(p,q)\in P\)</span>。</li>
+<li>考虑两个 <span class="math inline">\(|S|\)</span> 的 <span
+class="math inline">\(border\)</span>：<span
+class="math inline">\(a,b\)</span>，其中 <span
+class="math inline">\(b\)</span> 是最长 <span
+class="math inline">\(border\)</span>，<span class="math inline">\(a\ge
+\frac{|S|}{2}\)</span>。</li>
+<li>我们另 <span class="math inline">\(p,q\)</span> 为对应周期：<span
+class="math inline">\(p=|S|-a,\,q=|S|-b\)</span>。</li>
+<li>有弱周期定理，<span class="math inline">\(\gcd(p,q)\)</span> 是
+<span class="math inline">\(S\)</span> 的周期，<span
+class="math inline">\(|S|-\gcd(p,q)\)</span> 是 <span
+class="math inline">\(S\)</span> 的 <span
+class="math inline">\(border\)</span>。</li>
+<li>又因为 <span class="math inline">\(b\)</span> 是最长 <span
+class="math inline">\(border\)</span>，所以 <span
+class="math inline">\(\gcd(p,q)=q\)</span>，也就是 <span
+class="math inline">\(q|p\)</span>。</li>
+<li>由周期定义，<span class="math inline">\(k\times q\)</span> 也是
+<span class="math inline">\(S\)</span> 的周期，所以 <span
+class="math inline">\(|S|-k\times q\)</span> 都是 <span
+class="math inline">\(S\)</span> 的 <span
+class="math inline">\(border\)</span>，因此<strong>所有长度大于等于当前串一半的
+<span class="math inline">\(border\)</span> 构成等差数列</strong>。</li>
+<li>我们将当前 <span class="math inline">\(S\)</span> 的 <span
+class="math inline">\(border\)</span> 分为长度 <span
+class="math inline">\(\ge \frac{|S|}{2}\)</span>
+的和其他部分，第一部分是等差数列，第二部分继续递归。最多 <span
+class="math inline">\(\log |S|\)</span> 层，得证。</li>
+</ul>
+<p>将不同等差数列分开处理。</p>
+<p>对于 <span class="math inline">\(x,x+d,x+2d,\cdots x+kd\)</span>，设
+<span class="math inline">\(k\in[1,r]\)</span>，我们在 <span
+class="math inline">\(\bmod x\)</span> 下跑同余最短路，对于 <span
+class="math inline">\(i\in[0,x-1]\)</span> 连 <span
+class="math inline">\(i\to (i+kd)\bmod x\)</span>
+的边。容易发现，最终一定会形成环，且一共有 <span
+class="math inline">\(\gcd(x,d)\)</span> 个环，我们对每个环分开做。</p>
+<p>考虑 <span class="math inline">\(dis\)</span> 最小的点 <span
+class="math inline">\(p\)</span>，注意到<strong>不存在跨过 <span
+class="math inline">\(p\)</span> 的松弛操作</strong>（不然为啥不以 <span
+class="math inline">\(p\)</span> 为起点），因此可以在 <span
+class="math inline">\(p\)</span> 处断环为链，同时忽略跨过 <span
+class="math inline">\(p\)</span> 的边。容易发现，<strong>图变成了
+DAG</strong>，只要遵循拓扑序，就可以使用看起来并不图论的方式做松弛<del>比如单调队列</del>。</p>
+<p>对于一般的同余最短路，如果我们可以单次增长 <span
+class="math inline">\(l\)</span>，<span class="math inline">\(i\to
+(i+l)\bmod x\)</span> 的边权应为 <span
+class="math inline">\(l\)</span>，容易发现，这里<strong>第 <span
+class="math inline">\(i\)</span> 个点</strong>到<strong>第 <span
+class="math inline">\(j\)</span> 个点</strong>连边的边权应该为 <span
+class="math inline">\(x+(j-i)\times d\)</span>，注意第 <span
+class="math inline">\(i\)</span> 个点和点 <span
+class="math inline">\(i\)</span> 是有区别的。</p>
+<p>因此，对于每个 <span class="math inline">\(i\)</span>，算出 <span
+class="math inline">\(j=i-k,k\in[1,r]\)</span> 中最小的 <span
+class="math inline">\(dis(i)+(j-i)\times d+x\)</span>（<span
+class="math inline">\(dis\)</span>
+就是最短路），对于每个点找滑动窗口内最小值，只需要用单调队列维护即可。</p>
+<p>同一个等差数列内，环和环之间的信息合并是简单的，对 <span
+class="math inline">\(dis\)</span> 不断取 <span
+class="math inline">\(\min\)</span> 就行。</p>
+<p>现在考虑怎么从一个等差数列转移到另一个等差数列上，设两个等差数列分别形如
+<span class="math inline">\(a_1+kd_1\)</span> 和 <span
+class="math inline">\(a_2+kd_2\)</span>，需要用 <span
+class="math inline">\(dis(i)\)</span> 更新 <span
+class="math inline">\((dis(i)+ka_1)\bmod a_2\)</span>
+的答案，容易发现和上面环和环之间本质相同，拆成 <span
+class="math inline">\(\gcd(a_1,a_2)\)</span>
+个环，环内从最小值开始维护前缀最小值更新即可。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log n)\)</span>，<span
+class="math inline">\(\log\)</span> 来自等差数列个数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">5e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line">ll Len;</span><br><span class="line"><span class="type">char</span> s[N];</span><br><span class="line"><span class="type">int</span> nxt[N], border[N], que[N], seq[N], pos[N], tp, tot, cur;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">kmp</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(nxt, <span class="number">0</span>, <span class="built_in">sizeof</span>(nxt));</span><br><span class="line">    <span class="built_in">memset</span>(border, <span class="number">0</span>, <span class="built_in">sizeof</span>(border));</span><br><span class="line">    tot = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> p = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">2</span>, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (p &gt; <span class="number">0</span> &amp;&amp; s[p + <span class="number">1</span>] != s[i])</span><br><span class="line">            p = nxt[p];</span><br><span class="line">        <span class="keyword">if</span> (s[p + <span class="number">1</span>] == s[i])</span><br><span class="line">            p++;</span><br><span class="line">        nxt[i] = p;</span><br><span class="line">    &#125;</span><br><span class="line">    p = nxt[n];</span><br><span class="line">    <span class="keyword">while</span> (p)</span><br><span class="line">    &#123;</span><br><span class="line">        border[++tot] = n - p;</span><br><span class="line">        p = nxt[p];</span><br><span class="line">    &#125;</span><br><span class="line">    border[++tot] = n;</span><br><span class="line">&#125;</span><br><span class="line">ll dis[N], res[N], sta[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">chgmod</span><span class="params">(<span class="type">int</span> mod)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> cnt = __gcd(mod, cur);</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, cur - <span class="number">1</span>) res[i] = dis[i];</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, mod - <span class="number">1</span>) dis[i] = INF;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, cur - <span class="number">1</span>) dis[res[i] % mod] = <span class="built_in">min</span>(dis[res[i] % mod], res[i]);</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, cnt - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tp = <span class="number">0</span>;</span><br><span class="line">        que[++tp] = i;</span><br><span class="line">        <span class="type">int</span> p = (i + cur) % mod;</span><br><span class="line">        <span class="keyword">while</span> (p != que[<span class="number">1</span>])</span><br><span class="line">            que[++tp] = p, p = (p + cur) % mod;</span><br><span class="line">        <span class="built_in">rep</span>(j, tp + <span class="number">1</span>, tp * <span class="number">2</span>) que[j] = que[j - tp];</span><br><span class="line">        tp *= <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">rep</span>(j, <span class="number">2</span>, tp) dis[que[j]] = <span class="built_in">min</span>(dis[que[j]], dis[que[j - <span class="number">1</span>]] + cur);</span><br><span class="line">    &#125;</span><br><span class="line">    cur = mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">(<span class="type">int</span> now, <span class="type">int</span> dif, <span class="type">int</span> siz)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> cnt = __gcd(now, dif);</span><br><span class="line">    <span class="built_in">chgmod</span>(now);</span><br><span class="line">    <span class="keyword">if</span> (dif &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, cnt - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tp = <span class="number">0</span>;</span><br><span class="line">        que[++tp] = i;</span><br><span class="line">        <span class="type">int</span> tmp = (i + dif) % now;</span><br><span class="line">        <span class="keyword">while</span> (tmp != que[<span class="number">1</span>])</span><br><span class="line">            que[++tp] = tmp, tmp = (tmp + dif) % now;</span><br><span class="line">        <span class="type">int</span> minpos = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">re</span>(j, tp) <span class="keyword">if</span> (dis[que[j]] &lt; dis[que[minpos]]) minpos = j;</span><br><span class="line">        <span class="type">int</span> tmpcnt = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">rep</span>(j, minpos, tp) seq[++tmpcnt] = que[j];</span><br><span class="line">        <span class="built_in">re</span>(j, minpos - <span class="number">1</span>) seq[++tmpcnt] = que[j];</span><br><span class="line">        <span class="type">int</span> hd = <span class="number">1</span>, tl = <span class="number">1</span>;</span><br><span class="line">        pos[<span class="number">1</span>] = <span class="number">1</span>, sta[<span class="number">1</span>] = dis[seq[<span class="number">1</span>]] - dif;</span><br><span class="line">        <span class="built_in">rep</span>(j, <span class="number">2</span>, tp)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">while</span> (hd &lt;= tl &amp;&amp; pos[hd] + siz &lt; j)</span><br><span class="line">                hd++;</span><br><span class="line">            <span class="keyword">if</span> (hd &lt;= tl)</span><br><span class="line">                dis[seq[j]] = <span class="built_in">min</span>(dis[seq[j]], sta[hd] + j * <span class="number">1ll</span> * dif + now);</span><br><span class="line">            <span class="keyword">while</span> (hd &lt;= tl &amp;&amp; sta[tl] &gt;= dis[seq[j]] - j * <span class="number">1ll</span> * dif)</span><br><span class="line">                tl--;</span><br><span class="line">            sta[++tl] = dis[seq[j]] - j * <span class="number">1ll</span> * dif, pos[tl] = j;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; Len;</span><br><span class="line">    cin &gt;&gt; (s + <span class="number">1</span>);</span><br><span class="line">    Len -= n;</span><br><span class="line">    <span class="built_in">memset</span>(dis, <span class="number">0x3f</span>, <span class="built_in">sizeof</span>(dis));</span><br><span class="line">    dis[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    cur = n;</span><br><span class="line">    <span class="built_in">kmp</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>, j = <span class="number">1</span>; i &lt;= tot; i = j)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span> (border[j + <span class="number">1</span>] - border[j] == border[i + <span class="number">1</span>] - border[i])</span><br><span class="line">            j++;</span><br><span class="line">        <span class="built_in">work</span>(border[i], border[i + <span class="number">1</span>] - border[i], j - i - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, cur - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (dis[i] &lt;= Len)</span><br><span class="line">        &#123;</span><br><span class="line">            ans += (Len - dis[i]) / cur + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> T = <span class="number">0</span>;</span><br><span class="line">    CIOO;</span><br><span class="line">    cin &gt;&gt; T;</span><br><span class="line">    <span class="keyword">while</span> (T--)</span><br><span class="line">        <span class="built_in">Main</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/DP/" rel="tag"># DP</a>
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag"># 字符串</a>
+              <a href="/tags/KMP/" rel="tag"># KMP</a>
+              <a href="/tags/%E6%9C%80%E7%9F%AD%E8%B7%AF/" rel="tag"># 最短路</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/23/240123T3/" rel="prev" title="240123T3">
+                  <i class="fa fa-angle-left"></i> 240123T3
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Untitled-1</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+
+  <a href="https://github.com/h01yshhmy" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
