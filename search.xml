@@ -10813,4 +10813,67 @@ class="math inline">\(\log\)</span> 来自等差数列个数。</p>
         <tag>最短路</tag>
       </tags>
   </entry>
+  <entry>
+    <title>CF1762E</title>
+    <url>/2024/01/24/CF1762E/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF1762E">Tree Sum</a></p>
+<span id="more"></span>
+<p>题意：一个 <span class="math inline">\(n\)</span>
+个点的有边权树，边权 <span
+class="math inline">\(\{-1,1\}\)</span>，定义两点之间距离为边权和，求全部情况中
+<span class="math inline">\(1\)</span> 到 <span
+class="math inline">\(n\)</span> 的距离之和。</p>
+<p>设 <span class="math inline">\(g(u)=\prod_{(v,u)\in
+E}w(u,v)\)</span>。</p>
+<p>思考对于一个形态固定的树，如何染边。</p>
+<p>结论一：<span class="math inline">\(n\)</span> 为奇数时答案为 <span
+class="math inline">\(0\)</span>。</p>
+<p>证明：有 <span
+class="math inline">\(\prod_{u}g(u)=(-1)^{n}\)</span>，注意这里全是乘法，允许对每条边拆贡献，容易发现一条边会贡献两次，<span
+class="math inline">\(\prod_{u}g(u)=\prod_{(u,v)\in
+E}w(u,v)^2=1\)</span> 显然恒成立，当 <span class="math inline">\(n\bmod
+2=1\)</span> 的时候存在矛盾。</p>
+<p>相邻的边相关的性质，最特殊的当然是叶子。考虑经典的剥叶子套路。</p>
+<p>结论二：形态确定的偶数个点的树，染色方案为 <span
+class="math inline">\(1\)</span>。</p>
+<p>证明：叶子到父亲的边显然需要染 <span
+class="math inline">\(-1\)</span>，继续向上，父亲需要根据有几个叶子决定染什么颜色，显然这个决定是唯一的，可以看作每次删去一层叶子。</p>
+<p>结论三：对于合法方案中 <span class="math inline">\(w(u,v)=1\)</span>
+的边 <span class="math inline">\((u,v)\)</span>，删去不影响合法性。</p>
+<p>证明：显然。</p>
+<p>于是可以设计计数过程：删去某条边，并钦定点 <span
+class="math inline">\(1\)</span> 所在的连通块大小，保证不重不漏。</p>
+<p>设点 <span class="math inline">\(1\)</span> 所在连通块大小为 <span
+class="math inline">\(i\)</span>，点 <span
+class="math inline">\(n\)</span> 所在连通块大小为 <span
+class="math inline">\(n-i\)</span>。</p>
+<ul>
+<li>删边方案为两连通块中任意两点，贡献 <span
+class="math inline">\(i\times (n-i)\)</span>。</li>
+<li>边权大小为 <span class="math inline">\(\prod_{u\in
+link(1)}g(u)=(-1)^i\)</span>。</li>
+<li>可以选择剩余 <span class="math inline">\(n-2\)</span> 个点中 <span
+class="math inline">\(i-1\)</span> 个点和 <span
+class="math inline">\(i\)</span> 连通，方案数 <span
+class="math inline">\(\binom{n-2}{i-1}\)</span>。</li>
+<li>两侧需要计数全部生成树个数，根据 <span
+class="math inline">\(\textrm{Prufer}\)</span> 序列，贡献为 <span
+class="math inline">\(i^{i-2}\times (n-i)^{n-i-2}\)</span>。</li>
+</ul>
+<p>答案为： <span class="math display">\[
+\sum_{i=1}^{n-1}(-1)^i\binom{n-2}{i-1}i^{i-1}(n-i)^{n-i-1}
+\]</span> 时间复杂度 <span class="math inline">\(O(n\log
+n)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">5e5</span>+<span class="number">5</span>,mod=<span class="number">998244353</span>;</span><br><span class="line"><span class="type">int</span> n,fac[N],ifac[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qpow</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> res=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(b)&#123;</span><br><span class="line">        <span class="keyword">if</span>(b&amp;<span class="number">1</span>)res=<span class="number">1ll</span>*res*a%mod;</span><br><span class="line">        a=<span class="number">1ll</span>*a*a%mod;</span><br><span class="line">        b&gt;&gt;=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">C</span><span class="params">(<span class="type">int</span> n,<span class="type">int</span> m)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1ll</span>*fac[n]*ifac[m]%mod*ifac[n-m]%mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n);</span><br><span class="line">    fac[<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n)fac[i]=<span class="number">1ll</span>*fac[i<span class="number">-1</span>]*i%mod;</span><br><span class="line">    ifac[n]=<span class="built_in">qpow</span>(fac[n],mod<span class="number">-2</span>);</span><br><span class="line">    <span class="built_in">per</span>(i,n<span class="number">-1</span>,<span class="number">0</span>)ifac[i]=<span class="number">1ll</span>*ifac[i+<span class="number">1</span>]*(i+<span class="number">1</span>)%mod;</span><br><span class="line">    <span class="type">int</span> ans=<span class="number">0</span>,ret=<span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i,n<span class="number">-1</span>)&#123;</span><br><span class="line">        ret=<span class="number">1ll</span>*((i&amp;<span class="number">1</span>)?<span class="number">-1</span>:<span class="number">1</span>)*<span class="built_in">C</span>(n<span class="number">-2</span>,i<span class="number">-1</span>)%mod*<span class="built_in">qpow</span>(i,i<span class="number">-1</span>)%mod*<span class="built_in">qpow</span>(n-i,n-i<span class="number">-1</span>)%mod;</span><br><span class="line">        ans=((ans+ret)%mod+mod)%mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans,<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>随机过程与计数</category>
+      </categories>
+      <tags>
+        <tag>计数</tag>
+        <tag>组合</tag>
+        <tag>Prufer序列</tag>
+      </tags>
+  </entry>
 </search>
