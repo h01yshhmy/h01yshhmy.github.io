@@ -712,8 +712,9 @@ Q}j+\sum_{y_i\in Q}B_j\right)\right)
 <p>十分关键的，设 <span class="math inline">\(k=\sum_{x_i\in
 P}i\)</span>，<span
 class="math inline">\(S=\binom{n}{2}\)</span>，并枚举 <span
-class="math inline">\(k\)</span>。</p>
-<p><span class="math display">\[
+class="math inline">\(k\)</span>，实质上是在枚举不在 <span
+class="math inline">\(s\to u\)</span> 处切断，流量继续向后流动的 <span
+class="math inline">\(\sum i\)</span>。 <span class="math display">\[
 \begin{aligned}
 &amp;\min_{0\le k\le S}\left(\min_{P\subseteq X}\sum_{x_i\in X\backslash
 P}A_i+\min_{Q\subseteq Y}\left(\sum_{y_i\in Y\backslash
@@ -10968,6 +10969,59 @@ class="math inline">\(O(tn\log ^2 n)\)</span>。</p>
         <tag>点分治</tag>
         <tag>随机化</tag>
         <tag>边分治</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ARC125E</title>
+    <url>/2024/01/25/ARC125E/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/AT_arc125_e">[ARC125E]
+Snack</a></p>
+<span id="more"></span>
+<p>有一个 trick 集合为此题超集的题目：<a
+href="https://h01yshhmy.github.io/2023/12/11/ABC332G/">ABC332G |
+h01yshhmy</a>，写这篇是因为想的时间实在有点长。</p>
+<p>网络流模型容易得到。</p>
+<ul>
+<li>源点流零食 <span class="math inline">\(i\)</span>，流量 <span
+class="math inline">\(a_i\)</span>。</li>
+<li>零食 <span class="math inline">\(i\)</span> 流小孩 <span
+class="math inline">\(j\)</span>，流量 <span
+class="math inline">\(b_j\)</span>。</li>
+<li>小孩 <span class="math inline">\(i\)</span> 流汇点，流量 <span
+class="math inline">\(c_i\)</span>。</li>
+</ul>
+<p>答案为最大流。</p>
+<p>最大流转最小割，考虑割边决策。</p>
+<p>先枚举源点到每个零食的边是否割掉，设保留了 <span
+class="math inline">\(k\)</span> 个零食。</p>
+<p>容易发现，每个小孩有两种决策，要么把从这 <span
+class="math inline">\(k\)</span>
+个零食连过来的边全割掉，要么割自己到汇点的边，这个代价为 <span
+class="math inline">\(\min(kb_i,c_i)\)</span>，注意零食到小孩的流量和小孩编号相关。</p>
+<p>因为此图形态较为特殊，可以将全局的最优化问题分成小问题。</p>
+<p>容易发现这个决策和这 <span class="math inline">\(k\)</span>
+个零食具体是哪个无关，贪心的想，显然优先断掉 <span
+class="math inline">\(a_i\)</span> 更小的。先将 <span
+class="math inline">\(a\)</span> 升序排序，每次选的 <span
+class="math inline">\(k\)</span> 个是 <span
+class="math inline">\(a\)</span> 上的一个前缀。</p>
+<p>容易发现，随着 <span class="math inline">\(k\)</span> 的增长，每个
+<span class="math inline">\(\min(kb_i,c_i)\)</span>
+的图像会出现拐点，且只有一个拐点，后续贡献恒为 <span
+class="math inline">\(c_i\)</span>。</p>
+<p>我们按照 <span class="math inline">\(\frac{c_i}{b_i}\)</span>
+升序遍历小孩，显然当前贡献为 <span class="math inline">\(kb_i\)</span>
+的部分一定是这个遍历序列的一段前缀，用指针维护这个前缀即可。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log n)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">2e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n, m, b[N], p[N];</span><br><span class="line">ll a[N], c[N], f[N], ans;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n, m);</span><br><span class="line">    <span class="built_in">re</span>(i, n) <span class="built_in">read</span>(a[i]);</span><br><span class="line">    <span class="built_in">re</span>(i, m) <span class="built_in">read</span>(b[i]);</span><br><span class="line">    <span class="built_in">re</span>(i, m) <span class="built_in">read</span>(c[i]);</span><br><span class="line">    <span class="built_in">re</span>(i, m)</span><br><span class="line">    &#123;</span><br><span class="line">        f[i] = c[i] / b[i] + <span class="number">1</span>, p[i] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">sort</span>(a + <span class="number">1</span>, a + n + <span class="number">1</span>, <span class="built_in">greater</span>&lt;ll&gt;());</span><br><span class="line">    <span class="built_in">sort</span>(p + <span class="number">1</span>, p + m + <span class="number">1</span>, [](<span class="type">int</span> x, <span class="type">int</span> y)</span><br><span class="line">         &#123; <span class="keyword">return</span> f[x] &lt; f[y]; &#125;);</span><br><span class="line">    ll as = <span class="built_in">accumulate</span>(a + <span class="number">1</span>, a + n + <span class="number">1</span>, <span class="number">0ll</span>), cs = <span class="number">0</span>, bs = <span class="built_in">accumulate</span>(b + <span class="number">1</span>, b + m + <span class="number">1</span>, <span class="number">0ll</span>);</span><br><span class="line">    ans = as;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">1</span>, j = <span class="number">1</span>; k &lt;= n; k++)</span><br><span class="line">    &#123;</span><br><span class="line">        as -= a[k], cs += bs;</span><br><span class="line">        <span class="keyword">for</span> (; j &lt;= m &amp;&amp; f[p[j]] &lt;= k; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            cs -= <span class="number">1ll</span> * k * b[p[j]] - c[p[j]], bs -= b[p[j]];</span><br><span class="line">        &#125;</span><br><span class="line">        ans = <span class="built_in">min</span>(ans, as + cs);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>网络流</tag>
+        <tag>贪心</tag>
+        <tag>模拟费用流</tag>
       </tags>
   </entry>
 </search>
