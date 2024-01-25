@@ -9609,7 +9609,6 @@ class="math inline">\(v_3\)</span>
 ]]></content>
       <categories>
         <category>题解</category>
-        <category>GraphTA</category>
       </categories>
       <tags>
         <tag>图论</tag>
@@ -11022,6 +11021,50 @@ class="math inline">\(c_i\)</span>。</p>
         <tag>网络流</tag>
         <tag>贪心</tag>
         <tag>模拟费用流</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CF1715E</title>
+    <url>/2024/01/25/CF1715E/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF1715E">Long Way
+Home</a></p>
+<span id="more"></span>
+<p>是 <a href="https://h01yshhmy.github.io/2023/12/02/U169078/">U169078
+| h01yshhmy</a> 的严格加强版。</p>
+<p>考虑每次“加入”一个 <span class="math inline">\((u-v)^2\)</span>
+的贡献。</p>
+<p>首先，跑一次 <span class="math inline">\(k=0\)</span>
+时的最短路，得到初始 <span class="math inline">\(dis\)</span> 数组。</p>
+<p>然后，<strong>暴力更新</strong>即可。有转移式子： <span
+class="math display">\[
+\begin{aligned}
+dis(u)=\min_{v=1}^ndis(v)+(u-v)^2
+\end{aligned}
+\]</span> 考虑两个 <span class="math inline">\(v:p,q\)</span>，其中
+<span class="math inline">\(p\)</span> 比 <span
+class="math inline">\(q\)</span> 更优，钦定 <span
+class="math inline">\(p&gt;q\)</span>： <span class="math display">\[
+\begin{aligned}
+&amp;dis(p)+(u-p)^2&lt;dis(q)+(u-q)^2\\
+&amp;dis(p)-2up+p^2&lt;dis(q)-2uq+q^2\\
+&amp;\frac{(dis(p)+p^2)-(dis(q)+q^2)}{p-q}&lt; 2u
+\end{aligned}
+\]</span> 单调队列维护凸壳，在 DP 过程中记录被更新的 <span
+class="math inline">\(dis(u)\)</span>，从这些 <span
+class="math inline">\(u\)</span> 开始跑。</p>
+<p>当然也可以全跑一遍，不影响复杂度。</p>
+<p>时间复杂度 <span class="math inline">\(O(km\log n)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1e5</span> + <span class="number">7232</span>;</span><br><span class="line"><span class="type">int</span> n, m, k;</span><br><span class="line"><span class="type">int</span> x, y;</span><br><span class="line"><span class="type">long</span> <span class="type">long</span> dis[N], sum[N], z;</span><br><span class="line"><span class="type">short</span> vis[N];</span><br><span class="line"><span class="type">int</span> h[N], cnt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">hl</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> v, nxt;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> w;</span><br><span class="line">&#125; e[N &lt;&lt; <span class="number">1</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> v, <span class="type">long</span> <span class="type">long</span> w)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    e[++cnt].v = v;</span><br><span class="line">    e[cnt].nxt = h[u];</span><br><span class="line">    h[u] = cnt;</span><br><span class="line">    e[cnt].w = w;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">llt</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> id;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> d;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span>&lt;(<span class="type">const</span> llt &amp;x) <span class="type">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> d &gt; x.d;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; tmp;</span><br><span class="line">priority_queue&lt;llt&gt; p;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dij</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(vis, <span class="number">0</span>, <span class="built_in">sizeof</span>(vis));</span><br><span class="line">    <span class="keyword">while</span> (!p.<span class="built_in">empty</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        tmp = p.<span class="built_in">top</span>();</span><br><span class="line">        p.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">if</span> (vis[tmp.id])</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        vis[tmp.id] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = h[tmp.id]; i; i = e[i].nxt)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (dis[e[i].v] &gt; dis[tmp.id] + e[i].w)</span><br><span class="line">            &#123;</span><br><span class="line">                dis[e[i].v] = dis[tmp.id] + e[i].w;</span><br><span class="line">                p.<span class="built_in">push</span>((llt)&#123;e[i].v, dis[e[i].v]&#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> q[N &lt;&lt; <span class="number">4</span>], head = <span class="number">1</span>, tail = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="type">double</span> <span class="title">slope</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i == j)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1000000732.0</span>;</span><br><span class="line">    <span class="keyword">return</span> (sum[i] + (<span class="number">1ll</span>) * i * i - sum[j] - (<span class="number">1ll</span>) * j * j) * <span class="number">1.0</span> / (i - j);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">mi</span><span class="params">(<span class="type">long</span> <span class="type">long</span> x, <span class="type">long</span> <span class="type">long</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x &lt; y ? x : y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d%d&quot;</span>, &amp;n, &amp;m, &amp;k);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++)</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d%d%lld&quot;</span>, &amp;x, &amp;y, &amp;z), <span class="built_in">add</span>(x, y, z), <span class="built_in">add</span>(y, x, z);</span><br><span class="line">    <span class="built_in">memset</span>(dis, <span class="number">0x3f</span>, <span class="built_in">sizeof</span>(dis));</span><br><span class="line">    p.<span class="built_in">push</span>((llt)&#123;<span class="number">1</span>, <span class="number">0</span>&#125;);</span><br><span class="line">    dis[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">dij</span>();</span><br><span class="line">    <span class="keyword">while</span> (k--)</span><br><span class="line">    &#123;</span><br><span class="line">        head = tail = <span class="number">1</span>;</span><br><span class="line">        q[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">            sum[i] = dis[i];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">while</span> (head &lt; tail &amp;&amp; <span class="built_in">slope</span>(q[tail - <span class="number">1</span>], q[tail]) &gt; <span class="built_in">slope</span>(q[tail - <span class="number">1</span>], i))</span><br><span class="line">                --tail;</span><br><span class="line">            q[++tail] = i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">while</span> (head &lt; tail &amp;&amp; <span class="built_in">slope</span>(q[head], q[head + <span class="number">1</span>]) &lt; <span class="number">2.0</span> * i)</span><br><span class="line">                ++head;</span><br><span class="line">            <span class="type">int</span> j = q[head];</span><br><span class="line">            <span class="keyword">if</span> (dis[i] &gt; sum[j] + (i - j) * (i - j))</span><br><span class="line">            &#123;</span><br><span class="line">                dis[i] = sum[j] + (<span class="number">1ll</span>) * (i - j) * (i - j);</span><br><span class="line">                p.<span class="built_in">push</span>((llt)&#123;i, dis[i]&#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">dij</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%lld &quot;</span>, dis[i]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>GraphTA</category>
+      </categories>
+      <tags>
+        <tag>图论</tag>
+        <tag>DP</tag>
+        <tag>最短路</tag>
+        <tag>斜率优化</tag>
       </tags>
   </entry>
 </search>
