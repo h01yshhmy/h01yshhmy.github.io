@@ -11018,9 +11018,9 @@ class="math inline">\(c_i\)</span>。</p>
         <category>题解</category>
       </categories>
       <tags>
+        <tag>最大流最小割</tag>
         <tag>网络流</tag>
         <tag>贪心</tag>
-        <tag>模拟费用流</tag>
       </tags>
   </entry>
   <entry>
@@ -11065,6 +11065,52 @@ class="math inline">\(u\)</span> 开始跑。</p>
         <tag>DP</tag>
         <tag>最短路</tag>
         <tag>斜率优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>UOJ Round</title>
+    <url>/2024/01/28/UOJ-Round-19-A/</url>
+    <content><![CDATA[<p><a href="https://uoj.ac/contest/51/problem/513">【UR
+#19】清扫银河</a></p>
+<span id="more"></span>
+<p>我们称不能通行的边为 <span class="math inline">\(1\)</span>
+边，最终目标得到全 <span class="math inline">\(0\)</span> 边的图。</p>
+<p>首先，完全相同的操作最多执行一次。</p>
+<p>考虑操作一，众所周知，无向图所有简单环都可以通过“极小环”异或得到，这里的“极小环”指
+DFS 树上只含一条非树边的环。显然这样的环只有 <span
+class="math inline">\(m-n+1\)</span> 个。</p>
+<p>考虑操作二，发现我们还能剩下 <span class="math inline">\(n\)</span>
+次操作，不如直接简化，每次只翻转一个单点相邻的边。</p>
+<p>都是一样的思想，将范围大的操作无损拆成小的，减少操作方案数。</p>
+<p>正好 <span class="math inline">\(m+1\)</span>
+次操作，可以忽略操作次数限制。</p>
+<p>我们可以列出一些异或方程组，一共 <span
+class="math inline">\(m+1\)</span> 个变量，复杂度过高。</p>
+<p>将操作二全部做完再考虑操作一，容易发现，操作一可以将子图中全部边都异或成
+<span class="math inline">\(0\)</span>，当且仅当子图中每个点 <span
+class="math inline">\(1\)</span>
+权边度数均为偶数。不难通过欧拉回路的思路得到。</p>
+<p>问题变为能否通过操作二将全部点的 <span
+class="math inline">\(1\)</span> 权边度数变为偶数。<span
+class="math inline">\(n\)</span> 个变量 <span
+class="math inline">\(n\)</span>
+个方程，高斯消元解异或方程组即可，或者线性基：将每种操作二表示为 <span
+class="math inline">\(n\)</span> 维 <span
+class="math inline">\(0/1\)</span> 向量（根据相邻 <span
+class="math inline">\(1\)</span> 边个数奇偶性），判断这 <span
+class="math inline">\(n\)</span> 个向量能否线性表示出全 <span
+class="math inline">\(0\)</span>。</p>
+<p>使用 <code>bitset</code> 加速，时间复杂度 <span
+class="math inline">\(O(\frac{n^3}{\omega})\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">305</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> V, E;</span><br><span class="line">bitset&lt;N&gt; G[N], lb[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">insert</span><span class="params">(bitset&lt;N&gt; &amp;x)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = x._Find_first(); i != N; i = x._Find_first()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (lb[i].<span class="built_in">none</span>()) <span class="keyword">return</span> lb[i] = x, <span class="literal">true</span>;</span><br><span class="line">    x ^= lb[i];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> i, u, v, w;</span><br><span class="line">  cin &gt;&gt; V &gt;&gt; E;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= V; ++i) G[i].<span class="built_in">reset</span>(), lb[i].<span class="built_in">reset</span>();</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; E; ++i) &#123;</span><br><span class="line">    cin &gt;&gt; u &gt;&gt; v &gt;&gt; w, G[u].<span class="built_in">set</span>(v), G[v].<span class="built_in">set</span>(u);</span><br><span class="line">    <span class="keyword">if</span> (w) G-&gt;<span class="built_in">flip</span>(u), G-&gt;<span class="built_in">flip</span>(v);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= V; ++i) <span class="built_in">insert</span>(G[i].<span class="built_in">set</span>(i, G[i].<span class="built_in">count</span>() &amp; <span class="number">1</span>));</span><br><span class="line">  cout &lt;&lt; (<span class="built_in">insert</span>(G[<span class="number">0</span>]) ? <span class="string">&quot;no\n&quot;</span> : <span class="string">&quot;yes\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> T;</span><br><span class="line">  std::ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>), cin.<span class="built_in">tie</span>(<span class="literal">NULL</span>);</span><br><span class="line">  <span class="keyword">for</span> (cin &gt;&gt; T; T; --T) <span class="built_in">work</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>GraphTA</category>
+      </categories>
+      <tags>
+        <tag>高斯消元</tag>
+        <tag>线性基</tag>
       </tags>
   </entry>
 </search>
