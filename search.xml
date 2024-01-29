@@ -11070,7 +11070,7 @@ class="math inline">\(u\)</span> 开始跑。</p>
       </tags>
   </entry>
   <entry>
-    <title>UR</title>
+    <title>UOJ513</title>
     <url>/2024/01/28/UOJ-Round-19-A/</url>
     <content><![CDATA[<p><a href="https://uoj.ac/contest/51/problem/513">【UR
 #19】清扫银河</a></p>
@@ -11113,6 +11113,42 @@ class="math inline">\(O(\frac{n^3}{\omega})\)</span>。</p>
       <tags>
         <tag>高斯消元</tag>
         <tag>线性基</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P2048</title>
+    <url>/2024/01/29/P2048/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P2048">P2048 [NOI2010]
+超级钢琴</a></p>
+<span id="more"></span>
+<p>暴力做，需要将所有满足条件的段排序，考虑贪心。</p>
+<p>首先做个前缀和 <span class="math inline">\(s\)</span>。</p>
+<p>定义 <span class="math inline">\(f(i,l,r)=\max\limits_{j\in[l,r]}
+s_{j}-s_{i-1}\)</span>，也就是：若左端点为 <span
+class="math inline">\(i\)</span>，右端点合法区间为 <span
+class="math inline">\([l,r]\)</span> 的最优选。</p>
+<p>显然 <span class="math inline">\(f(i,l,r)\)</span> 的值可以 ST
+表直接查。</p>
+<p>将初始的 <span class="math inline">\(n\)</span> 个 <span
+class="math inline">\(f(i,l,r)\)</span>
+塞到优先队列中，考虑取完当前最优后怎么处理。</p>
+<p>对于当前最大 <span class="math inline">\(f(i,l,r)\)</span>，ST
+表找到右端点 <span
+class="math inline">\(j\)</span>，容易发现，我们需要做的事就是：对于
+<span class="math inline">\(i\)</span>，将 <span
+class="math inline">\(j\)</span> 从它的区间删掉。新加入 <span
+class="math inline">\(f(i,l,j-1)\)</span> 和 <span
+class="math inline">\(f(i,j+1,r)\)</span> 即可。</p>
+<p>时间复杂度 <span class="math inline">\(O((n+k)\log n)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">5e5</span> + <span class="number">5</span>, Lg = <span class="number">20</span>;</span><br><span class="line"><span class="type">int</span> n, K, L, R, lg[N];</span><br><span class="line">ll s[N], pos[N][Lg + <span class="number">1</span>];</span><br><span class="line"><span class="function">ll <span class="title">comp</span><span class="params">(ll x, ll y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> s[x] &gt; s[y] ? x : y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">2</span>, n) lg[i] = lg[i / <span class="number">2</span>] + <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n) pos[i][<span class="number">0</span>] = i;</span><br><span class="line">    <span class="built_in">re</span>(j, <span class="number">20</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">re</span>(i, n - (<span class="number">1</span> &lt;&lt; j) + <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            pos[i][j] = <span class="built_in">comp</span>(pos[i][j - <span class="number">1</span>], pos[i + (<span class="number">1</span> &lt;&lt; (j - <span class="number">1</span>))][j - <span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">ask</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> z = lg[r - l + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">comp</span>(pos[l][z], pos[r - (<span class="number">1</span> &lt;&lt; z) + <span class="number">1</span>][z]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> o, l, r, t;</span><br><span class="line">    <span class="built_in">Node</span>() &#123;&#125;</span><br><span class="line">    <span class="built_in">Node</span>(<span class="type">int</span> o, <span class="type">int</span> l, <span class="type">int</span> r) : <span class="built_in">o</span>(o), <span class="built_in">l</span>(l), <span class="built_in">r</span>(r), <span class="built_in">t</span>(<span class="built_in">ask</span>(l, r)) &#123;&#125;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span>&lt;(<span class="type">const</span> Node &amp;b) <span class="type">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> s[t] - s[o - <span class="number">1</span>] &lt; s[b.t] - s[b.o - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">priority_queue&lt;Node&gt; q;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n, K, L, R);</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">read</span>(s[i]);</span><br><span class="line">        s[i] += s[i - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">init</span>();</span><br><span class="line">    <span class="built_in">re</span>(i, n - L + <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">Node</span>(i, i + L - <span class="number">1</span>, <span class="built_in">min</span>(i + R - <span class="number">1</span>, n)));</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (K--)</span><br><span class="line">    &#123;</span><br><span class="line">        Node tmp = q.<span class="built_in">top</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="type">int</span> o = tmp.o, l = tmp.l, r = tmp.r, t = tmp.t;</span><br><span class="line">        ans += s[t] - s[o - <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">if</span> (l != t)</span><br><span class="line">            q.<span class="built_in">push</span>(<span class="built_in">Node</span>(o, l, t - <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">if</span> (r != t)</span><br><span class="line">            q.<span class="built_in">push</span>(<span class="built_in">Node</span>(o, t + <span class="number">1</span>, r));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>贪心</tag>
+        <tag>优先队列</tag>
+        <tag>ST表</tag>
       </tags>
   </entry>
 </search>
