@@ -10820,7 +10820,9 @@ class="math inline">\(\log\)</span> 来自等差数列个数。</p>
 <span id="more"></span>
 <p>题意：一个 <span class="math inline">\(n\)</span>
 个点的有边权树，边权 <span
-class="math inline">\(\{-1,1\}\)</span>，定义两点之间距离为边权和，求全部情况中
+class="math inline">\(\{-1,1\}\)</span>，如果树满足每个点相邻的边权之积为
+<span
+class="math inline">\(-1\)</span>，称这棵树为好树，定义两点之间距离为边权和，求全部好树中
 <span class="math inline">\(1\)</span> 到 <span
 class="math inline">\(n\)</span> 的距离之和。</p>
 <p>设 <span class="math inline">\(g(u)=\prod_{(v,u)\in
@@ -11068,7 +11070,7 @@ class="math inline">\(u\)</span> 开始跑。</p>
       </tags>
   </entry>
   <entry>
-    <title>UOJ Round</title>
+    <title>UR</title>
     <url>/2024/01/28/UOJ-Round-19-A/</url>
     <content><![CDATA[<p><a href="https://uoj.ac/contest/51/problem/513">【UR
 #19】清扫银河</a></p>
