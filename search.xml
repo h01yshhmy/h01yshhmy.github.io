@@ -11151,4 +11151,96 @@ class="math inline">\(f(i,j+1,r)\)</span> 即可。</p>
         <tag>ST表</tag>
       </tags>
   </entry>
+  <entry>
+    <title>CF1515I</title>
+    <url>/2024/01/31/CF1515I/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF1515I">Phoenix and
+Diamonds</a></p>
+<span id="more"></span>
+<p>严格弱化版：<a
+href="https://www.luogu.com.cn/problem/CF702F">T-Shirts</a>，<span
+class="math inline">\(a_i=1\)</span> 且不带修。</p>
+<p>修改只修改个数，先按照题目要求对钻石排序，越优下标越小。</p>
+<p>考虑对值域做二进制分组的思想，或者说倍增值域
+“分块”，将钻石分层，每次考虑当前层 <span
+class="math inline">\(H\)</span>。</p>
+<p>先忽略 <span class="math inline">\(a_i\)</span>，假设 <span
+class="math inline">\(a_i=1\)</span>。</p>
+<p>设当前 <span class="math inline">\(c\in
+[2^{H-1},2^{H})\)</span>，对于 <span class="math inline">\(\{i|w_i\ge
+2^{H-1}\}\)</span>，集合中最多取一个，取之后 <span
+class="math inline">\(H\)</span> 一定会减少至少 <span
+class="math inline">\(1\)</span>；对于 <span
+class="math inline">\(\{i|w_i&lt;
+2^{H-1}\}\)</span>，在排序后的轴上一定是一个区间 <span
+class="math inline">\([l,r]\)</span>。若区间<strong>填不满</strong>整个集合，满足取完这个区间之后
+<span class="math inline">\(c&#39;&lt;w_{r+1}\)</span>，又因为 <span
+class="math inline">\(w_{r+1}&lt;2^{H-1}\)</span>，<span
+class="math inline">\(c&lt;2^{H-1}\)</span> 成立，所以 <span
+class="math inline">\(H\)</span> 仍然会减少至少 <span
+class="math inline">\(1\)</span>。</p>
+<p>显然，<span class="math inline">\(H\)</span> 只需要取在 <span
+class="math inline">\([1,\log w]\)</span> 的范围。</p>
+<p>容易发现，<span class="math inline">\(a_i\)</span>
+的值不影响上述任何讨论，乘个系数而已。</p>
+<p>线段树每个节点维护三个长为 <span class="math inline">\(\log
+w\)</span> 的数组：</p>
+<ul>
+<li><span class="math inline">\(wa(i)\)</span>，区间内 <span
+class="math inline">\(w_j&lt;2^{i-1}\)</span> 的 <span
+class="math inline">\(\sum w_ja_j\)</span>。</li>
+<li><span class="math inline">\(va(i)\)</span>，区间内 <span
+class="math inline">\(w_j&lt;2^{i-1}\)</span> 的 <span
+class="math inline">\(\sum v_ja_j\)</span>。</li>
+<li><span class="math inline">\(lc(i)\)</span>，如果要取走区间内至少一个
+<span class="math inline">\(w_j\in[2^{i-1},2^i)\)</span> 的 <span
+class="math inline">\(j\)</span>，<span class="math inline">\(c\)</span>
+至少是多少。</li>
+</ul>
+<p>修改只有单点改，对某个叶子重算一下即可，只需要思考如何
+<code>pushup</code>。</p>
+<p>有： <span class="math display">\[
+\begin{aligned}
+&amp;wa_u(i)=wa_l(i)+wa_r(i)\\
+&amp;va_u(i)=va_l(i)+va_r(i)\\
+&amp;lc_u(i)=\min\{lc_l(i),lc_r(i)+wa_l(i)\}
+\end{aligned}
+\]</span> 原因显然，左边比右边更优，想在右边取左边一定会取满。</p>
+<p>容易想到一些线段树二分的做法，确实正确，但不妨暴力一点。</p>
+<p>我们在线段树递归查询过程中动态维护 <span
+class="math inline">\(c,H\)</span>。</p>
+<p>只需要判两种情况：</p>
+<ul>
+<li><span class="math inline">\(c\ge wa_u(H)\)</span>，可以直接将 <span
+class="math inline">\(wa_u(H)\)</span> 全部取走，返回 <span
+class="math inline">\(va_u(H)\)</span>。</li>
+<li><span class="math inline">\(wa_u(H-1)\le
+c&lt;lc_u(H-1)\)</span>，可以直接将 <span
+class="math inline">\(wa_u(H-1)\)</span> 全部取走，且当前 <span
+class="math inline">\(H\)</span> 这一部分啥都取不了，返回 <span
+class="math inline">\(va_u(H-1)\)</span>。</li>
+</ul>
+<p>对于其他情况，直接递归两个儿子。</p>
+<p>复杂度为何正确？</p>
+<p>“正常” 的线段树查询操作，都是单侧递归，复杂度 <span
+class="math inline">\(O(\log n)\)</span>。</p>
+<p>我们将每次两侧递归看作是：继续延续当前单侧操作，新增一个递归到另一侧。</p>
+<p>容易发现，不满足上述两个条件的情况，要么可以取 <span
+class="math inline">\(w_i\ge 2^{H-1}\)</span>，要么 <span
+class="math inline">\([l,r]\)</span>（前文中）填不满，没法全部取完这些重量轻的物品。根据前面的分析，这样的情况只有
+<span class="math inline">\(O(\log w)\)</span> 次。</p>
+<p>综上，时间复杂度为 <span class="math inline">\(O(q\log
+^2w)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">2e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n, m, H, w[N], v[N], a[N], ord[N], pos[N];</span><br><span class="line">ll c;</span><br><span class="line"><span class="keyword">using</span> bitval = array&lt;ll, <span class="number">19</span>&gt;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span></span><br><span class="line">&#123;</span><br><span class="line">    bitval wa, va, lc;</span><br><span class="line">&#125; t[N * <span class="number">4</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pushup</span><span class="params">(<span class="type">int</span> rt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">re</span>(i, <span class="number">18</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        t[rt].wa[i] = t[<span class="built_in">ls</span>(rt)].wa[i] + t[<span class="built_in">rs</span>(rt)].wa[i];</span><br><span class="line">        t[rt].va[i] = t[<span class="built_in">ls</span>(rt)].va[i] + t[<span class="built_in">rs</span>(rt)].va[i];</span><br><span class="line">        t[rt].lc[i] = <span class="built_in">min</span>(t[<span class="built_in">ls</span>(rt)].lc[i], t[<span class="built_in">rs</span>(rt)].lc[i] + t[<span class="built_in">ls</span>(rt)].wa[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">initval</span><span class="params">(<span class="type">int</span> rt, <span class="type">int</span> p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">re</span>(i, <span class="number">18</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        t[rt].wa[i] = t[rt].va[i] = <span class="number">0</span>, t[rt].lc[i] = INF;</span><br><span class="line">        <span class="keyword">if</span> (w[p] &lt; (<span class="number">1</span> &lt;&lt; i - <span class="number">1</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            t[rt].wa[i] = <span class="number">1ll</span> * w[p] * a[p];</span><br><span class="line">            t[rt].va[i] = <span class="number">1ll</span> * v[p] * a[p];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (w[p] &lt; (<span class="number">1</span> &lt;&lt; i) &amp;&amp; a[p] &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            t[rt].lc[i] = w[p];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">build</span><span class="params">(<span class="type">int</span> rt, <span class="type">int</span> l, <span class="type">int</span> r)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l == r)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">initval</span>(rt, ord[l]);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">build</span>(<span class="built_in">ls</span>(rt), l, mid);</span><br><span class="line">    <span class="built_in">build</span>(<span class="built_in">rs</span>(rt), mid + <span class="number">1</span>, r);</span><br><span class="line">    <span class="built_in">pushup</span>(rt);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">update</span><span class="params">(<span class="type">int</span> rt, <span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l == r)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">initval</span>(rt, ord[p]);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (p &lt;= mid)</span><br><span class="line">        <span class="built_in">update</span>(<span class="built_in">ls</span>(rt), l, mid, p);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">update</span>(<span class="built_in">rs</span>(rt), mid + <span class="number">1</span>, r, p);</span><br><span class="line">    <span class="built_in">pushup</span>(rt);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">updH</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (H &gt; <span class="number">1</span> &amp;&amp; (<span class="number">1</span> &lt;&lt; ((H - <span class="number">1</span>) - <span class="number">1</span>)) &gt; c)</span><br><span class="line">        H--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ll <span class="title">query</span><span class="params">(<span class="type">int</span> rt, <span class="type">int</span> l, <span class="type">int</span> r)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l == r)</span><br><span class="line">    &#123;</span><br><span class="line">        ll x = <span class="built_in">min</span>(<span class="number">1ll</span> * a[ord[l]], c / w[ord[l]]);</span><br><span class="line">        c -= x * w[ord[l]];</span><br><span class="line">        <span class="built_in">updH</span>();</span><br><span class="line">        <span class="keyword">return</span> x * v[ord[l]];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (t[rt].wa[H] &lt;= c)</span><br><span class="line">    &#123;</span><br><span class="line">        ll bak = t[rt].va[H];</span><br><span class="line">        c -= t[rt].wa[H];</span><br><span class="line">        <span class="built_in">updH</span>();</span><br><span class="line">        <span class="keyword">return</span> bak;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (t[rt].wa[H - <span class="number">1</span>] &lt;= c &amp;&amp; c &lt; t[rt].lc[H - <span class="number">1</span>])</span><br><span class="line">    &#123;</span><br><span class="line">        ll bak = t[rt].va[H - <span class="number">1</span>];</span><br><span class="line">        c -= t[rt].wa[H - <span class="number">1</span>];</span><br><span class="line">        <span class="built_in">updH</span>();</span><br><span class="line">        <span class="keyword">return</span> bak;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">query</span>(<span class="built_in">ls</span>(rt), l, mid) + <span class="built_in">query</span>(<span class="built_in">rs</span>(rt), mid + <span class="number">1</span>, r);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n, m);</span><br><span class="line">    <span class="built_in">re</span>(i, n) <span class="built_in">read</span>(a[i], w[i], v[i]);</span><br><span class="line">    <span class="built_in">re</span>(i, n) ord[i] = i;</span><br><span class="line">    <span class="keyword">auto</span> cmp = [](<span class="type">int</span> x, <span class="type">int</span> y)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (v[x] == v[y])</span><br><span class="line">            <span class="keyword">return</span> w[x] &lt; w[y];</span><br><span class="line">        <span class="keyword">return</span> v[x] &gt; v[y];</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">sort</span>(ord + <span class="number">1</span>, ord + n + <span class="number">1</span>, cmp);</span><br><span class="line">    <span class="built_in">re</span>(i, n) pos[ord[i]] = i;</span><br><span class="line">    <span class="built_in">build</span>(<span class="number">1</span>, <span class="number">1</span>, n);</span><br><span class="line">    <span class="type">int</span> op = <span class="number">0</span>, k = <span class="number">0</span>, d = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (m--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">read</span>(op);</span><br><span class="line">        <span class="keyword">if</span> (op == <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">read</span>(k, d);</span><br><span class="line">            a[d] += k;</span><br><span class="line">            <span class="built_in">update</span>(<span class="number">1</span>, <span class="number">1</span>, n, pos[d]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (op == <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">read</span>(k, d);</span><br><span class="line">            a[d] -= k;</span><br><span class="line">            <span class="built_in">update</span>(<span class="number">1</span>, <span class="number">1</span>, n, pos[d]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (op == <span class="number">3</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">read</span>(c);</span><br><span class="line">            H = <span class="number">18</span>;</span><br><span class="line">            <span class="built_in">updH</span>();</span><br><span class="line">            <span class="built_in">write</span>(<span class="built_in">query</span>(<span class="number">1</span>, <span class="number">1</span>, n), <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>DSs</category>
+      </categories>
+      <tags>
+        <tag>线段树</tag>
+        <tag>倍增</tag>
+        <tag>二进制分组</tag>
+      </tags>
+  </entry>
 </search>
