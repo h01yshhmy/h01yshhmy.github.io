@@ -10474,7 +10474,7 @@ class="math inline">\(\min\)</span>，树状数组可以解决。</p>
 class="math inline">\(O(n^2)\)</span> 量级），需要去掉一些。</p>
 <p>设有两个点对 <span
 class="math inline">\((x_1,y_1),(x_2,y_2)\)</span>，满足 <span
-class="math inline">\(x_1\le x_2\le y_2\le x_1\)</span>，且 <span
+class="math inline">\(x_1\le x_2\le y_2\le y_1\)</span>，且 <span
 class="math inline">\(dis(x_1,y_1)\ge dis(x_2,y_2)\)</span>，显然 <span
 class="math inline">\((x_1,y_1)\)</span> 有贡献的时候 <span
 class="math inline">\((x_2,y_2)\)</span> 也有贡献，而且 <span
@@ -11278,7 +11278,7 @@ class="math inline">\(\textrm{SG}(u)\)</span>。</p>
 class="math inline">\(1\)</span> 的情况，但不知道怎么计算这种情况的
 <span class="math inline">\(\textrm{SG}\)</span>。</p>
 <p>从 <span class="math inline">\(\textrm{SG(v)}\to
-\textrm{SG(v)}(u)\)</span>，子树内多了一种操作：断 <span
+\textrm{SG}(u)\)</span>，子树内多了一种操作：断 <span
 class="math inline">\((u,v)\)</span>。断掉 <span
 class="math inline">\((u,v)\)</span>
 后显然就直接走到结束状态了，结束状态的 <span
@@ -11328,10 +11328,9 @@ href="https://h01yshhmy.github.io/2024/02/01/AGC017D/">AGC017D |
 h01yshhmy</a>，需要搞懂。</p>
 <p>考虑 <span class="math inline">\(k&gt;1\)</span> 的情况。</p>
 <p>当删边删到两个关键点的路径上时，我们将当前局面划分为两个子局面。</p>
-<p>尽可能多的划分。对于虚树的所有叶子（这些叶子显然都是关键点），将叶子的子树看作子游戏，容易发现，所有的这些子游戏相互独立。</p>
-<p>相互独立的原因和 <a
-href="https://h01yshhmy.github.io/2024/02/01/AGC017D/">AGC017D |
-h01yshhmy</a> 中 “复制根” 这一思路相同。</p>
+<p>尽可能多的划分。对于虚树的所有叶子（这些叶子显然都是关键点），将叶子的子树看作子游戏，容易发现，所有的这些子游戏相互独立，而且这些子游戏和
+<a href="https://h01yshhmy.github.io/2024/02/01/AGC017D/">AGC017D |
+h01yshhmy</a> 所处理的问题一样。我们可以直接沿用代码。</p>
 <p>形式化一点，对于 <span class="math inline">\(u\in V_T,\,v\not\in
 V_T\)</span> 的 <span class="math inline">\((u,v)\)</span>，<span
 class="math inline">\(\textrm{SG}(u)\)</span> 是这个子游戏的 <span
@@ -11340,18 +11339,21 @@ class="math inline">\(\textrm{SG}\)</span> 值。</p>
 class="math inline">\(\textrm{SG}\)</span> 值是各个子游戏的异或和。</p>
 <p>不过这里求出来的整体值，不包含虚树内部的边。相当于将虚树缩成点了，整个游戏的结束状态是：除了虚树内的边都被删。</p>
 <p>所以我们还要考虑这个虚树的 <span
-class="math inline">\(\textrm{SG}\)</span> 值，异或进刚才的整体值。</p>
-<p>容易发现，虚树的 <span class="math inline">\(\textrm{SG}\)</span>
+class="math inline">\(\textrm{SG}\)</span>
+值，显然虚树和虚树外没有公共边，依然各自独立，可以直接异或进外部的整体
+<span class="math inline">\(\textrm{SG}\)</span> 值。</p>
+<p>虚树的 <span class="math inline">\(\textrm{SG}\)</span>
 值就是虚树边数 <span class="math inline">\(\bmod
-2\)</span>。可以感性理解成一条一条边的删，奇偶性影响了先后手。</p>
+2\)</span>。笔者不是很会证明。市面上的过程要么有
+“读者自证不难”，要么有奇妙引理，搞明白了再补吧。</p>
 <p>具体到实现上。初始答案为 <span
 class="math inline">\(\textrm{SG}(1)\)</span>，增加一个关键点的时候，向上跳父亲并打访问标记，直到当前点被访问过（显然
 <span class="math inline">\(u\)</span> 被访问过 <span
 class="math inline">\(u\)</span>
 的父亲都被访问过），相当于遍历了虚树中新加入的部分。</p>
-<p>如何更新答案？先 <span class="math inline">\(\oplus\textrm{
-SG}(u)+1\)</span>，撤销原来在虚树之外对答案的贡献，并 <span
-class="math inline">\(\oplus\textrm{ SG}(u)\oplus
+<p>如何更新答案？先 <span
+class="math inline">\(\oplus\;(\textrm{SG}(u)+1)\)</span>，撤销原来在虚树之外对答案的贡献，并
+<span class="math inline">\(\oplus\textrm{ SG}(u)\oplus
 1\)</span>，前者是新造成的贡献，因为前面说了这个贡献和其他虚树内点的游戏独立，所以直接异或。后者是虚树的
 <span class="math inline">\(\textrm{SG}\)</span>
 值，边个数的奇偶性。</p>
@@ -11367,6 +11369,155 @@ class="math inline">\(O(n)\)</span>。</p>
         <tag>博弈</tag>
         <tag>SG函数</tag>
         <tag>Nim游戏</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P3232</title>
+    <url>/2024/02/02/P3232/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P3232">P3232 [HNOI2013]
+游走</a></p>
+<span id="more"></span>
+<p>设 <span class="math inline">\(g_i\)</span> 为经过 <span
+class="math inline">\(i\)</span> 这条边的期望次数，求： <span
+class="math display">\[
+\sum_{i\in E}w_i\times g_i
+\]</span> 的最小值。</p>
+<p>发现只要求出 <span class="math inline">\(g\)</span>，将 <span
+class="math inline">\(g\)</span> 排序后就可以贪心的赋 <span
+class="math inline">\(w\)</span>。</p>
+<p>边太多，对边做不好做。考虑对点做。</p>
+<p>设 <span class="math inline">\(f_u\)</span> 为点 <span
+class="math inline">\(u\)</span> 的期望经过次数。</p>
+<p>有转移方程： <span class="math display">\[
+f_u=[u=1]+\sum_{(u,v)\in E}\frac{f_v}{deg_v}
+\]</span> 图上这种转移显然没法直接做。高斯消元暴力解方程即可。</p>
+<p>得到 <span class="math inline">\(f\)</span> 后考虑如何求出 <span
+class="math inline">\(g\)</span>。 <span class="math display">\[
+g_i=\frac{f_u}{deg_u}+\frac{f_v}{deg_v},\,E_i=(u,v),\,u\ne n,\,v\ne n
+\]</span> 显然正确。</p>
+<p>时间复杂度 <span class="math inline">\(O(n^3+m\log m)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">505</span>, M = <span class="number">125005</span>;</span><br><span class="line"><span class="keyword">using</span> edge = pair&lt;<span class="type">int</span>, <span class="type">int</span>&gt;;</span><br><span class="line"><span class="type">int</span> n, m, deg[N];</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; G[N];</span><br><span class="line">edge e[M];</span><br><span class="line"><span class="type">double</span> a[N][N], b[N], f[N], res[M];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Gauss</span><span class="params">(<span class="type">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> p = i;</span><br><span class="line">        <span class="built_in">rep</span>(j, i + <span class="number">1</span>, n)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">fabs</span>(a[j][i]) &gt; <span class="built_in">fabs</span>(a[p][i]))</span><br><span class="line">                p = j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i != p)</span><br><span class="line">            <span class="built_in">swap</span>(a[i], a[p]), <span class="built_in">swap</span>(b[i], b[p]);</span><br><span class="line">        <span class="built_in">rep</span>(j, i + <span class="number">1</span>, n)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">double</span> d = a[j][i] / a[i][i];</span><br><span class="line">            b[j] -= d * b[i];</span><br><span class="line">            <span class="built_in">rep</span>(k, i, n) a[j][k] -= d * a[i][k];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">pe</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">rep</span>(j, i + <span class="number">1</span>, n) b[i] -= f[j] * a[i][j];</span><br><span class="line">        f[i] = b[i] / a[i][i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CIOO;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="type">int</span> u = <span class="number">0</span>, v = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, m)</span><br><span class="line">    &#123;</span><br><span class="line">        cin &gt;&gt; u &gt;&gt; v;</span><br><span class="line">        G[u].<span class="built_in">pb</span>(v), G[v].<span class="built_in">pb</span>(u);</span><br><span class="line">        e[i] = (edge)&#123;u, v&#125;;</span><br><span class="line">        deg[u]++, deg[v]++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">re</span>(i, n - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        a[i][i] = <span class="number">1.0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j : G[i])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (j != n)</span><br><span class="line">                a[i][j] = <span class="number">-1.0</span> / deg[j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    b[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">Gauss</span>(n - <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">re</span>(i, m)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">tie</span>(u, v) = e[i];</span><br><span class="line">        <span class="keyword">if</span> (u != n)</span><br><span class="line">            res[i] += f[u] / deg[u];</span><br><span class="line">        <span class="keyword">if</span> (v != n)</span><br><span class="line">            res[i] += f[v] / deg[v];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">sort</span>(res + <span class="number">1</span>, res + m + <span class="number">1</span>);</span><br><span class="line">    <span class="type">double</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, m)</span><br><span class="line">    &#123;</span><br><span class="line">        ans += res[i] * (m - i + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; fixed &lt;&lt; <span class="built_in">setprecision</span>(<span class="number">3</span>) &lt;&lt; ans &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>概率与期望</tag>
+        <tag>高斯消元</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CF1823F</title>
+    <url>/2024/02/02/CF1823F/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF1823F">Random
+Walk</a></p>
+<span id="more"></span>
+<p>相对较为套路。</p>
+<p>设 <span class="math inline">\(f_u\)</span> 为点 <span
+class="math inline">\(u\)</span> 的期望经过次数，有转移式： <span
+class="math display">\[
+f_u=[u=s]+\sum_{(u,v)\in E}\frac{f_v}{deg_v}
+\]</span> 显然这个 DP 的转移并不是 DAG，做不了。只能暴力解方程，复杂度
+<span class="math inline">\(O(n^3)\)</span>。</p>
+<p>注意在随机过程中，有一个点的 <span class="math inline">\(f\)</span>
+是确定的：<span class="math inline">\(f_t=1\)</span>，走到 <span
+class="math inline">\(t\)</span> 后一定会立即结束。</p>
+<p>我们将 <span class="math inline">\(t\)</span> 作为根，并试图通过
+<span class="math inline">\(f_t=1\)</span> 向下递推出其他点的值。</p>
+<p>都是线性的东西，不妨设 <span
+class="math inline">\(f_v=A_vf_u+B_v\)</span>，其中 <span
+class="math inline">\(u\)</span> 为 <span
+class="math inline">\(v\)</span> 的父亲。</p>
+<p>思想在于，不同于儿子，树上找父亲是唯一的。这使得只要知道 <span
+class="math inline">\(A,B\)</span>，就可以将方程降至两个未知数 <span
+class="math inline">\(f_u,f_v\)</span>，直接递归求解。是一种特殊的树上高斯消元。
+<span class="math display">\[
+\begin{aligned}
+f_u&amp;=[u=s]+\sum_{(u,v)\in E}\frac{f_v}{deg_v}\\
+&amp;=\frac{f_{fa}}{deg_{fa}}+[u=s]+\sum_{v\in
+son(u)}\frac{f_v}{deg_v}\\
+&amp;=\frac{f_{fa}}{deg_{fa}}+[u=s]+\sum_{v\in
+son(u)}\frac{A_vf_u+B_v}{deg_v}\\
+\end{aligned}
+\]</span> 移项，容易得到： <span class="math display">\[
+(1-\sum_{v\in
+son(u)}\frac{A_v}{deg_v})f_u=\frac{f_{fa}}{deg_{fa}}+[u=s]+\sum_{v\in
+son(u)}\frac{B_v}{deg_v}
+\]</span> 进一步整理： <span class="math display">\[
+\begin{aligned}
+&amp;A_u=\frac{\frac{1}{deg_{fa}}}{1-\sum_{v\in
+son(u)}\frac{A_v}{deg_v}}\\
+&amp;B_u=\frac{[u=s]+\sum_{v\in son(u)}\frac{B_v}{deg_v}}{1-\sum_{v\in
+son(u)}\frac{A_v}{deg_v}}
+\end{aligned}
+\]</span> <span class="math inline">\(A,B\)</span>
+的转移不存在互相依赖，直接做。</p>
+<p>然后根据 <span class="math inline">\(A,B\)</span> 转移 <span
+class="math inline">\(f\)</span> 即可。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log P)\)</span>，<span
+class="math inline">\(P\)</span> 为模数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">2e5</span> + <span class="number">5</span>, mod = <span class="number">998244353</span>;</span><br><span class="line"><span class="type">int</span> n, s, t, deg[N], inv[N], A[N], B[N], f[N];</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; G[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qpow</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (b)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>)</span><br><span class="line">            res = <span class="number">1ll</span> * res * a % mod;</span><br><span class="line">        a = <span class="number">1ll</span> * a * a % mod;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">0</span>, b = (u == s);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> v : G[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (v == fa)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(v, u);</span><br><span class="line">        a = (a + <span class="number">1ll</span> * A[v] * inv[deg[v]] % mod) % mod;</span><br><span class="line">        b = (b + <span class="number">1ll</span> * B[v] * inv[deg[v]] % mod) % mod;</span><br><span class="line">    &#125;</span><br><span class="line">    a = (<span class="number">1</span> - a + mod) % mod;</span><br><span class="line">    <span class="keyword">if</span> (fa != t)</span><br><span class="line">        A[u] = <span class="number">1ll</span> * inv[deg[fa]] * <span class="built_in">qpow</span>(a, mod - <span class="number">2</span>) % mod;</span><br><span class="line">    B[u] = <span class="number">1ll</span> * b * <span class="built_in">qpow</span>(a, mod - <span class="number">2</span>) % mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (u != t)</span><br><span class="line">        f[u] = (<span class="number">1ll</span> * A[u] * f[fa] % mod + B[u]) % mod;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> v : G[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (v == fa)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">solve</span>(v, u);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n, s, t);</span><br><span class="line">    <span class="type">int</span> u = <span class="number">0</span>, v = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">read</span>(u, v);</span><br><span class="line">        G[u].<span class="built_in">pb</span>(v), G[v].<span class="built_in">pb</span>(u);</span><br><span class="line">        deg[u]++, deg[v]++;</span><br><span class="line">    &#125;</span><br><span class="line">    inv[<span class="number">0</span>] = inv[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">2</span>, n)</span><br><span class="line">    &#123;</span><br><span class="line">        inv[i] = <span class="number">1ll</span> * (mod - mod / i) * inv[mod % i] % mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">dfs</span>(t, <span class="number">0</span>);</span><br><span class="line">    f[t] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">solve</span>(t, <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">write</span>(f[i], <span class="string">&#x27; &#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+        <tag>概率与期望</tag>
+        <tag>树形DP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P5643</title>
+    <url>/2024/02/02/P5643/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P5643">P5643 [PKUWC2018]
+随机游走</a></p>
+<span id="more"></span>
+<p>比较板的综合题。</p>
+<p>集合内<strong>全部</strong>点都至少经过一次时停止，也就是求走到最后一个点的期望步数。这个不好做，考虑
+min-max
+容斥转为：求集合中<strong>至少一个点</strong>经过一次的期望步数，也就是走到第一个点的期望步数。</p>
+<p>设 <span class="math inline">\(f_{S,u}\)</span> 为：从 <span
+class="math inline">\(u\)</span> 出发，集合 <span
+class="math inline">\(S\)</span> 中的点至少经过了一个的期望步数。</p>
+<p>容易得到： <span class="math display">\[
+f_{S,u}=\begin{cases}\frac{1}{deg_u}\sum_{(u,v)\in
+E}(f_{S,v}+1)&amp;u\not\in S\\0&amp;u\in S\end{cases}
+\]</span> 套路的，采用 <a
+href="https://h01yshhmy.github.io/2024/02/02/CF1823F/">CF1823F |
+h01yshhmy</a> 中的树上高斯消元。</p>
+<p>我们设 <span
+class="math inline">\(f_{S,u}=A_uf_{S,fa}+B_u\)</span>，容易得到： <span
+class="math display">\[
+\begin{aligned}
+&amp;A_u=\frac{1}{deg_u-\sum_{v\in son(u)}A_v}\\
+&amp;B_u=\frac{\sum_{v\in son(u)}B_v+deg_u}{deg_u-\sum_{v\in son(u)}A_v}
+\end{aligned}
+\]</span> 对于每个 <span class="math inline">\(S\)</span>，跑一遍
+DP，求出 <span class="math inline">\(f_{S,root}=B_{root}\)</span>
+即可。根为定值，只需要记一个 <span
+class="math inline">\(f_{S}\)</span>。</p>
+<p>设答案为 <span class="math inline">\(g_S\)</span>，写出 min-max
+容斥的式子： <span class="math display">\[
+g_S=\sum_{T\in S,T\ne \varnothing}(-1)^{|T|+1}f_{T}
+\]</span> 将容斥系数提前乘进 <span
+class="math inline">\(f_T\)</span>，是一个子集和的形式，<span
+class="math inline">\(g=FWT(f)\)</span>。</p>
+<p>当然用子集和 DP 也行。</p>
+<p>时间复杂度 <span class="math inline">\(O(n2^n+\sum k)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">19</span>, LN = <span class="number">262149</span>, mod = <span class="number">998244353</span>;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; G[N];</span><br><span class="line"><span class="type">int</span> n, qn, rt, deg[N], A[N], B[N], f[LN];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qpow</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (b)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>)</span><br><span class="line">            res = <span class="number">1ll</span> * res * a % mod;</span><br><span class="line">        a = <span class="number">1ll</span> * a * a % mod;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa, <span class="type">int</span> S)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">0</span>, b = <span class="number">0</span>, iv = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (S &gt;&gt; (u - <span class="number">1</span>) &amp; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> v : G[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (v == fa)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(v, u, S);</span><br><span class="line">        a = (a + A[v]) % mod;</span><br><span class="line">        b = (b + B[v]) % mod;</span><br><span class="line">    &#125;</span><br><span class="line">    iv = <span class="built_in">qpow</span>((deg[u] - a + mod) % mod, mod - <span class="number">2</span>);</span><br><span class="line">    A[u] = iv;</span><br><span class="line">    B[u] = <span class="number">1ll</span> * iv * (b + deg[u]) % mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n, qn, rt);</span><br><span class="line">    <span class="type">int</span> u = <span class="number">0</span>, v = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">read</span>(u, v);</span><br><span class="line">        G[u].<span class="built_in">pb</span>(v), G[v].<span class="built_in">pb</span>(u);</span><br><span class="line">        deg[u]++, deg[v]++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> U = (<span class="number">1</span> &lt;&lt; n) - <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(s, U)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">re</span>(i, n)</span><br><span class="line">        &#123;</span><br><span class="line">            A[i] = B[i] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">dfs</span>(rt, <span class="number">0</span>, s);</span><br><span class="line">        f[s] = (__builtin_popcount(s) &amp; <span class="number">1</span>) ? B[rt] : mod - B[rt];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= U; i *= <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= U; j += i * <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">rep</span>(k, <span class="number">0</span>, i - <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                f[i + j + k] = (f[i + j + k] + f[j + k]) % mod;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> k = <span class="number">0</span>, S = <span class="number">0</span>, x = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (qn--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">read</span>(k);</span><br><span class="line">        S = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">re</span>(i, k)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">read</span>(x);</span><br><span class="line">            S |= (<span class="number">1</span> &lt;&lt; x - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">write</span>(f[S], <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>随机过程与计数</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+        <tag>容斥</tag>
+        <tag>子集和DP</tag>
+        <tag>树形DP</tag>
+        <tag>min-max容斥</tag>
+        <tag>FWT</tag>
       </tags>
   </entry>
 </search>
