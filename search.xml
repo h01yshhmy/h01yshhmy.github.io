@@ -11562,7 +11562,7 @@ class="math inline">\(pos\)</span>
     <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P4839">P4839 P
 哥的桶</a></p>
 <span id="more"></span>
-<p>纯板子。</p>
+<p>可以说是纯板子。</p>
 <p><span class="math inline">\(n\)</span>
 个集合，单个集合加入，询问集合区间最大异或和。</p>
 <p>容易想到线段树套线性基，线性基维护每个集合最大异或和，合并信息直接暴力线性基合并，理论复杂度正确。</p>
