@@ -11070,52 +11070,6 @@ class="math inline">\(u\)</span> 开始跑。</p>
       </tags>
   </entry>
   <entry>
-    <title>UOJ513</title>
-    <url>/2024/01/28/UOJ-Round-19-A/</url>
-    <content><![CDATA[<p><a href="https://uoj.ac/contest/51/problem/513">【UR
-#19】清扫银河</a></p>
-<span id="more"></span>
-<p>我们称不能通行的边为 <span class="math inline">\(1\)</span>
-边，最终目标得到全 <span class="math inline">\(0\)</span> 边的图。</p>
-<p>首先，完全相同的操作最多执行一次。</p>
-<p>考虑操作一，众所周知，无向图所有简单环都可以通过“极小环”异或得到，这里的“极小环”指
-DFS 树上只含一条非树边的环。显然这样的环只有 <span
-class="math inline">\(m-n+1\)</span> 个。</p>
-<p>考虑操作二，发现我们还能剩下 <span class="math inline">\(n\)</span>
-次操作，不如直接简化，每次只翻转一个单点相邻的边。</p>
-<p>都是一样的思想，将范围大的操作无损拆成小的，减少操作方案数。</p>
-<p>正好 <span class="math inline">\(m+1\)</span>
-次操作，可以忽略操作次数限制。</p>
-<p>我们可以列出一些异或方程组，一共 <span
-class="math inline">\(m+1\)</span> 个变量，复杂度过高。</p>
-<p>将操作二全部做完再考虑操作一，容易发现，操作一可以将子图中全部边都异或成
-<span class="math inline">\(0\)</span>，当且仅当子图中每个点 <span
-class="math inline">\(1\)</span>
-权边度数均为偶数。不难通过欧拉回路的思路得到。</p>
-<p>问题变为能否通过操作二将全部点的 <span
-class="math inline">\(1\)</span> 权边度数变为偶数。<span
-class="math inline">\(n\)</span> 个变量 <span
-class="math inline">\(n\)</span>
-个方程，高斯消元解异或方程组即可，或者线性基：将每种操作二表示为 <span
-class="math inline">\(n\)</span> 维 <span
-class="math inline">\(0/1\)</span> 向量（根据相邻 <span
-class="math inline">\(1\)</span> 边个数奇偶性），判断这 <span
-class="math inline">\(n\)</span> 个向量能否线性表示出全 <span
-class="math inline">\(0\)</span>。</p>
-<p>使用 <code>bitset</code> 加速，时间复杂度 <span
-class="math inline">\(O(\frac{n^3}{\omega})\)</span>。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">305</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> V, E;</span><br><span class="line">bitset&lt;N&gt; G[N], lb[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">insert</span><span class="params">(bitset&lt;N&gt; &amp;x)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = x._Find_first(); i != N; i = x._Find_first()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (lb[i].<span class="built_in">none</span>()) <span class="keyword">return</span> lb[i] = x, <span class="literal">true</span>;</span><br><span class="line">    x ^= lb[i];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> i, u, v, w;</span><br><span class="line">  cin &gt;&gt; V &gt;&gt; E;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= V; ++i) G[i].<span class="built_in">reset</span>(), lb[i].<span class="built_in">reset</span>();</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; E; ++i) &#123;</span><br><span class="line">    cin &gt;&gt; u &gt;&gt; v &gt;&gt; w, G[u].<span class="built_in">set</span>(v), G[v].<span class="built_in">set</span>(u);</span><br><span class="line">    <span class="keyword">if</span> (w) G-&gt;<span class="built_in">flip</span>(u), G-&gt;<span class="built_in">flip</span>(v);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= V; ++i) <span class="built_in">insert</span>(G[i].<span class="built_in">set</span>(i, G[i].<span class="built_in">count</span>() &amp; <span class="number">1</span>));</span><br><span class="line">  cout &lt;&lt; (<span class="built_in">insert</span>(G[<span class="number">0</span>]) ? <span class="string">&quot;no\n&quot;</span> : <span class="string">&quot;yes\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> T;</span><br><span class="line">  std::ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>), cin.<span class="built_in">tie</span>(<span class="literal">NULL</span>);</span><br><span class="line">  <span class="keyword">for</span> (cin &gt;&gt; T; T; --T) <span class="built_in">work</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>题解</category>
-        <category>GraphTA</category>
-      </categories>
-      <tags>
-        <tag>高斯消元</tag>
-        <tag>线性基</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>P2048</title>
     <url>/2024/01/29/P2048/</url>
     <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P2048">P2048 [NOI2010]
@@ -11269,7 +11223,7 @@ class="math inline">\(\textrm{SG}\)</span> 值。</p>
 <p>我们将断边看作取了一个子树，类比 Nim
 游戏，结束状态相当于将每一堆物品都取完了，和 Nim
 游戏等价。所以各自独立的做是没有问题的。</p>
-<p>需要算整棵树的 <span class="math inline">\(\textrm{SG(v)}\)</span>
+<p>需要算整棵树的 <span class="math inline">\(\textrm{SG}\)</span>
 值是否为 <span class="math inline">\(0\)</span>。</p>
 <p>考虑类似 DP 的做法，算出 <span class="math inline">\(u\)</span>
 为根子树中，<span class="math inline">\(u\)</span> 为关键点的 <span
@@ -11286,7 +11240,7 @@ class="math inline">\(\textrm{SG}\)</span> 值为 <span
 class="math inline">\(0\)</span>。</p>
 <p>从博弈图的角度考虑，<strong>每个</strong>状态能转移到的状态都多了一个
 <span
-class="math inline">\(0\)</span>。事实上整个博弈图像是一个有向的<strong>完全图</strong>，对图的建模不要想错了。</p>
+class="math inline">\(0\)</span>。事实上整个博弈图像是一个有向的<strong>完全图</strong>。</p>
 <p>根据 <span
 class="math inline">\(\textrm{SG}(x)=\textrm{mex}\{\textrm{SG}(y_1),\textrm{SG}(y_2),\cdots,\textrm{SG}(y_k)\}\)</span>，<span
 class="math inline">\(y\)</span> 为 <span
@@ -11582,6 +11536,209 @@ x)\)</span>。</p>
       <tags>
         <tag>线段树</tag>
         <tag>线性基</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>UOJ513</title>
+    <url>/2024/01/28/UOJ513/</url>
+    <content><![CDATA[<p><a href="https://uoj.ac/contest/51/problem/513">【UR
+#19】清扫银河</a></p>
+<span id="more"></span>
+<p>我们称不能通行的边为 <span class="math inline">\(1\)</span>
+边，最终目标得到全 <span class="math inline">\(0\)</span> 边的图。</p>
+<p>首先，完全相同的操作最多执行一次。</p>
+<p>考虑操作一，众所周知，无向图所有简单环都可以通过“极小环”异或得到，这里的“极小环”指
+DFS 树上只含一条非树边的环。显然这样的环只有 <span
+class="math inline">\(m-n+1\)</span> 个。</p>
+<p>考虑操作二，发现我们还能剩下 <span class="math inline">\(n\)</span>
+次操作，不如直接简化，每次只翻转一个单点相邻的边。</p>
+<p>都是一样的思想，将范围大的操作无损拆成小的，减少操作方案数。</p>
+<p>正好 <span class="math inline">\(m+1\)</span>
+次操作，可以忽略操作次数限制。</p>
+<p>我们可以列出一些异或方程组，一共 <span
+class="math inline">\(m+1\)</span> 个变量，复杂度过高。</p>
+<p>将操作二全部做完再考虑操作一，容易发现，操作一可以将子图中全部边都异或成
+<span class="math inline">\(0\)</span>，当且仅当子图中每个点 <span
+class="math inline">\(1\)</span>
+权边度数均为偶数。不难通过欧拉回路的思路得到。</p>
+<p>问题变为能否通过操作二将全部点的 <span
+class="math inline">\(1\)</span> 权边度数变为偶数。<span
+class="math inline">\(n\)</span> 个变量 <span
+class="math inline">\(n\)</span>
+个方程，高斯消元解异或方程组即可，或者线性基：将每种操作二表示为这组基中的一个
+<span class="math inline">\(0/1\)</span> 向量（根据相邻 <span
+class="math inline">\(1\)</span>
+边个数奇偶性），判断线性基的张成中有没有全 <span
+class="math inline">\(0\)</span> 的向量。</p>
+<p>使用 <code>bitset</code> 加速，时间复杂度 <span
+class="math inline">\(O(\frac{n^3}{\omega})\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">305</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> V, E;</span><br><span class="line">bitset&lt;N&gt; G[N], lb[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">insert</span><span class="params">(bitset&lt;N&gt; &amp;x)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = x._Find_first(); i != N; i = x._Find_first()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (lb[i].<span class="built_in">none</span>()) <span class="keyword">return</span> lb[i] = x, <span class="literal">true</span>;</span><br><span class="line">    x ^= lb[i];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> i, u, v, w;</span><br><span class="line">  cin &gt;&gt; V &gt;&gt; E;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= V; ++i) G[i].<span class="built_in">reset</span>(), lb[i].<span class="built_in">reset</span>();</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; E; ++i) &#123;</span><br><span class="line">    cin &gt;&gt; u &gt;&gt; v &gt;&gt; w, G[u].<span class="built_in">set</span>(v), G[v].<span class="built_in">set</span>(u);</span><br><span class="line">    <span class="keyword">if</span> (w) G-&gt;<span class="built_in">flip</span>(u), G-&gt;<span class="built_in">flip</span>(v);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= V; ++i) <span class="built_in">insert</span>(G[i].<span class="built_in">set</span>(i, G[i].<span class="built_in">count</span>() &amp; <span class="number">1</span>));</span><br><span class="line">  cout &lt;&lt; (<span class="built_in">insert</span>(G[<span class="number">0</span>]) ? <span class="string">&quot;no\n&quot;</span> : <span class="string">&quot;yes\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> T;</span><br><span class="line">  std::ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>), cin.<span class="built_in">tie</span>(<span class="literal">NULL</span>);</span><br><span class="line">  <span class="keyword">for</span> (cin &gt;&gt; T; T; --T) <span class="built_in">work</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>GraphTA</category>
+      </categories>
+      <tags>
+        <tag>高斯消元</tag>
+        <tag>线性基</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CF1119H</title>
+    <url>/2024/02/04/CF1119H/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF1119H">Triple</a></p>
+<span id="more"></span>
+<p>很牛的题！</p>
+<p>首先有一个较为显然的暴力。</p>
+<p><span class="math inline">\(n\)</span> 个幂级数，对于三元组 <span
+class="math inline">\(\{a_i,b_i,c_i\}\)</span>，使 <span
+class="math inline">\(F_i[a_i]=x,\,F_i[b_i]=y,\,F_i[c_i]=z\)</span>，其余项系数全
+<span class="math inline">\(0\)</span>。</p>
+<p>将全部 <span class="math inline">\(F_i\)</span>
+做异或卷积就是答案。复杂度 <span
+class="math inline">\(O(nk2^k)\)</span>，不行。</p>
+<p>每个幂级数只有三个不是 <span
+class="math inline">\(0\)</span>，考虑简化运算。</p>
+<p>设 <span class="math inline">\(c\)</span> 为异或卷积的变换系数：
+<span class="math display">\[
+\begin{aligned}
+&amp;FWT(F_i)[j]=\sum_{p=0}^{n-1}c(j,p)F_i[p]\\
+&amp;G[j]=\prod_{i=1}^nFWT(F_i)[j]
+\end{aligned}
+\]</span> 众所周知，<span
+class="math inline">\(c(i,j)=(-1)^{\textrm{cnt}(i\&amp;j)}\)</span>，<span
+class="math inline">\(cnt\)</span> 为 <code>popcount</code>，<span
+class="math inline">\(\&amp;\)</span> 为按位与。解释在文末。</p>
+<p>得到： <span class="math display">\[
+FWT(F_i)[j]=(-1)^{cnt(j\&amp;a_i)}x+(-1)^{cnt(j\&amp;b_i)}y+(-1)^{cnt(j\&amp;c_i)}z
+\]</span> 优化了 <span class="math inline">\(FWT\)</span> 的复杂度，显然
+<span class="math inline">\(IFWT(G)\)</span> 就是答案，复杂度 <span
+class="math inline">\(O((n+k)2^k)\)</span>，还是不行。</p>
+<p><span class="math inline">\(x,y,z\)</span>
+均为定值的性质没有用到。考虑变换形式，从另一个角度看。</p>
+<p>后面的正负只有 <span class="math inline">\(2^3=8\)</span>
+种，分别求八种情况的值，得到 <span class="math inline">\(x\pm y\pm
+z\)</span> 在 <span class="math inline">\(S[j]\)</span>
+这个位置被乘几次，就可以直接快速幂了。</p>
+<p>怎么求这一坨乘了几次？<span class="math inline">\(8\)</span>
+种是不是太矢了？</p>
+<p>将 <span class="math inline">\(\{a_i,b_i,c_i\}\)</span> 异或 <span
+class="math inline">\(a_i\)</span>，变为 <span
+class="math inline">\(\{0,b_i\oplus a_i,c_i\oplus a_i\}\)</span>。</p>
+<p>最后得到的幂级数下标 <span
+class="math inline">\(\oplus_{i=1}^{n}a_i\)</span>
+就是原位置，下标做了映射。</p>
+<p>现在那一坨中 <span class="math inline">\(j\&amp;a_i=0\)</span>
+一定成立，第一项一定为正。</p>
+<p>下面一切讨论都固定了 <span class="math inline">\(j\)</span>。</p>
+<p>考虑 <span class="math inline">\(x+y+z,x+y-z,x-y+z,x-y-z\)</span>
+四种情况，记它们分别为 <span
+class="math inline">\(s_1,s_2,s_3,s_4\)</span>，它们乘的次数分别为 <span
+class="math inline">\(c_1,c_2,c_3,c_4\)</span>，</p>
+<p>采用一个比较数学的方法得到 <span
+class="math inline">\(c\)</span>，解方程。</p>
+<p>首先有： <span class="math display">\[
+\begin{aligned}
+&amp;c_1+c_2+c_3+c_4=n&amp;(1)\\
+&amp;FWT(F_i)[j]=s_{1/2/3/4}\\
+&amp;G[j]=s_1^{c_1}s_2^{c_2}s_3^{c_3}s_4^{c_4}
+\end{aligned}
+\]</span> 考虑人为构造一些特例，对特例做 <span
+class="math inline">\(FWT\)</span>，运用含有这些 <span
+class="math inline">\(FWT\)</span> 数组的等式，解出 <span
+class="math inline">\(c_{1/2/3/4}\)</span>。</p>
+<p>下面 <span class="math inline">\(F_i\)</span>
+不再有原来的计数含义，继续沿用只是方便记号规定。</p>
+<p>构造 <span class="math inline">\(F_i\)</span> 赋值 <span
+class="math inline">\(F_i[b_i]=1\)</span>，也就是 <span
+class="math inline">\(x=0,y=1,z=0\)</span>。</p>
+<p>此时： <span class="math display">\[
+\begin{aligned}
+&amp;FWT(F_i)[j]=(-1)^{cnt(j\&amp;b_i)}=s_{1/2/3/4}\\
+&amp;s_1=1,\,s_2=1,\,s_3=-1,\,s_4=-1
+\end{aligned}
+\]</span> 所谓 “乘的次数”
+就是贡献的次数，可以贡献乘法当然也可以贡献加法，有： <span
+class="math display">\[
+\begin{aligned}
+&amp;\sum_{i=1}^{n}FWT(F_i)[j]=\sum_{p=1}^4s_pc_p=c_1+c_2-c_3-c_4&amp;(2)
+\end{aligned}
+\]</span> 这几步比较智慧，想办法凑形式，这个和式也是凑出来的。</p>
+<p>众所周知，<span class="math inline">\(FWT\)</span>
+可以看作线性变换，有 <span
+class="math inline">\(FWT(F+G)=FWT(F)+FWT(G)\)</span>。</p>
+<p>所以： <span class="math display">\[
+\sum_{i=1}^nFWT(F_i)=FWT\left(\sum_{i=1}^{n}F_i\right)
+\]</span> 只需要做一次 <span class="math inline">\(FWT\)</span>
+即可。</p>
+<p>根据构造 <span class="math inline">\(F_i\)</span> 的过程： <span
+class="math display">\[
+\left(\sum_{i=1}^nF_i\right)[j]=\sum_{i=1}^{n}[b_i=j]
+\]</span> 其实就是个桶。代码中记作 <span
+class="math inline">\(f_1\)</span>，剩下两种情况为 <span
+class="math inline">\(f_2,f_3\)</span>。</p>
+<p>同理，我们可以构造 <span class="math inline">\(F_i[c_i]=1\)</span>
+的情况，也就是 <span class="math inline">\(x=0,y=0,z=1\)</span>，有：
+<span class="math display">\[
+\begin{aligned}
+&amp;\sum_{i=1}^{n}FWT(F_i)[j]=c_1-c_2+c_3-c_4&amp;(3)
+\end{aligned}
+\]</span> 构造 <span class="math inline">\(F_i[b_i\oplus c_i]=1\)</span>
+的情况，也就是 <span
+class="math inline">\(x=0,y=1,z=1\)</span>，其实就是上面两种情况异或卷积一下的结果。</p>
+<p>此时有： <span class="math display">\[
+FWT(F_i)[j]=(-1)^{cnt(j\&amp; b_i)}(-1)^{cnt(j\&amp;c_i)}
+\]</span> 多一项不影响本质： <span class="math display">\[
+\begin{aligned}
+&amp;\sum_{i=1}^{n}FWT(F_i)[j]=c_1-c_2-c_3+c_4&amp;(4)
+\end{aligned}
+\]</span> 现在可以解了。</p>
+<p>对于每个 <span
+class="math inline">\(j\)</span>，我们设三种情况等式左边的 <span
+class="math inline">\(FWT(F_i)[j]\)</span> 之和为 <span
+class="math inline">\(p_{1/2/3}\)</span>。</p>
+<p>联立方程组： <span class="math display">\[
+\begin{cases}
+n=c_1+c_2+c_3+c_4\\
+p_1=c_1+c_2-c_3-c_4\\
+p_2=c_1-c_2+c_3-c_4\\
+p_3=c_1-c_2-c_3+c_4
+\end{cases}
+\]</span> 易得： <span class="math display">\[
+\begin{cases}
+c_1=\frac{1}{4}(n+p_1+p_2+p_3)\\
+c_2=\frac{1}{2}(n+p_1-2c_1)\\
+c_3=\frac{1}{2}(n+p_2-2c_1)\\
+c_4=\frac{1}{2}(n+p_3-2c_1)
+\end{cases}
+\]</span> 显然 <span class="math inline">\(c\le n\)</span>，<span
+class="math inline">\(p\)</span> 和 <span
+class="math inline">\(n\)</span> 量级差不多，<span
+class="math inline">\(FWT\)</span> 求 <span
+class="math inline">\(p_{1/2/3}\)</span>
+的过程中可以不取模，不会溢出。</p>
+<p>快速幂求出 <span class="math inline">\(G\)</span>，<span
+class="math inline">\(IFWT(G)\)</span> 就是答案（复读）。</p>
+<p>时间复杂度 <span class="math inline">\(O((k+\log
+n)2^k)\)</span>。</p>
+<p>三元组可以扩展，若给出 <span class="math inline">\(m\)</span>
+元组，复杂度为 <span class="math inline">\(O(n2^m+(k+m+\log
+n)2^{k+m})\)</span>，当然这种做法会变得复杂，有另一种拓展性更强的做法，前面思路基本相同，后面一些观察，发现解方程其实不必要——系数和
+<span class="math inline">\(FWT\)</span> 的系数 <span
+class="math inline">\(c(i,j)\)</span> 有奇妙的统一性，所以跑 <span
+class="math inline">\(FWT\)</span>
+就可以得到个数。感觉挺难想到，就不写了。</p>
+<p>有时候解方程这种 “简单” 的思路还是很容易被忽略的吧。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1.4e5</span> + <span class="number">5</span>, mod = <span class="number">998244353</span>, inv2 = <span class="number">499122177</span>;</span><br><span class="line"><span class="function">ll <span class="title">qpow</span><span class="params">(ll a, <span class="type">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ll res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (b)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>)</span><br><span class="line">            res = res * a % mod;</span><br><span class="line">        a = a * a % mod;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">inv</span><span class="params">(<span class="type">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">qpow</span>(x, mod - <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> n, m;</span><br><span class="line">ll x, y, z, f1[N], f2[N], f3[N], f[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">DWT</span><span class="params">(ll a[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> len = <span class="number">1</span>; len &lt;= m; len *= <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">0</span>; p &lt;= m; p += len * <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">rep</span>(i, p, p + len - <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                ll sav = a[i];</span><br><span class="line">                a[i] += a[i + len];</span><br><span class="line">                a[i + len] = sav - a[i + len];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">IDWT</span><span class="params">(ll a[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> len = <span class="number">1</span>; len &lt;= m; len *= <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">0</span>; p &lt;= m; p += len * <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">rep</span>(i, p, p + len - <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                ll sav = a[i];</span><br><span class="line">                a[i] = (a[i] + a[i + len]) * inv2 % mod;</span><br><span class="line">                a[i + len] = (sav - a[i + len] + mod) * inv2 % mod;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n, m);</span><br><span class="line">    m = (<span class="number">1</span> &lt;&lt; m) - <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">read</span>(x, y, z);</span><br><span class="line">    <span class="type">int</span> xsuma = <span class="number">0</span>, a = <span class="number">0</span>, b = <span class="number">0</span>, c = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">read</span>(a, b, c);</span><br><span class="line">        xsuma ^= a;</span><br><span class="line">        b ^= a, c ^= a;</span><br><span class="line">        f1[b]++, f2[c]++, f3[b ^ c]++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">DWT</span>(f1), <span class="built_in">DWT</span>(f2), <span class="built_in">DWT</span>(f3);</span><br><span class="line">    ll s1 = (x + y + z) % mod, s2 = (x + y - z + mod) % mod,</span><br><span class="line">       s3 = (x - y + mod + z) % mod, s4 = (x - y + mod - z + mod) % mod;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, m)</span><br><span class="line">    &#123;</span><br><span class="line">        ll c1 = (n + f1[i] + f2[i] + f3[i]) / <span class="number">4</span>,</span><br><span class="line">           c2 = (n + f1[i] - <span class="number">2</span> * c1) / <span class="number">2</span>,</span><br><span class="line">           c3 = (n + f2[i] - <span class="number">2</span> * c1) / <span class="number">2</span>,</span><br><span class="line">           c4 = (n + f3[i] - <span class="number">2</span> * c1) / <span class="number">2</span>;</span><br><span class="line">        f[i] = <span class="built_in">qpow</span>(s1, c1) * <span class="built_in">qpow</span>(s2, c2) % mod *</span><br><span class="line">               <span class="built_in">qpow</span>(s3, c3) % mod * <span class="built_in">qpow</span>(s4, c4) % mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">IDWT</span>(f);</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, m)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">write</span>(f[i ^ xsuma], <span class="string">&#x27; &#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>WTF</category>
+      </categories>
+      <tags>
+        <tag>多项式</tag>
+        <tag>生成函数</tag>
+        <tag>FWT</tag>
       </tags>
   </entry>
 </search>
