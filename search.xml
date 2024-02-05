@@ -11630,13 +11630,13 @@ FWT(F_i)[j]=(-1)^{\textrm{cnt}(j\&amp;a_i)}x+(-1)^{\textrm{cnt}(j\&amp;b_i)}y+(-
 <span class="math inline">\(IFWT(G)\)</span> 就是答案，复杂度 <span
 class="math inline">\(O((n+k)2^k)\)</span>，还是不行。</p>
 <p><span class="math inline">\(x,y,z\)</span>
-均为定值的性质没有用到。考虑变换形式，从另一个角度看。</p>
+均为定值的性质没有用到，从另一个角度看。</p>
 <p>后面的正负只有 <span class="math inline">\(2^3=8\)</span>
 种，分别求八种情况的值，得到 <span class="math inline">\(x\pm y\pm
-z\)</span> 在 <span class="math inline">\(S[j]\)</span>
-这个位置被乘几次，就可以直接快速幂了。</p>
+z\)</span> 在 <span class="math inline">\(G[j]\)</span>
+中被乘几次，就可以直接快速幂了。</p>
 <p>怎么求这一坨乘了几次？<span class="math inline">\(8\)</span>
-种是不是太矢了？</p>
+种是不是太多了？</p>
 <p>将 <span class="math inline">\(\{a_i,b_i,c_i\}\)</span> 异或 <span
 class="math inline">\(a_i\)</span>，变为 <span
 class="math inline">\(\{0,b_i\oplus a_i,c_i\oplus a_i\}\)</span>。</p>
@@ -11663,7 +11663,7 @@ class="math inline">\(FWT\)</span>，运用含有这些 <span
 class="math inline">\(FWT\)</span> 数组的等式，解出 <span
 class="math inline">\(c_{1/2/3/4}\)</span>。</p>
 <p>下面 <span class="math inline">\(F_i\)</span>
-不再有原来的计数含义，继续沿用只是方便记号规定。</p>
+不再有原来的计数含义，继续沿用只是方便记号约定。</p>
 <p>构造 <span class="math inline">\(F_i\)</span> 赋值 <span
 class="math inline">\(F_i[b_i]=1\)</span>，也就是 <span
 class="math inline">\(x=0,y=1,z=0\)</span>。</p>
@@ -11757,6 +11757,149 @@ class="math inline">\(FWT\)</span>
         <tag>多项式</tag>
         <tag>生成函数</tag>
         <tag>FWT</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CF838C</title>
+    <url>/2024/02/05/CF838C/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF838C">Future
+Failure</a></p>
+<span id="more"></span>
+<p><em>2800。感觉应该以 </em>3200 对待。</p>
+<p>以下 “先手” 指对应的状态下当前操作方，而不是 Alice。</p>
+<p>博弈要把握决策上的对称性，同种先手必胜策略适用于两方。感觉这么说像是正确的废话呢。</p>
+<p>设字母 <span class="math inline">\(i\)</span> 出现了 <span
+class="math inline">\(a_i\)</span> 次。</p>
+<p>对于一个长度为 <span class="math inline">\(n\)</span>
+的串，不同的排列个数为： <span class="math display">\[
+C_n=\frac{n!}{\prod a_i!}
+\]</span> <strong><span class="math inline">\(a_i\)</span>
+可以为零。</strong>题面要求的是字符 <span class="math inline">\(\le
+k\)</span> 种。</p>
+<p>多重组合数。</p>
+<p>显然，排列个数对先手后手的贡献在于奇偶性。</p>
+<ul>
+<li>若 <span class="math inline">\(C_n\)</span>
+为偶数时，当前先手必胜。</li>
+</ul>
+<p>证明：</p>
+<p>若删掉一个字符后进入必败状态，直接删即可先手必胜。</p>
+<p>若删掉一个字符后进入必胜状态，双方会一直做变换，直到走完全部 <span
+class="math inline">\(C_n\)</span> 种方案，由于 <span
+class="math inline">\(C_n\)</span>
+为偶数，初始时候的后手不得不删掉一个字符，先手必胜。</p>
+<ul>
+<li>若 <span class="math inline">\(C_n\)</span> 为奇数。</li>
+</ul>
+<p>和刚才类似的讨论。</p>
+<p>若删掉一个字符后进入必败状态，当然直接删。</p>
+<p>若删除一个字符后进入必胜状态，先手时不想删的，而现在 <span
+class="math inline">\(C_n\)</span> 是奇数，全部走完后先手不得不删。</p>
+<p>现在两种情况得出结果并不统一，至少我们知道，删除不同的字符造成的影响可能不一样，不能只针对
+<span class="math inline">\(C_n\)</span>。</p>
+<p>需要进一步讨论。</p>
+<p>删除一个字符 <span class="math inline">\(i\)</span>，等价于让 <span
+class="math inline">\(a_i\gets a_i-1,n\gets n-1\)</span>，也就是 <span
+class="math inline">\(C_n\gets C_n\times \frac{a_i}{n}\)</span>。</p>
+<p>有一个结论：当且仅当 <span class="math inline">\(n\)</span>
+为奇数，先手必胜。</p>
+<p>不妨考虑：</p>
+<ul>
+<li>当 <span class="math inline">\(n\)</span>
+是奇数时，一定可以不转移到对方必胜状态。</li>
+<li>当 <span class="math inline">\(n\)</span>
+是偶数时，一定会最终转移到对方必胜状态。</li>
+</ul>
+<p>别忘了 <span class="math inline">\(n=\sum a_i\)</span>。</p>
+<p>乘 <span class="math inline">\(\frac{a_i}{n}\)</span>
+时，根据前面的结论，先手希望乘出奇数，走到必败状态。 那 <span
+class="math inline">\(a_i\)</span> 肯定也要是奇数。</p>
+<p>当 <span class="math inline">\(n\)</span> 是奇数，一定会有奇数个
+<span class="math inline">\(a_i\)</span>
+为奇数，两人轮流选奇数，后手被迫选偶数，<span
+class="math inline">\(C_n\)</span>
+变成偶数，先手必胜——这里先手和初始先手一样，对方必败。</p>
+<p>当 <span class="math inline">\(n\)</span> 是偶数，一定会有偶数个
+<span class="math inline">\(a_i\)</span>
+为奇数，两人轮流选奇数，先手被迫拿偶数，<span
+class="math inline">\(C_n\)</span>
+变成偶数，先手必胜——这里先手就是初始后手，对方必胜。</p>
+<p>所以上面两个命题成立。</p>
+<p>综上：</p>
+<ul>
+<li>当 <span class="math inline">\(n\)</span> 为奇数，先手必胜。</li>
+<li>当 <span class="math inline">\(n\)</span> 为偶数，当且仅当 <span
+class="math inline">\(C_n\)</span> 为偶数时，先手必胜。</li>
+</ul>
+<p><span class="math inline">\(n\)</span> 为奇数显然答案为 <span
+class="math inline">\(k^n\)</span>。</p>
+<p><span class="math inline">\(n\)</span>
+为偶数时，需要计数有多少个串满足 <span
+class="math inline">\(C_n\)</span> 为偶数。</p>
+<p>如果做过 <a href="https://www.luogu.com.cn/problem/P3773">P3773
+[CTSC2017]
+吉夫特</a>，可能知道有一些关于组合数为奇数的结论。所以这里考虑容斥，用
+<span class="math inline">\(k^n\)</span> 减去 <span
+class="math inline">\(C_n\)</span> 为奇数的情况。</p>
+<p>将形式改为组合数之积： <span class="math display">\[
+C_n=\frac{(\sum_{i=1}^n
+a_i)!}{\prod_{i=1}^na_i!}=\prod_{j=1}^{n}\binom{\sum_{i=j}^{n}a_i}{a_{j}}
+\]</span> 显然，后面乘起来的组合数中必须全为奇数才能使 <span
+class="math inline">\(C_n\)</span> 为奇数。</p>
+<p>根据 <a href="https://h01yshhmy.github.io/2024/01/13/P3773/">P3773 |
+h01yshhmy</a> 的经验，<span class="math inline">\(a_j\)</span>
+在二进制上是 <span class="math inline">\(\sum_{i=j}^na_i\)</span>
+的子集时，组合数为奇数（使用 Lucas 定理证明）。</p>
+<p>从 <span class="math inline">\(j=n\)</span> 开始，不断使 <span
+class="math inline">\(j\gets j-1\)</span>，关注 <span
+class="math inline">\(a_j\)</span> 是 <span
+class="math inline">\(\sum_{i=j}^n a_i\)</span>
+的子集需要什么条件，容易发现，<span class="math inline">\(\sum_{i=j}^n
+a_i\)</span> 的加法过程中不能存在进位。也就是说各个 <span
+class="math inline">\(a_i\)</span> 之间互斥。</p>
+<p>也就是说，每种 <span class="math inline">\(a\)</span> 对应一种将
+<span class="math inline">\(n\)</span> 至多划分成 <span
+class="math inline">\(k\)</span> 个集合的方案。</p>
+<p>可以做 <span class="math inline">\(k\)</span> 次子集卷积： <span
+class="math display">\[
+\begin{aligned}
+&amp;g_{i}=\frac{1}{i!}\\
+&amp;h_i=\sum_{j\textrm{ and }k=\varnothing,\,j\textrm{ or
+}k=i}f_j\times g_k\\
+&amp;f\gets h
+\end{aligned}
+\]</span> 每做一次相当于加入了一个新集合。代码中注意卷上 <span
+class="math inline">\(k=0\)</span>（循环变量 <span
+class="math inline">\(k\)</span>） 的情况并 <span
+class="math inline">\(g_0=1\)</span>，这样可以算的是至多 <span
+class="math inline">\(k\)</span> 个集合的方案。</p>
+<p>最终的 <span class="math inline">\(f\)</span> 是 <span
+class="math inline">\(C_n\)</span> 的分母，还需要乘上 <span
+class="math inline">\(n!\)</span>。</p>
+<p>发现我们是对着不变的 <span class="math inline">\(g\)</span>
+做子集卷积，其实就是 <span
+class="math inline">\(f=g^k\)</span>，可以使用快速幂加速。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log^2 n\log
+k)\)</span>。</p>
+<p>注意常数优化。设 <span
+class="math inline">\(p=\textrm{popcount}(n)\)</span>，<span
+class="math inline">\(O(np^2\log k)\)</span>
+为实际复杂度，上界不要直接用 <span class="math inline">\(\log
+n\)</span>，虽然可以卡满但是数据并没有卡，不然过不去。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">262144</span>;</span><br><span class="line"><span class="type">int</span> n, K, mod, Lim;</span><br><span class="line"><span class="type">int</span> f[<span class="number">20</span>][N], g[<span class="number">20</span>][N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">upd</span><span class="params">(<span class="type">int</span> &amp;x, <span class="type">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ((x += y) &gt;= mod)</span><br><span class="line">        x -= mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">FWT</span><span class="params">(<span class="type">int</span> a[], <span class="type">int</span> len, <span class="type">int</span> op)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= len; i *= <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= len; j += i * <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">rep</span>(k, <span class="number">0</span>, i - <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">upd</span>(a[i + j + k], <span class="number">1ll</span> * op * a[j + k] % mod);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qpow</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (b)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>)</span><br><span class="line">            res = <span class="number">1ll</span> * res * a % mod;</span><br><span class="line">        a = <span class="number">1ll</span> * a * a % mod;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> fac[N], ifac[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">(<span class="type">int</span> lim)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    fac[<span class="number">0</span>] = ifac[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, lim)</span><br><span class="line">        fac[i] = <span class="number">1ll</span> * fac[i - <span class="number">1</span>] * i % mod;</span><br><span class="line">    ifac[lim] = <span class="built_in">qpow</span>(fac[lim], mod - <span class="number">2</span>);</span><br><span class="line">    <span class="built_in">pe</span>(i, lim - <span class="number">1</span>)</span><br><span class="line">        ifac[i] = <span class="number">1ll</span> * ifac[i + <span class="number">1</span>] * (i + <span class="number">1</span>) % mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n, K, mod);</span><br><span class="line">    <span class="keyword">if</span> (n &amp; <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">write</span>(<span class="built_in">qpow</span>(K, n), <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> U = (<span class="number">1</span> &lt;&lt; (<span class="type">int</span>)(<span class="built_in">ceil</span>(<span class="built_in">log2</span>(n + <span class="number">1</span>)))) - <span class="number">1</span>;</span><br><span class="line">    Lim = __builtin_popcount(n);</span><br><span class="line">    <span class="built_in">init</span>(<span class="built_in">max</span>(n, U));</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, U)</span><br><span class="line">    &#123;</span><br><span class="line">        g[__builtin_popcount(i)][i] = ifac[i];</span><br><span class="line">        f[<span class="number">0</span>][i] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, Lim) <span class="built_in">FWT</span>(g[i], U, <span class="number">1</span>);</span><br><span class="line">    <span class="type">int</span> bak = K;</span><br><span class="line">    <span class="keyword">while</span> (K)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (K &amp; <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">per</span>(j, Lim, <span class="number">0</span>) <span class="built_in">rep</span>(k, <span class="number">0</span>, j - <span class="number">1</span>) <span class="built_in">rep</span>(i, <span class="number">0</span>, U)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">upd</span>(f[j][i], <span class="number">1ll</span> * f[k][i] * g[j - k][i] % mod);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">per</span>(j, Lim, <span class="number">0</span>) <span class="built_in">rep</span>(k, <span class="number">0</span>, j - <span class="number">1</span>) <span class="built_in">rep</span>(i, <span class="number">0</span>, U)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">upd</span>(g[j][i], <span class="number">1ll</span> * g[k][i] * g[j - k][i] % mod);</span><br><span class="line">        &#125;</span><br><span class="line">        K &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    K = bak;</span><br><span class="line">    <span class="built_in">FWT</span>(f[Lim], U, mod - <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">write</span>((<span class="built_in">qpow</span>(K, n) - <span class="number">1ll</span> * f[Lim][n] * fac[n] % mod + mod) % mod, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>随机过程与计数</category>
+      </categories>
+      <tags>
+        <tag>计数</tag>
+        <tag>多项式</tag>
+        <tag>生成函数</tag>
+        <tag>Lucas定理</tag>
+        <tag>博弈</tag>
+        <tag>FWT</tag>
+        <tag>子集卷积</tag>
       </tags>
   </entry>
 </search>
