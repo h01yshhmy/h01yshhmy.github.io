@@ -785,26 +785,24 @@ p)\)</span> 的最小正整数，则称 <span
 class="math inline">\(\textrm{ord}_p(a)\)</span> 为 <span
 class="math inline">\(a\)</span> 在模 <span
 class="math inline">\(p\)</span> 意义下的<strong>阶</strong>。</p>
-<p>其实就是 <span class="math inline">\(G=(\mathbb{Z}^{*}_p,\times
-)\)</span> 这个群中，以 <span class="math inline">\(a\)</span>
-为生成元的子群的阶，这个子群的 “环长”。</p>
-<p>默认 <span class="math inline">\(a,b\in
-G\)</span>。根据循环群的一些性质：</p>
+<p>其实就是 <span class="math inline">\(|\left\langle
+a\right\rangle|\)</span>。</p>
+<p>对于 <span
+class="math inline">\(G=(\mathbb{Z}^{*}_p,\times)\)</span>，默认 <span
+class="math inline">\(a,b\in G\)</span>。根据循环群的一些性质：</p>
 <ul>
 <li><p>有 <span
 class="math inline">\(\textrm{ord}_p(a)|\varphi(p)\)</span>。</p></li>
 <li><p>若 <span
 class="math inline">\(\textrm{ord}_{p}(a)|\textrm{ord}_p(b)\)</span>，有
 <span class="math inline">\(b^{c}\equiv a\,(\textrm{mod
-}p)\)</span>，其中 <span
-class="math inline">\(c=\frac{\textrm{ord}_p(b)}{\textrm{ord}_p(a)}\)</span>。结合群论相关很好理解，整除相当于
-<span class="math inline">\(a,b\)</span>
-两个子群有一些交（当然这些交就是“步长”的公倍数，规定步长乘环长 <span
-class="math inline">\(\equiv 0(\bmod |G|)\)</span>），可以感性理解成
-<span class="math inline">\(G\)</span> 上 <span
+}p)\)</span>，至少存在一个 <span
+class="math inline">\(c=\frac{\textrm{ord}_p(b)}{\textrm{ord}_p(a)}\)</span>。可以整除相当于
+<span class="math inline">\(\langle a\rangle,\langle b\rangle\)</span>
+有一些交，<span class="math inline">\(G\)</span> 上 <span
 class="math inline">\(b\)</span> 走 <span
 class="math inline">\(c\)</span> 步能遇到一个 <span
-class="math inline">\(a\)</span>。</p>
+class="math inline">\(a\)</span>。不过我们只需要知道存在性即可。</p>
 <p>第一条性质就是 <span class="math inline">\(b\)</span> 为 <span
 class="math inline">\(G\)</span> 的原根时特殊情况。</p></li>
 </ul>
@@ -821,13 +819,13 @@ p)\)</span>。</p>
 的个数最多只有 <span class="math inline">\(\sigma_0(p-1)\)</span>
 种，大约是 <span class="math inline">\(10^4\)</span> 量级。</p>
 <ul>
-<li>设 <span class="math inline">\(G\)</span> 的原根为 <span
+<li>为什么？设 <span class="math inline">\(G\)</span> 的原根为 <span
 class="math inline">\(g\)</span>，考虑群中的一个 <span
 class="math inline">\(g^k\)</span>，性质：<span
 class="math inline">\(\textrm{ord}_p(g^k)=\frac{|G|}{\gcd(|G|,k)}\)</span>，显然不同的阶只有
 <span class="math inline">\(|G|=p-1\)</span> 的因数个数种。</li>
 </ul>
-<p>所以直接暴力数就行。记得开 <code>__int128</code>。</p>
+<p>所以直接开个桶暴力数就行。记得开 <code>__int128</code>。</p>
 <p>时间复杂度 <span
 class="math inline">\(O(n\log^2p+\sigma_0^2(p-1))\)</span>。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> i128=__int128;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N=<span class="number">2e5</span>+<span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line">ll P,a[N];</span><br><span class="line">vector&lt;ll&gt; fac;</span><br><span class="line"><span class="function">i128 <span class="title">qpow</span><span class="params">(i128 a,ll b)</span></span>&#123;</span><br><span class="line">    i128 res=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(b)&#123;</span><br><span class="line">        <span class="keyword">if</span>(b&amp;<span class="number">1</span>)res=res*a%P;</span><br><span class="line">        a=a*a%P;</span><br><span class="line">        b&gt;&gt;=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ll <span class="title">delta</span><span class="params">(ll v)</span></span>&#123;</span><br><span class="line">    ll ans=P<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">for</span>(ll i:fac)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">qpow</span>(v,ans/i)==<span class="number">1</span>)&#123;</span><br><span class="line">            ans/=i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (P<span class="number">-1</span>)/ans;</span><br><span class="line">&#125;</span><br><span class="line">unordered_map&lt;ll,<span class="type">int</span>&gt; mp;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line">    cin&gt;&gt;n&gt;&gt;P;</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        cin&gt;&gt;a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    ll v=P<span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">for</span>(ll i=<span class="number">2</span>;i*i&lt;=v;i++)&#123;</span><br><span class="line">        <span class="keyword">while</span>(v%i==<span class="number">0</span>)&#123;</span><br><span class="line">            fac.<span class="built_in">pb</span>(i);</span><br><span class="line">            v/=i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(v)fac.<span class="built_in">pb</span>(v);</span><br><span class="line">    <span class="built_in">sort</span>(<span class="built_in">range</span>(fac));</span><br><span class="line">    <span class="built_in">re</span>(i,n)&#123;</span><br><span class="line">        mp[<span class="built_in">delta</span>(a[i])]++;</span><br><span class="line">    &#125;</span><br><span class="line">    ll ans=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> [i,u]:mp)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> [j,v]:mp)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i%j==<span class="number">0</span>)ans+=<span class="number">1ll</span>*u*v;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout&lt;&lt;ans&lt;&lt;<span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -839,6 +837,7 @@ class="math inline">\(O(n\log^2p+\sigma_0^2(p-1))\)</span>。</p>
       <tags>
         <tag>数论</tag>
         <tag>原根</tag>
+        <tag>群论</tag>
       </tags>
   </entry>
   <entry>
@@ -12014,6 +12013,177 @@ class="math inline">\(O(AC)\)</span>。</p>
         <tag>群论</tag>
         <tag>Polya 定理</tag>
         <tag>置换</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>P2599</title>
+    <url>/2024/02/08/P2599/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P2599">P2599 [ZJOI2009]
+取石子游戏</a></p>
+<span id="more"></span>
+<p>不要把博弈做死了。灵活一点。</p>
+<p>显然每个时刻的状态都是 <span class="math inline">\([1,n]\)</span>
+上的连续区间。</p>
+<p>为了省事，以下简记 <span class="math inline">\(\langle
+i,j\rangle=a_i,a_{i+1},\cdots,a_j\)</span>。</p>
+<p>考虑设 <span class="math inline">\(L(i,j)\)</span>：当前状态为：<span
+class="math inline">\((L(i,j),\langle i,j\rangle)\)</span>
+时，先手必败。</p>
+<p><span class="math inline">\(R(i,j)\)</span> 同理：当前状态为：<span
+class="math inline">\((\langle i,j\rangle,R(i,j))\)</span>
+时，先手必败。</p>
+<p><span class="math inline">\(L,R\)</span>
+一定存在？如果存在是否唯一？</p>
+<p>存在性：</p>
+<p>反证。若存在一种情况使得 <span class="math inline">\(\langle
+i,j\rangle\)</span> 左边放多少石子都先手必胜，则 <span
+class="math inline">\(L(i,j)\)</span> 不一定存在。</p>
+<p>在这种情况中，先手无论如何操作都会使当前状态变为必败态。</p>
+<ul>
+<li>若这一步拿了 <span class="math inline">\(\langle i,j\rangle\)</span>
+左边放的，当前状态为先手必败（先后手互换），那么 <span
+class="math inline">\(\langle i,j\rangle\)</span>
+左边剩下的一些石子就会成为 <span
+class="math inline">\(L(i,j)\)</span>，与 <span
+class="math inline">\(L(i,j)\)</span> 不存在矛盾。</li>
+<li>若这一步拿了 <span
+class="math inline">\(a_j\)</span>，当前必败态，因为无论左边放多少都是先手必胜，后手继续在
+<span class="math inline">\(\langle i,j\rangle\)</span>
+左侧拿石子，仍然为必败态送给先手。两个一步可达的状态均为必败态。若设初始先手A后手B，最初A必胜，而现在A必败，又是矛盾。</li>
+</ul>
+<p>综上，不存在这种情况，也就证明 <span class="math inline">\(L\)</span>
+一定存在。<span class="math inline">\(R\)</span> 同理。</p>
+<p>唯一性：</p>
+<p>反证。若 <span class="math inline">\(L(i,j)\)</span>
+不唯一，显然任意两种 <span class="math inline">\(L(i,j)\)</span>
+之间都一步可达，和存在性证明中第二种情况相同，矛盾。</p>
+<p><span class="math inline">\(L\)</span> 一定唯一，<span
+class="math inline">\(R\)</span> 同理。</p>
+<p>显然求出 <span class="math inline">\(L,R\)</span>
+后答案可以随便判，考虑如何求出 <span
+class="math inline">\(L,R\)</span>。</p>
+<p>边界 <span
+class="math inline">\(L(i,i)=R(i,i)=a_i\)</span>：退化为一般 Nim
+游戏，两堆相等石子 Nim 和为 <span class="math inline">\(0\)</span>。</p>
+<p>剩下很多分讨。外层枚举区间长度，从底向上做。</p>
+<p>设 <span
+class="math inline">\(L=L(i,j-1),R=R(i,j-1),x=a_j\)</span>。</p>
+<ul>
+<li><p>若 <span class="math inline">\(x=R\)</span>（<strong>Case
+1</strong>）。</p>
+<ul>
+<li>有 <span class="math inline">\(L(i,j)=0\)</span>。</li>
+<li>证明：右侧加入的 <span class="math inline">\(x\)</span>
+恰好满足先手必败，左边就不用加了。</li>
+</ul></li>
+<li><p>若 <span class="math inline">\(x&lt;R\)</span>：</p>
+<ul>
+<li><p>若 <span class="math inline">\(x&lt;L\)</span>，即 <span
+class="math inline">\(x&lt;\min(L,R)\)</span>（<strong>Case
+2</strong>）。</p>
+<ul>
+<li><p>有 <span class="math inline">\(L(i,j)=x\)</span>。</p></li>
+<li><p>证明：就是证明 <span class="math inline">\((x,\langle
+i,j-1\rangle,x)\)</span> 为必败局面。</p>
+<p>两侧石子数相同，后手做对称操作一定最优（因为先手不傻）。</p>
+<p>直到当前局面形如 <span class="math inline">\((y,\langle
+i,j-1\rangle)\)</span> 或者 <span class="math inline">\((\langle
+i,j-1\rangle,y)\)</span>，显然这个局面轮到后手接盘。因为 <span
+class="math inline">\(0&lt;y\le
+x&lt;\min(L,R)\)</span>，容易发现，后手必胜，先手必败，符合要求。</p></li>
+<li><p>注意必须满足 <span
+class="math inline">\(x&gt;0\)</span>。</p></li>
+</ul></li>
+<li><p>若 <span class="math inline">\(x\ge L\)</span>，即 <span
+class="math inline">\(L\le x&lt;R\)</span>（<strong>Case
+3</strong>）。</p>
+<ul>
+<li><p>有 <span class="math inline">\(L(i,j)=x+1\)</span>。</p></li>
+<li><p>证明：就是证明 <span class="math inline">\((x+1,\langle
+i,j-1\rangle,x)\)</span> 为必败局面。</p>
+<p>考虑两种情况：</p>
+<ol type="1">
+<li><p>若先手拿了 <span class="math inline">\(x+1\)</span>，设还剩 <span
+class="math inline">\(y\)</span> 个石子。</p>
+<p>若 <span class="math inline">\(y&gt;L\)</span>，后手让右侧剩下 <span
+class="math inline">\(y-1\)</span> 个，递归证明。</p>
+<p>若 <span class="math inline">\(y=L\)</span>，后手将右侧也拿完，和
+<span class="math inline">\(L(i,j-1)\)</span> 局面相同，必败局面。</p>
+<p>若 <span class="math inline">\(0&lt;y&lt;L\)</span>，后手让右侧剩下
+<span class="math inline">\(y\)</span> 个，回到 Case 2，必败局面。</p>
+<p>若 <span class="math inline">\(y=0\)</span>，后手无需操作，因为右边
+<span class="math inline">\(L\le x&lt;R\)</span>，不符合 <span
+class="math inline">\(R(i,j-1)\)</span>，先手必胜，必败局面。</p></li>
+<li><p>若先手拿了 <span class="math inline">\(x\)</span>，设还剩 <span
+class="math inline">\(y\)</span> 个石子。</p>
+<p>若 <span class="math inline">\(y\ge L\)</span>，后手让左侧剩下 <span
+class="math inline">\(y+1\)</span> 个，递归证明。</p>
+<p>若 <span class="math inline">\(0&lt;y&lt;L\)</span>，后手让左侧剩下
+<span class="math inline">\(y\)</span> 个，回到 Case 2，必败局面。</p>
+<p>若 <span class="math inline">\(y=0\)</span>，后手让左侧剩下 <span
+class="math inline">\(L\)</span> 个，符合 <span
+class="math inline">\(L(i,j-1)\)</span>，先手必败，必败局面。</p></li>
+</ol></li>
+</ul></li>
+</ul></li>
+<li><p><span class="math inline">\(x&gt;R\)</span>：</p>
+<ul>
+<li><p><span class="math inline">\(x\le L\)</span>，即 <span
+class="math inline">\(R&lt;x\le L\)</span>（<strong>Case
+4</strong>）。</p>
+<ul>
+<li>有 <span class="math inline">\(L(i,j)=x-1\)</span>.</li>
+<li>证明：和 Case 3 思路完全相同，略。</li>
+</ul></li>
+<li><p><span class="math inline">\(x&gt;L\)</span>，即 <span
+class="math inline">\(x&gt;\max(L,R)\)</span>（<strong>Case
+5</strong>）。</p>
+<ul>
+<li><p>有 <span class="math inline">\(L(i,j)=x\)</span>。</p></li>
+<li><p>证明：就是证明 <span class="math inline">\((x,\langle
+i,j-1\rangle,x)\)</span> 为必败状态。</p>
+<p>设先手让两侧中其中一个变成了 <span class="math inline">\(y\)</span>
+个石子。</p>
+<p>若 <span
+class="math inline">\(y&gt;\max(L,R)\)</span>，递归证明。</p>
+<p>若 <span
+class="math inline">\(0&lt;y&lt;\min(L,R)\)</span>，后手让另一侧也剩
+<span class="math inline">\(y\)</span> 个，回到 Case 2，必败状态。</p>
+<p>若 <span class="math inline">\(y=0\)</span>，后手让另一侧剩 <span
+class="math inline">\(L/R\)</span> 个，必败状态。</p>
+<p>剩下 <span class="math inline">\(L\le x\le R\)</span> 或 <span
+class="math inline">\(R\le x\le L\)</span> 的情况。</p>
+<p>对于 Case 3，<span class="math inline">\(L\le x\le
+R-1\)</span>，<span class="math inline">\((x+1,\langle
+i,j-1\rangle,x)\)</span>。</p>
+<p>对于 Case 4，<span class="math inline">\(R+1\le x\le
+L\)</span>，<span class="math inline">\((x-1,\langle
+i,j-1\rangle,x)\)</span>。</p>
+<p>先手可以让两侧的 <span class="math inline">\(x\)</span> 相差 <span
+class="math inline">\(1\)</span> 来让当前状态适配 Case
+3/4，必败状态。</p>
+<p>容易发现我们只需要额外解决 <span class="math inline">\(x=L\)</span>
+或 <span class="math inline">\(x=R\)</span> 的情况。</p>
+<p>先手直接让 <span
+class="math inline">\(y=0\)</span>，必败状态。</p></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>综上： <span class="math display">\[
+L(i,j)=\begin{cases}0&amp;x=R\\x+1&amp;L\le x&lt;R\\x-1&amp;R&lt;x\le
+L\\x&amp;\textrm{otherwise}\end{cases}
+\]</span> <span class="math inline">\(R\)</span> 同理，均为对称。</p>
+<p>只需要判 <span class="math inline">\([L(2,n)=a_1]\)</span> 即可。</p>
+<p>时间复杂度 <span class="math inline">\(O(n^2)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">1005</span>;</span><br><span class="line"><span class="type">int</span> T, n, a[N], L[N][N], R[N][N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mian</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n);</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">read</span>(a[i]);</span><br><span class="line">        L[i][i] = R[i][i] = a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">rep</span>(len, <span class="number">2</span>, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">re</span>(i, n - len + <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> j = i + len - <span class="number">1</span>, l = L[i][j - <span class="number">1</span>], r = R[i][j - <span class="number">1</span>], x = a[j];</span><br><span class="line">            <span class="keyword">if</span> (x == r)</span><br><span class="line">                L[i][j] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (l &lt;= x &amp;&amp; x &lt; r)</span><br><span class="line">                L[i][j] = x + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (r &lt; x &amp;&amp; x &lt;= l)</span><br><span class="line">                L[i][j] = x - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                L[i][j] = x;</span><br><span class="line">            l = L[i + <span class="number">1</span>][j], r = R[i + <span class="number">1</span>][j], x = a[i];</span><br><span class="line">            <span class="keyword">if</span> (x == l)</span><br><span class="line">                R[i][j] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (r &lt;= x &amp;&amp; x &lt;= l)</span><br><span class="line">                R[i][j] = x + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (l &lt; x &amp;&amp; x &lt;= r)</span><br><span class="line">                R[i][j] = x - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                R[i][j] = x;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (L[<span class="number">2</span>][n] == a[<span class="number">1</span>])</span><br><span class="line">        <span class="built_in">write</span>(<span class="number">0</span>, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">write</span>(<span class="number">1</span>, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(T);</span><br><span class="line">    <span class="keyword">while</span> (T--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">mian</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>Game!</category>
+      </categories>
+      <tags>
+        <tag>博弈</tag>
+        <tag>Nim游戏</tag>
       </tags>
   </entry>
 </search>
