@@ -12233,4 +12233,87 @@ class="math inline">\(O(n^3)\)</span>，实际跑的很快。</p>
         <tag>网络流</tag>
       </tags>
   </entry>
+  <entry>
+    <title>CF1411F</title>
+    <url>/2024/02/09/CF1411F/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF1411F">The Thorny
+Path</a></p>
+<span id="more"></span>
+<p>交换两个数相当于交换两个点的后继点，容易发现，要么使两个置换环合并，要么使一个置换环分裂。</p>
+<p>我们可以任意操作每个置换环大小，最大乘积只和 <span
+class="math inline">\(n\)</span> 相关。置换环的大小序列是 <span
+class="math inline">\(n\)</span> 的整数拆分。</p>
+<p>首先，拆分一定尽可能平均的拆，原因显然，可以通过基本不等式证明。</p>
+<p>设将 <span class="math inline">\(n\)</span> 平均分成 <span
+class="math inline">\(x\)</span> 份。当然不一定整除，可能会剩下 <span
+class="math inline">\(n\bmod
+\left\lfloor\frac{n}{x}\right\rfloor\)</span>，先忽略。</p>
+<p>设 <span class="math inline">\(f,g\)</span>： <span
+class="math display">\[
+\begin{aligned}
+&amp;f(x)=(\frac{n}{x})^x=\exp(x\ln\frac{n}{x})\\
+&amp;g(x)=x\ln\frac{x}{n}
+\end{aligned}
+\]</span> 对于 <span class="math inline">\(g\)</span>： <span
+class="math display">\[
+\begin{aligned}
+g(x)&amp;=x\ln \frac{x}{n}\\
+g&#39;(x)&amp;=\ln \frac{x}{n}+x\ln&#39;\frac{x}{n}\\
+&amp;=\ln\frac{x}{n}+x\times \frac{1}{x}\\
+&amp;=\ln\frac{x}{n}+1
+\end{aligned}
+\]</span> 对于 <span class="math inline">\(f\)</span>： <span
+class="math display">\[
+\begin{aligned}
+f(x)&amp;=\exp(-g(x))\\
+f&#39;(x)&amp;=\exp(-g(x))\times(-g&#39;(x))\\
+&amp;=-\exp(x\ln\frac{n}{x})(\ln \frac{x}{n}+1)\\
+&amp;=-(\frac{n}{x})^x(\ln\frac{x}{n}+1)
+\end{aligned}
+\]</span> 顶点： <span class="math display">\[
+\begin{aligned}
+&amp;f&#39;(x)=-(\frac{n}{x})^x(\ln\frac{x}{n}+1)\\
+&amp;(\frac{n}{x})^x\ne 0\Rightarrow \frac{x}{n}+1=0\\
+&amp;\therefore\ln x=\ln n-1=\ln\frac{n}{e}\\
+&amp;\therefore x=\frac{n}{e}
+\end{aligned}
+\]</span> 平均分成 <span class="math inline">\(\frac{n}{e}\)</span>
+乘积最大，尽可能取 <span class="math inline">\(2\)</span> 还是 <span
+class="math inline">\(3\)</span>？容易发现尽可能取 <span
+class="math inline">\(3\)</span> 更优。</p>
+<p>如何得到答案？</p>
+<p>显然，<span class="math inline">\(n\bmod 3\)</span> 意义下为 <span
+class="math inline">\(0\)</span> 时 <span
+class="math inline">\(ans=3^{n/3}\)</span>，为 <span
+class="math inline">\(1\)</span> 时 <span
+class="math inline">\(ans=4\times 3^{n/3-1}\)</span>，为 <span
+class="math inline">\(2\)</span> 时 <span
+class="math inline">\(ans=2\times 3^{n/3}\)</span>，均为整除。</p>
+<p><span class="math inline">\(n\bmod 3=0\)</span>
+较为好做，最终一定全是 <span class="math inline">\(3\)</span>，将 <span
+class="math inline">\(\bmod 3\)</span> 意义下的 <span
+class="math inline">\(1,2\)</span> 尽可能合并即可。</p>
+<p><span class="math inline">\(n\bmod 3=2\)</span> 可以先提出一个 <span
+class="math inline">\(2\)</span>，然后再按照 <span
+class="math inline">\(n\bmod 3=0\)</span> 来做。</p>
+<p><span class="math inline">\(n\bmod 3=1\)</span> 较为复杂。</p>
+<p>为了最小化次数，拆数的时候尽可能留一个 <span
+class="math inline">\(4\)</span>。如果留不了，只会是 <span
+class="math inline">\(1,3\)</span> 合并，显然 <span
+class="math inline">\(2,2\)</span> 合并贡献相同，浪费操作次数。</p>
+<p>当然也可以合出两个 <span
+class="math inline">\(2\)</span>，容易发现这种情况更优时，只能是一些现成的
+<span class="math inline">\(1\)</span>
+拼出来的（现成指不是拆出来的，不然还不如一开始就不拆）都判一下即可。</p>
+<p>时间复杂度 <span class="math inline">\(O(n)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">ksm</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y = mod - <span class="number">2</span>, <span class="type">int</span> z = mod)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (y)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (y &amp; <span class="number">1</span>)</span><br><span class="line">            ret = (ret * x) % z;</span><br><span class="line">        x = (x * x) % z;</span><br><span class="line">        y &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> n, ans, res, tmp;</span><br><span class="line"><span class="type">int</span> a[N], v[N];</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; num;</span><br><span class="line"><span class="type">int</span> cnt[<span class="number">3</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    num.<span class="built_in">clear</span>();</span><br><span class="line">    <span class="built_in">rd</span>(n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="built_in">rd</span>(a[i]);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        v[i] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> x = i, len = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (!v[x])</span><br><span class="line">            v[x] = <span class="number">1</span>, x = a[x], len++;</span><br><span class="line">        <span class="keyword">if</span> (len)</span><br><span class="line">            num.<span class="built_in">push_back</span>(len);</span><br><span class="line">    &#125;</span><br><span class="line">    res = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">memset</span>(cnt, <span class="number">0</span>, <span class="built_in">sizeof</span>(cnt));</span><br><span class="line">    <span class="keyword">if</span> (n % <span class="number">3</span> == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        ans = <span class="built_in">ksm</span>(<span class="number">3</span>, n / <span class="number">3</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x : num)</span><br><span class="line">            res += (x - <span class="number">1</span>) / <span class="number">3</span>, cnt[x % <span class="number">3</span>]++;</span><br><span class="line">        res += <span class="built_in">min</span>(cnt[<span class="number">1</span>], cnt[<span class="number">2</span>]);</span><br><span class="line">        <span class="keyword">if</span> (cnt[<span class="number">2</span>] &gt; cnt[<span class="number">1</span>])</span><br><span class="line">            res += (cnt[<span class="number">2</span>] - cnt[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">if</span> (cnt[<span class="number">1</span>] &gt; cnt[<span class="number">2</span>])</span><br><span class="line">            res += (cnt[<span class="number">1</span>] - cnt[<span class="number">2</span>]) / <span class="number">3</span> * <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (n % <span class="number">3</span> == <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        ans = <span class="built_in">ksm</span>(<span class="number">3</span>, n / <span class="number">3</span> - <span class="number">1</span>) * <span class="number">4</span> % mod;</span><br><span class="line">        <span class="type">bool</span> flag = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x : num)</span><br><span class="line">            res += (x - <span class="number">1</span>) / <span class="number">3</span>, cnt[x % <span class="number">3</span>]++;</span><br><span class="line">        <span class="type">int</span> Res = res;</span><br><span class="line">        res = inf;</span><br><span class="line">        tmp = Res;</span><br><span class="line">        <span class="type">int</span> c[<span class="number">3</span>];</span><br><span class="line">        c[<span class="number">1</span>] = cnt[<span class="number">1</span>];</span><br><span class="line">        c[<span class="number">2</span>] = cnt[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">if</span> (c[<span class="number">2</span>] &gt;= <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            c[<span class="number">2</span>] -= <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> x = <span class="number">2</span> - c[<span class="number">2</span>];</span><br><span class="line">            c[<span class="number">2</span>] = <span class="number">0</span>;</span><br><span class="line">            c[<span class="number">1</span>] -= <span class="number">2</span> * x;</span><br><span class="line">            tmp += x;</span><br><span class="line">        &#125;</span><br><span class="line">        tmp += <span class="built_in">min</span>(c[<span class="number">1</span>], c[<span class="number">2</span>]);</span><br><span class="line">        <span class="keyword">if</span> (c[<span class="number">2</span>] &gt; c[<span class="number">1</span>])</span><br><span class="line">            tmp += (c[<span class="number">2</span>] - c[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">if</span> (c[<span class="number">1</span>] &gt; c[<span class="number">2</span>])</span><br><span class="line">            tmp += (c[<span class="number">1</span>] - c[<span class="number">2</span>]) / <span class="number">3</span> * <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (c[<span class="number">1</span>] &gt;= <span class="number">0</span> &amp;&amp; c[<span class="number">2</span>] &gt;= <span class="number">0</span>)</span><br><span class="line">            res = <span class="built_in">min</span>(res, tmp);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x : num)</span><br><span class="line">            <span class="keyword">if</span> (x &gt;= <span class="number">4</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                tmp = Res - (x % <span class="number">3</span> != <span class="number">0</span>);</span><br><span class="line">                cnt[x % <span class="number">3</span>]--;</span><br><span class="line">                cnt[(x - <span class="number">4</span>) % <span class="number">3</span>]++;</span><br><span class="line">                tmp += <span class="built_in">min</span>(cnt[<span class="number">1</span>], cnt[<span class="number">2</span>]);</span><br><span class="line">                <span class="keyword">if</span> (cnt[<span class="number">2</span>] &gt; cnt[<span class="number">1</span>])</span><br><span class="line">                    tmp += (cnt[<span class="number">2</span>] - cnt[<span class="number">1</span>]);</span><br><span class="line">                <span class="keyword">if</span> (cnt[<span class="number">1</span>] &gt; cnt[<span class="number">2</span>])</span><br><span class="line">                    tmp += (cnt[<span class="number">1</span>] - cnt[<span class="number">2</span>]) / <span class="number">3</span> * <span class="number">2</span>;</span><br><span class="line">                res = <span class="built_in">min</span>(res, tmp);</span><br><span class="line">                cnt[(x - <span class="number">4</span>) % <span class="number">3</span>]--;</span><br><span class="line">                cnt[x % <span class="number">3</span>]++;</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">if</span> (cnt[<span class="number">0</span>] &amp;&amp; cnt[<span class="number">1</span>])</span><br><span class="line">        &#123;</span><br><span class="line">            tmp = Res + <span class="number">1</span>;</span><br><span class="line">            cnt[<span class="number">1</span>]--;</span><br><span class="line">            tmp += <span class="built_in">min</span>(cnt[<span class="number">1</span>], cnt[<span class="number">2</span>]);</span><br><span class="line">            <span class="keyword">if</span> (cnt[<span class="number">2</span>] &gt; cnt[<span class="number">1</span>])</span><br><span class="line">                tmp += (cnt[<span class="number">2</span>] - cnt[<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">if</span> (cnt[<span class="number">1</span>] &gt; cnt[<span class="number">2</span>])</span><br><span class="line">                tmp += (cnt[<span class="number">1</span>] - cnt[<span class="number">2</span>]) / <span class="number">3</span> * <span class="number">2</span>;</span><br><span class="line">            res = <span class="built_in">min</span>(res, tmp);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (n % <span class="number">3</span> == <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        ans = <span class="built_in">ksm</span>(<span class="number">3</span>, n / <span class="number">3</span>) * <span class="number">2</span> % mod;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x : num)</span><br><span class="line">            res += (x - <span class="number">1</span>) / <span class="number">3</span>, cnt[x % <span class="number">3</span>]++;</span><br><span class="line">        <span class="keyword">if</span> (cnt[<span class="number">2</span>])</span><br><span class="line">            cnt[<span class="number">2</span>]--;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            cnt[<span class="number">1</span>] -= <span class="number">2</span>, res++;</span><br><span class="line">        res += <span class="built_in">min</span>(cnt[<span class="number">1</span>], cnt[<span class="number">2</span>]);</span><br><span class="line">        <span class="keyword">if</span> (cnt[<span class="number">2</span>] &gt; cnt[<span class="number">1</span>])</span><br><span class="line">            res += (cnt[<span class="number">2</span>] - cnt[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">if</span> (cnt[<span class="number">1</span>] &gt; cnt[<span class="number">2</span>])</span><br><span class="line">            res += (cnt[<span class="number">1</span>] - cnt[<span class="number">2</span>]) / <span class="number">3</span> * <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; res &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+      </categories>
+      <tags>
+        <tag>置换</tag>
+        <tag>导数</tag>
+      </tags>
+  </entry>
 </search>
