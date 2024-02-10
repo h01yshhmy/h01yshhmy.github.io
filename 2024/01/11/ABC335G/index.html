@@ -27,7 +27,7 @@
 <meta property="og:description" content="[ABC335G] Discrete Logarithm Problems">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-01-11T08:00:27.000Z">
-<meta property="article:modified_time" content="2024-02-08T15:44:33.639Z">
+<meta property="article:modified_time" content="2024-02-10T08:26:36.649Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="数论">
 <meta property="article:tag" content="原根">
@@ -160,7 +160,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">197</span>
+          <span class="site-state-item-count">198</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -246,7 +246,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-02-08 23:44:33" itemprop="dateModified" datetime="2024-02-08T23:44:33+08:00">2024-02-08</time>
+      <time title="修改时间：2024-02-10 16:26:36" itemprop="dateModified" datetime="2024-02-10T16:26:36+08:00">2024-02-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -286,12 +286,12 @@ Discrete Logarithm Problems</a></p>
 p)\)</span> 的最小正整数，则称 <span
 class="math inline">\(\textrm{ord}_p(a)\)</span> 为 <span
 class="math inline">\(a\)</span> 在模 <span
-class="math inline">\(p\)</span> 意义下的<strong>阶</strong>。</p>
+class="math inline">\(p\)</span> 意义下的阶。</p>
 <p>其实就是 <span class="math inline">\(|\left\langle
 a\right\rangle|\)</span>。</p>
 <p>对于 <span
 class="math inline">\(G=(\mathbb{Z}^{*}_p,\times)\)</span>，默认 <span
-class="math inline">\(a,b\in G\)</span>。根据循环群的一些性质：</p>
+class="math inline">\(a,b\in G\)</span>，循环群的性质：</p>
 <ul>
 <li><p>有 <span
 class="math inline">\(\textrm{ord}_p(a)|\varphi(p)\)</span>。</p></li>
@@ -304,9 +304,7 @@ class="math inline">\(c=\frac{\textrm{ord}_p(b)}{\textrm{ord}_p(a)}\)</span>。�
 有一些交，<span class="math inline">\(G\)</span> 上 <span
 class="math inline">\(b\)</span> 走 <span
 class="math inline">\(c\)</span> 步能遇到一个 <span
-class="math inline">\(a\)</span>。不过我们只需要知道存在性即可。</p>
-<p>第一条性质就是 <span class="math inline">\(b\)</span> 为 <span
-class="math inline">\(G\)</span> 的原根时特殊情况。</p></li>
+class="math inline">\(a\)</span>。不过我们只需要知道存在性即可。</p></li>
 </ul>
 <p>怎么求阶？</p>
 <p>初始我们设 <span
@@ -323,7 +321,7 @@ p)\)</span>。</p>
 <ul>
 <li>为什么？设 <span class="math inline">\(G\)</span> 的原根为 <span
 class="math inline">\(g\)</span>，考虑群中的一个 <span
-class="math inline">\(g^k\)</span>，性质：<span
+class="math inline">\(g^k\)</span>，众所周知，<span
 class="math inline">\(\textrm{ord}_p(g^k)=\frac{|G|}{\gcd(|G|,k)}\)</span>，显然不同的阶只有
 <span class="math inline">\(|G|=p-1\)</span> 的因数个数种。</li>
 </ul>
