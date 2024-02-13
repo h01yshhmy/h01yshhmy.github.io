@@ -12714,4 +12714,77 @@ class="math inline">\(O(\frac{n^3}{\omega})\)</span>。</p>
         <category>闲话</category>
       </categories>
   </entry>
+  <entry>
+    <title>CF1765C</title>
+    <url>/2024/02/12/CF1765C/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF1765C">Card
+Guessing</a></p>
+<span id="more"></span>
+<p>我是蠢比。</p>
+<p>对排列计数。不要只从延长当前前缀的角度设计。例如此题。从填空的角度设计，状态要和当前空余位置个数相关。</p>
+<p>不要把 DP 写死了。DP
+应该作为纯思维题对待。不要当成只需要状态填满，搞搞式子就能过的东西。不要什么都塞进状态里。多思考能否
+DP
+一些中间量，得到最终答案。在得到最终答案的过程中，融入一些初始没被塞进状态的限制。</p>
+<p>对于总次数期望，将期望拆到每次猜测，也就是“能到某个状态的概率”乘以“这个状态会有多大概率成功”之和。容易发现“能到某个状态的概率”的分母只和
+<span class="math inline">\(n\)</span>
+相关。为了方便过程我们最后再除掉。只需要关注分子，也就是方案数。</p>
+<p>设 <span class="math inline">\(m=\min(k,i-1)\)</span>，对于第 <span
+class="math inline">\(i\)</span> 次猜测，已经抽出了 <span
+class="math inline">\(m\)</span> 张。</p>
+<p>种类少个数多。设四种卡片分别抽出 <span
+class="math inline">\(c_{1,2,3,4}\)</span> 张，满足 <span
+class="math inline">\(m=\sum c\)</span>，安排这些卡片的方案数为： <span
+class="math display">\[
+\binom{m}{c_1,c_2,c_3,c_4}\times\binom{4n-m}{n-c_1,n-c_2,n-c_3,n-c_4}
+\]</span> 注意是对第 <span class="math inline">\(i\)</span>
+次方案计数，不是对卡片序列 <span class="math inline">\(p\)</span>
+前缀计数，这里是从整体的角度算贡献系数，<span
+class="math inline">\(m\)</span> 后面的 <span
+class="math inline">\(4n-m\)</span> 个也要算。</p>
+<p>对于概率，设 <span class="math inline">\(p=\min
+c_i\)</span>，对方案乘上概率得到： <span class="math display">\[
+\binom{m}{c_1,c_2,c_3,c_4}\times\binom{4n-m}{n-c_1,n-c_2,n-c_3,n-c_4}\times
+\frac{n-p}{4n-m}
+\]</span> 原因显然。只有在 <span class="math inline">\(n-p\)</span>
+中抽才能猜中。</p>
+<p>暴力枚举 <span class="math inline">\(c_{1,2,3,4}\)</span>
+复杂度不可接受。</p>
+<p>两个组合数都是“整数四拆分”，考虑对这四个物品做背包，大小不定，加入物品时需要再枚举一层物品大小。</p>
+<p>在外层枚举 <span class="math inline">\(p\)</span>。</p>
+<p>上面的式子不太能直观的表现出新加入一个 <span
+class="math inline">\(c_x\)</span> 时贡献的变化，我们需要将下标分开：
+<span class="math display">\[
+\frac{m!(4n-m-1)!(n-p)}{c_1!(n-c_1)!\times c_2!(n-c_2)!\times
+c_3!(n-c_3)!\times c_4!(n-c_4)!}
+\]</span> 转移系数是 <span
+class="math inline">\(c_x!(n-c_x)!\)</span>。分子等加入全部四个物品之后再贡献（背包做完再枚举
+<span class="math inline">\(m\)</span>）。</p>
+<p>注意前面还忽略了这 <span class="math inline">\(m\)</span>
+个的连续分布位置。枚举 <span class="math inline">\(m\)</span>
+的时候，要对 <span class="math inline">\(m=k\)</span> 的情况乘上 <span
+class="math inline">\(4n-m\)</span>——一共有 <span
+class="math inline">\(4n-m\)</span> 个出现位置。</p>
+<p>原始实现的 DP 数组为 <span
+class="math inline">\([4][4n][2]\)</span>：第几个物品，总容量，是否触碰到下界
+<span class="math inline">\(p\)</span>（显然至少要有一个 <span
+class="math inline">\(c_x=p\)</span>）。</p>
+<p>对于第一维可以搞两个数组滚掉。小优化。</p>
+<p>不要忘了处理最开始概率的分母，乘上： <span class="math display">\[
+\frac1{\binom{4n}{n,n,n,n}}
+\]</span> 时间复杂度 <span class="math inline">\(O(n^3)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> N = <span class="number">2e3</span> + <span class="number">5</span>;</span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> mod = <span class="number">998244353</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> &amp;x, <span class="type">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    x += y, x &gt;= mod &amp;&amp; (x -= mod);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">ksm</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> s = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (b)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>)</span><br><span class="line">            s = <span class="number">1ll</span> * s * a % mod;</span><br><span class="line">        a = <span class="number">1ll</span> * a * a % mod, b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> fc[N], ifc[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">bin</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span> m)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt; m)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1ll</span> * fc[n] * ifc[m] % mod * ifc[n - m] % mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> n, k, ans, way = <span class="number">1</span>;</span><br><span class="line"><span class="type">int</span> f[N][<span class="number">2</span>], g[N][<span class="number">2</span>];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = fc[<span class="number">0</span>] = <span class="number">1</span>; i &lt; N; i++)</span><br><span class="line">        fc[i] = <span class="number">1ll</span> * fc[i - <span class="number">1</span>] * i % mod;</span><br><span class="line">    ifc[N - <span class="number">1</span>] = <span class="built_in">ksm</span>(fc[N - <span class="number">1</span>], mod - <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = N - <span class="number">2</span>; ~i; i--)</span><br><span class="line">        ifc[i] = <span class="number">1ll</span> * ifc[i + <span class="number">1</span>] * (i + <span class="number">1</span>) % mod;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; k;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> p = <span class="number">0</span>; p &lt; n &amp;&amp; p * <span class="number">4</span> &lt;= k; p++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">memset</span>(f, <span class="number">0</span>, <span class="built_in">sizeof</span>(f)), f[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> _ = <span class="number">0</span>; _ &lt; <span class="number">4</span>; _++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">memset</span>(g, <span class="number">0</span>, <span class="built_in">sizeof</span>(g));</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> q = p; q &lt;= n; q++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="type">int</span> c = <span class="number">1ll</span> * ifc[q] * ifc[n - q] % mod;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> v = <span class="number">0</span>; v &lt; <span class="number">2</span>; v++)</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> i = _ * n; ~i; i--)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span> (f[i][v])</span><br><span class="line">                            <span class="built_in">add</span>(g[i + q][v | (p == q)], <span class="number">1ll</span> * f[i][v] * c % mod);</span><br><span class="line">                    &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">memcpy</span>(f, g, <span class="built_in">sizeof</span>(f));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= k &amp;&amp; i &lt; <span class="number">4</span> * n; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> coef = i == k ? n * <span class="number">4</span> - i : <span class="number">1</span>;</span><br><span class="line">            coef = <span class="number">1ll</span> * coef * fc[i] % mod * fc[<span class="number">4</span> * n - i - <span class="number">1</span>] % mod;</span><br><span class="line">            coef = <span class="number">1ll</span> * coef * (n - p) % mod;</span><br><span class="line">            ans = (ans + <span class="number">1ll</span> * f[i][<span class="number">1</span>] * coef) % mod;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> way = <span class="number">1ll</span> * fc[n * <span class="number">4</span>] * <span class="built_in">ksm</span>(ifc[n], <span class="number">4</span>) % mod;</span><br><span class="line">    ans = <span class="number">1ll</span> * ans * <span class="built_in">ksm</span>(way, mod - <span class="number">2</span>) % mod;</span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>随机过程与计数</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+        <tag>计数</tag>
+        <tag>组合</tag>
+        <tag>概率与期望</tag>
+        <tag>背包</tag>
+      </tags>
+  </entry>
 </search>
