@@ -12909,4 +12909,81 @@ class="math inline">\(v\to u\)</span> 可达的时候一样会贡献上。</p>
         <tag>最短路</tag>
       </tags>
   </entry>
+  <entry>
+    <title>CF1781F</title>
+    <url>/2024/02/16/CF1781F/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/CF1781F">Bracket
+Insertion</a></p>
+<span id="more"></span>
+<p>牛牛题。</p>
+<p>概率在这题没啥特殊用处，求合法方案数除掉总方案即可。</p>
+<p>其实不能说是合法方案数，因为我们有两个随机事件，这样就是忽略随机位置，只考虑随机
+<code>() )(</code>。感觉这种“随机了一半”的东西说不出组合意义，就只是算某个式子吧。</p>
+<p>易得总方案：<span class="math inline">\(1\times 3\times
+5\cdots(2n-1)\)</span>。</p>
+<p>套路的，将括号序列转为 <span class="math inline">\(1/-1\)</span>
+序列，并对他的前缀和序列做计数。</p>
+<p>设插入位置在前缀和序列上前一个数是 <span
+class="math inline">\(x\)</span> ，对于加入 <code>()</code>
+的情况，相当于将 <span class="math inline">\(x\)</span> 换为 <span
+class="math inline">\([x,x+1,x]\)</span>；对于加入 <code>)(</code>
+的情况，相当于将 <span class="math inline">\(x\)</span> 换为 <span
+class="math inline">\([x,x-1,x]\)</span>。</p>
+<p>注意到对于 <span class="math inline">\(x\)</span> 换出的 <span
+class="math inline">\([x,\cdots,x]\)</span>，即使内部继续递归替换，开头结尾也不变，所以我们可以将一个头尾是
+<span class="math inline">\(x\)</span> 的序列拆成 <span
+class="math inline">\(x,x\pm1,x\)</span>
+三个子段来计数，这是一种通用结构。</p>
+<p>定义 <span class="math inline">\(f(i,x)\)</span> 为：执行 <span
+class="math inline">\(i\)</span> 次操作，这 <span
+class="math inline">\(i\)</span> 次操作的前缀和数组开头结尾均为 <span
+class="math inline">\(x\)</span> 的方案数（<span
+class="math inline">\(i\)</span> 次操作全部抵消），就是对初始的单个
+<span class="math inline">\(x\)</span> 做了 <span
+class="math inline">\(i\)</span> 次替换。</p>
+<p>有转移： <span class="math display">\[
+\begin{aligned}
+f(i,x)=&amp;\sum_{u=0}^{i-1}\sum_{v=0}^{i-u-1}p\binom{i-1}{u,v}\times
+f(u,x)\times f(v,x+1)\times
+f(i-u-v-1,x)+\\&amp;\sum_{u=0}^{i-1}\sum_{v=0}^{i-u-1}(1-p)\binom{i-1}{u,v}\times
+f(u,x)\times f(v,x-1)\times f(i-u-v-1,x)
+\end{aligned}
+\]</span> 组合意义：在 <span class="math inline">\(i-1\)</span>
+次操作内挑 <span class="math inline">\(u,v,i-u-v-1\)</span>
+次操作，用于交换 <span class="math inline">\(x,x\pm
+1,x\)</span>（递归内部），<span class="math inline">\(f(u,x)\times
+f(v,x\pm1)\times f(i-u-v-1,x)\)</span> 就是把三个部分方案乘起来。</p>
+<p>状态平方，转移平方，复杂度是四次方的。</p>
+<p>状态很难减少，考虑优化转移。</p>
+<p>动动式子： <span class="math display">\[
+\begin{aligned}
+f(i,x)=&amp;\sum_{u=0}^{i-1}\binom{i-1}{u}(p\times f(u,x+1)+(1-p)\times
+f(u,x-1))\sum_{v=0}^{i-u-1}\binom{i-u-1}{i}\times f(i,x)\times
+f(i-u-v-1,x)
+\end{aligned}
+\]</span> 第二个和式看起来很规整： <span class="math display">\[
+\begin{aligned}
+g(i,x)=&amp;\sum_{j=0}^{i}\binom{i}{j}\times f(j,x)\times f(i-j,x)
+\end{aligned}
+\]</span> 得到： <span class="math display">\[
+\begin{aligned}
+f(i,x)=&amp;\sum_{j=0}^{i-1}\binom{i-1}{j}(p\times f(j,x+1)+(1-p)\times
+f(j,x-1))\times g(i-j-1,x)
+\end{aligned}
+\]</span> <span class="math inline">\(f,g\)</span> 均可以线性转移。</p>
+<p>最后再对 <span class="math inline">\(f(n,0)\)</span> 除掉 <span
+class="math inline">\(1\times 3\times 5\cdots(2n-1)\)</span>。</p>
+<p>时间复杂度 <span class="math inline">\(O(n^3)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">505</span>, mod = <span class="number">998244353</span>;</span><br><span class="line"><span class="type">int</span> n, p;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qpow</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (b)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>)</span><br><span class="line">            res = <span class="number">1ll</span> * res * a % mod;</span><br><span class="line">        a = <span class="number">1ll</span> * a * a % mod;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> C[N][N], f[N][N], g[N][N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n, p);</span><br><span class="line">    p = <span class="number">1ll</span> * p * <span class="built_in">qpow</span>(<span class="number">10000</span>, mod - <span class="number">2</span>) % mod;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, n) C[i][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">re</span>(j, i)</span><br><span class="line">        &#123;</span><br><span class="line">            C[i][j] = (C[i - <span class="number">1</span>][j] + C[i - <span class="number">1</span>][j - <span class="number">1</span>]) % mod;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, n) f[<span class="number">0</span>][i] = g[<span class="number">0</span>][i] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">rep</span>(x, <span class="number">0</span>, n)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">rep</span>(j, <span class="number">0</span>, i - <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                f[i][x] = (f[i][x] + (<span class="number">1ll</span> * p * f[j][x + <span class="number">1</span>] % mod + <span class="number">1ll</span> * (<span class="number">1</span> - p + mod) * (x ? f[j][x - <span class="number">1</span>] : <span class="number">0</span>) % mod) % mod * C[i - <span class="number">1</span>][j] % mod * g[i - j - <span class="number">1</span>][x] % mod) % mod;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">rep</span>(j, <span class="number">0</span>, i)</span><br><span class="line">            &#123;</span><br><span class="line">                g[i][x] = (g[i][x] + <span class="number">1ll</span> * C[i][j] * f[j][x] % mod * f[i - j][x] % mod) % mod;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> ans = f[n][<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">2</span> * n; i += <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        ans = <span class="number">1ll</span> * ans * <span class="built_in">qpow</span>(i, mod - <span class="number">2</span>) % mod;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>随机过程与计数</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+        <tag>组合</tag>
+        <tag>概率与期望</tag>
+      </tags>
+  </entry>
 </search>
