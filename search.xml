@@ -10757,20 +10757,20 @@ class="math inline">\(x\to u\)</span> 至多存在一个。</p>
 <ul>
 <li>若存在 <span class="math inline">\(u\to x\)</span> 且 <span
 class="math inline">\(x\)</span> 在 <span class="math inline">\(u\to
-v\)</span> 上，有 <span class="math inline">\(u\to x\to v\to
-u\)</span>。</li>
+v\)</span> 上，有 <span class="math inline">\(u\to \underline{x\to v\to
+u}\)</span>。</li>
 <li>若存在 <span class="math inline">\(u\to x\)</span> 且 <span
 class="math inline">\(x\)</span> 在 <span class="math inline">\(v\to
-u\)</span> 上，有 <span class="math inline">\(u\to x\to
-u\)</span>。</li>
+u\)</span> 上，有 <span class="math inline">\(u\to \underline{x\to
+u}\)</span>。</li>
 <li>若存在 <span class="math inline">\(x\to u\)</span> 且 <span
 class="math inline">\(x\)</span> 在 <span class="math inline">\(u\to
-v\)</span> 上，有 <span class="math inline">\(x\to u\to v\to
-u\)</span>。</li>
+v\)</span> 上，有 <span class="math inline">\(\underline{u\to
+x}\)</span>。</li>
 <li>若存在 <span class="math inline">\(x\to u\)</span> 且 <span
 class="math inline">\(x\)</span> 在 <span class="math inline">\(v\to
-u\)</span> 上，有 <span class="math inline">\(x\to u\to
-u\)</span>。</li>
+u\)</span> 上，有 <span class="math inline">\(x\to \underline{u\to v\to
+x}\)</span>。</li>
 <li>若 <span class="math inline">\(u\to x,x\to u\)</span> 均不存在，有
 <span class="math inline">\(x\)</span> 不在 <span
 class="math inline">\(u\to v\)</span> 或 <span
@@ -13065,5 +13065,91 @@ class="math inline">\(O(\frac{n^3}{\omega})\)</span>。</p>
       <categories>
         <category>闲话</category>
       </categories>
+  </entry>
+  <entry>
+    <title>P4383</title>
+    <url>/2024/02/20/P4383/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P4383">P4383 [八省联考
+2018] 林克卡特树</a></p>
+<span id="more"></span>
+<p>对于一些分式（此题并没有）和一些类背包的划分问题，可以尝试寻找凸性。</p>
+<p>先找这些操作的性质。</p>
+<p>容易发现， 题目等价于：将树划分为 <span
+class="math inline">\(k+1\)</span>
+个连通块，最大化每个连通块的直径之和。</p>
+<p>但是先别急。直径之和这种东西不够基本，不够本质。</p>
+<p>直径是连通块内最大路径。这东西是 <span
+class="math inline">\(\max\)</span> 套 <span
+class="math inline">\(\max\)</span>，显然可以去掉一层 <span
+class="math inline">\(\max\)</span>，整合约束。</p>
+<p>就是：在树中找 <span class="math inline">\(k+1\)</span>
+个各自不相交的链，最大化全部链权值之和。</p>
+<p>在树中剖链，对经典的树上背包稍作修改即可。</p>
+<p>设 <span class="math inline">\(f(u,i,0/1/2)\)</span> 为：点 <span
+class="math inline">\(u\)</span> 子树中，剖 <span
+class="math inline">\(i\)</span> 个完整链，点 <span
+class="math inline">\(u\)</span>
+是：不在链上/作为一个子树内<strong>半链</strong>的端点/在子树内<strong>完整链</strong>内部。</p>
+<p>半链端点的状态设计是为了便于拼接。</p>
+<p>容易得到转移： <span class="math display">\[
+\begin{aligned}
+&amp;f(u,i,0)\gets\max_{v\in son(u),\,j\in[1,i-1]}f(u,j,0)+f(v,i-j,0)\\
+&amp;f(u,i,1)\gets\max_{v\in
+son(u),\,j\in[1,i-1]}\max\{f(u,j,1)+f(v,i-j,0),f(u,j,0)+f(v,i-j,1)+w_{(u,v)}\}\\
+&amp;f(u,i,2)\gets\max_{v\in
+son(u),\,j\in[1,i-1]}\max\{f(u,j,2)+f(v,i-j,0),f(u,j,1)+f(v,i-j-1,1)+w_{(u,v)}\}\\
+\end{aligned}
+\]</span> 边界： <span class="math display">\[
+\begin{aligned}
+&amp;f(u,i,1)\gets\max_{v\in son(u)}\{f(u,i,0)+f(v,0,1)+w_{(u,v)}\}\\
+&amp;f(u,i,0)\gets\max_{v\in son(u)}\{f(u,0,0)+f(v,0,1)+w_{(u,v)}\}
+\end{aligned}
+\]</span> 当前转移后做：<span
+class="math inline">\(f(u,i,0)\gets\max\{f(u,i-1,1),f(u,i,2)\}\)</span>，当然这里
+<span class="math inline">\(f(u,i,0)\)</span> 的含义就变了，不过 DP
+是从底向上的，无所谓。</p>
+<p>转移 <span class="math inline">\(\gets\)</span> 为取 <span
+class="math inline">\(\max\)</span>。</p>
+<p>复杂度 <span class="math inline">\(O(nk)\)</span>，有 <span
+class="math inline">\(60\)</span> 分。</p>
+<p>考虑进一步优化。</p>
+<p>可以通过经验，也可以感知划分链的过程，<del>容易发现</del>，<span
+class="math inline">\(g(i)=f(u,i,0)\)</span> 是上凸的。</p>
+<p>考虑 <span class="math inline">\(\Delta g(i)\)</span>
+的增减性。选链是一种贪心过程，候选的链不会消失，对于每次加入的新的链，我们选它是因为这条链在前面是劣的，而到现在是最优。所以
+<span class="math inline">\(\Delta g(i)\)</span>
+单调递减，所以可以感性的认为 <span class="math inline">\(g(i)\)</span>
+是上凸的。注意如果链个数过多，可能不得不断掉一些链，<span
+class="math inline">\(\Delta g(i)\)</span> 可能 <span
+class="math inline">\(&lt;0\)</span>。</p>
+<p>套路的，采用 wqs 二分，对于 <span class="math inline">\(g(x)\)</span>
+构成凸壳的切线 <span class="math inline">\(y=mid\times x+b\)</span>，有
+<span class="math inline">\(g(x)-mid\times x=b\)</span>，所有和链个数
+<span class="math inline">\(x\)</span>
+有关的部分都在左侧，右侧为定值。将左侧融合，可以看作对每条链的权值减少
+<span class="math inline">\(mid\)</span>，<span
+class="math inline">\(b\)</span> 为定值，所以 <span
+class="math inline">\(g(x)-mid\times x\)</span> 和 <span
+class="math inline">\(x\)</span> 无关，可以减少一维状态，<span
+class="math inline">\(O(n)\)</span> DP 得到。</p>
+<p>DP 过程中还要记录一下链个数（用于
+<code>check</code>）。具体写法见代码，转移和暴力相同，少了一维而已。</p>
+<p>注意 <span class="math inline">\(mid\)</span>
+的范围，需要取到正负边界。</p>
+<p>时间复杂度 <span class="math inline">\(O(n\log V)\)</span>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">3e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="type">int</span> n, K;</span><br><span class="line">vector&lt;pii&gt; G[N];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">dat</span></span><br><span class="line">&#123;</span><br><span class="line">    ll x;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">    <span class="keyword">inline</span> <span class="type">bool</span> <span class="keyword">operator</span>&lt;(<span class="type">const</span> dat &amp;b) <span class="type">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (x == b.x)</span><br><span class="line">            <span class="keyword">return</span> y &gt; b.y;</span><br><span class="line">        <span class="keyword">return</span> x &lt; b.x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">inline</span> dat <span class="keyword">operator</span>+(<span class="type">const</span> dat &amp;b) <span class="type">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> (dat)&#123;x + b.x, y + b.y&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">inline</span> dat <span class="keyword">operator</span>+(<span class="type">int</span> v)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> (dat)&#123;x + v, y&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; f[N][<span class="number">3</span>];</span><br><span class="line">ll mid;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> dat <span class="title">upd</span><span class="params">(dat a)</span> </span>&#123; <span class="keyword">return</span> (dat)&#123;a.x - mid, a.y + <span class="number">1</span>&#125;; &#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    f[u][<span class="number">2</span>] = <span class="built_in">max</span>(f[u][<span class="number">2</span>], (dat)&#123;-mid, <span class="number">1</span>&#125;);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> [v, w] : G[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (v == fa)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(v, u);</span><br><span class="line">        f[u][<span class="number">2</span>] = <span class="built_in">max</span>(&#123;f[u][<span class="number">2</span>], f[u][<span class="number">2</span>] + f[v][<span class="number">0</span>], <span class="built_in">upd</span>(f[u][<span class="number">1</span>] + f[v][<span class="number">1</span>] + w)&#125;);</span><br><span class="line">        f[u][<span class="number">1</span>] = <span class="built_in">max</span>(&#123;f[u][<span class="number">1</span>], f[u][<span class="number">1</span>] + f[v][<span class="number">0</span>], f[u][<span class="number">0</span>] + f[v][<span class="number">1</span>] + w&#125;);</span><br><span class="line">        f[u][<span class="number">0</span>] = <span class="built_in">max</span>(f[u][<span class="number">0</span>], f[u][<span class="number">0</span>] + f[v][<span class="number">0</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    f[u][<span class="number">0</span>] = <span class="built_in">max</span>(&#123;f[u][<span class="number">0</span>], <span class="built_in">upd</span>(f[u][<span class="number">1</span>]), f[u][<span class="number">2</span>]&#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CIOO;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; K;</span><br><span class="line">    <span class="type">int</span> u = <span class="number">0</span>, v = <span class="number">0</span>, w = <span class="number">0</span>;</span><br><span class="line">    ll l = <span class="number">0</span>, r = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cin &gt;&gt; u &gt;&gt; v &gt;&gt; w;</span><br><span class="line">        G[u].<span class="built_in">pb</span>(<span class="built_in">mkp</span>(v, w));</span><br><span class="line">        G[v].<span class="built_in">pb</span>(<span class="built_in">mkp</span>(u, w));</span><br><span class="line">        r += <span class="built_in">abs</span>(w);</span><br><span class="line">    &#125;</span><br><span class="line">    l = -r;</span><br><span class="line">    <span class="keyword">while</span> (l &lt;= r)</span><br><span class="line">    &#123;</span><br><span class="line">        mid = (l + r) / <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">memset</span>(f, <span class="number">0</span>, <span class="built_in">sizeof</span>(f));</span><br><span class="line">        <span class="built_in">dfs</span>(<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (f[<span class="number">1</span>][<span class="number">0</span>].y &lt;= K + <span class="number">1</span>)</span><br><span class="line">            r = mid - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            l = mid + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">memset</span>(f, <span class="number">0</span>, <span class="built_in">sizeof</span>(f));</span><br><span class="line">    mid = l;</span><br><span class="line">    <span class="built_in">dfs</span>(<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">    cout &lt;&lt; mid * (K + <span class="number">1</span>) + f[<span class="number">1</span>][<span class="number">0</span>].x &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>:D:P</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+        <tag>树形DP</tag>
+        <tag>凸包</tag>
+        <tag>背包</tag>
+        <tag>wqs二分</tag>
+        <tag>树上背包</tag>
+      </tags>
   </entry>
 </search>
