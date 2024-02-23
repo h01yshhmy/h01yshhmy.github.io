@@ -13238,4 +13238,81 @@ class="math inline">\(O(\frac{n^3}{\omega})\)</span>。</p>
         <category>闲话</category>
       </categories>
   </entry>
+  <entry>
+    <title>240223T1</title>
+    <url>/2024/02/23/240223T1/</url>
+    <content><![CDATA[<p>没有链接。</p>
+<span id="more"></span>
+<p>题目来自 Froranzen，Froranzen
+来自2024山东省队（<del>奶！</del>)。</p>
+<h2 id="题面">题面</h2>
+<p>一个图，<span class="math inline">\(n\)</span>
+个点，有两类<strong>有向</strong>边：</p>
+<ul>
+<li>一类边：分为 <span class="math inline">\(m\)</span> 组，第 <span
+class="math inline">\(i\)</span> 组边权均为 <span
+class="math inline">\(w_i\)</span>，还有四元组 <span
+class="math inline">\((l_1,r_1,l_2,r_2)\)</span>，组内边集为 <span
+class="math inline">\(\{(u,v),u\in[l_1,r_1],v\in[l_2,r_2]\}\)</span>。</li>
+<li>二类边：边集为 <span class="math inline">\((u,v)\)</span>，<span
+class="math inline">\(u,v\)</span> 为任意两点，边对应权值为 <span
+class="math inline">\(|u-v|\times a_u\)</span>，<span
+class="math inline">\(a_u=0\)</span> 表示点 <span
+class="math inline">\(u\)</span> 不能连向任何一点。</li>
+</ul>
+<p>给出全部边的约束和边权，求 <span class="math inline">\(1\)</span> 到
+<span class="math inline">\(n\)</span> 的最短路。</p>
+<p><span class="math inline">\(n,m\le 5\times
+10^4\)</span>，所有边权均为不超过 <span
+class="math inline">\(10^9\)</span> 的正整数。</p>
+<h2 id="题解">题解</h2>
+<p>属于是：做过类似的就可以秒，没做过可能想不到的题，纯个人感觉。能想到李超树维护就赢了。</p>
+<p>这可能就是放在 T1 的原因。</p>
+<p>对于一类边，显然是线段树优化建图，<span
+class="math inline">\([l_1,r_1]\)</span> 和 <span
+class="math inline">\([l_2,r_2]\)</span> 在线段树上的对应点集分别用
+<span class="math inline">\(0\)</span> 权边连到两个汇点，在汇点间连
+<span class="math inline">\(w_i\)</span> 即可。</p>
+<p>对于二类边，<span class="math inline">\(u,v\)</span>
+是任意两点，任何位置都可以走，引导我们从其他角度优化，而不是构造图结构。</p>
+<p>显然 <span class="math inline">\(|u-v|\times a_u\)</span>
+这个东西非常有性质。</p>
+<p>对于每个 <span class="math inline">\(u\)</span>，<span
+class="math inline">\(f(v)=|u-v|\times a_u\)</span> 是由形如
+<code>\/</code> 的两个线段构成的，容易想到，二类边实质就是这两个线段对
+<span class="math inline">\(dis(x)\)</span> 的图像取 <span
+class="math inline">\(\min\)</span>。</p>
+<p>可以用李超线段树维护。暴力取 <span
+class="math inline">\(\min\)</span> 并不好做，需要稍微聪明一点。</p>
+<p>具体的：</p>
+<ul>
+<li>需要两个结构：原本 <span
+class="math inline">\(\textrm{dijkstra}\)</span>
+的堆和一棵李超线段树。</li>
+<li>首先，比较堆和李超树的全局最小值，取更小的作为转移点 <span
+class="math inline">\(v\)</span> 并删除，注意保持两个结构同步。</li>
+<li>在图上（线段树图）做松弛。</li>
+<li>若 <span class="math inline">\(a_v\ne
+0\)</span>，向李超树中增加两个线段。</li>
+</ul>
+<p>正确性显然，只是将对别人取 <span class="math inline">\(\min\)</span>
+的东西单独放到李超树里而已。</p>
+<p>李超树插入线段 <span
+class="math inline">\(O(\log^2n)\)</span>，两个结构查询最小值均 <span
+class="math inline">\(O(\log n)\)</span>，边数是 <span
+class="math inline">\(O(n\log n)\)</span> 的，总复杂度为 <span
+class="math inline">\(O(n\log ^2n)\)</span>。</p>
+<p>代码暂时没有。</p>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>GraphTA</category>
+      </categories>
+      <tags>
+        <tag>线段树</tag>
+        <tag>最短路</tag>
+        <tag>优化建图</tag>
+        <tag>李超线段树</tag>
+      </tags>
+  </entry>
 </search>
