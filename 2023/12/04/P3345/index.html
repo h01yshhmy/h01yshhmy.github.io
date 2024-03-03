@@ -27,7 +27,7 @@
 <meta property="og:description" content="P3345 [ZJOI2015] 幻想乡战略游戏">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-12-04T04:08:08.000Z">
-<meta property="article:modified_time" content="2023-12-04T07:19:49.211Z">
+<meta property="article:modified_time" content="2024-02-27T15:43:40.453Z">
 <meta property="article:author" content="Untitled-1">
 <meta property="article:tag" content="图论">
 <meta property="article:tag" content="点分治">
@@ -160,7 +160,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">214</span>
+          <span class="site-state-item-count">215</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -238,9 +238,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-12-04 12:08:08 / 修改时间：15:19:49" itemprop="dateCreated datePublished" datetime="2023-12-04T12:08:08+08:00">2023-12-04</time>
+      <time title="创建时间：2023-12-04 12:08:08" itemprop="dateCreated datePublished" datetime="2023-12-04T12:08:08+08:00">2023-12-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-02-27 23:43:40" itemprop="dateModified" datetime="2024-02-27T23:43:40+08:00">2024-02-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -271,6 +277,33 @@
     <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3345">P3345 [ZJOI2015]
 幻想乡战略游戏</a></p>
 <span id="more"></span>
+<p>2024.02.27写的一些整理：</p>
+<p><strong>begin</strong></p>
+<ul>
+<li>求 <span class="math inline">\(f\)</span>。
+<ul>
+<li>只考虑求单点 <span class="math inline">\(f(x)\)</span> 的值。树形
+DP，这部分建议看链接内，思想还是挺厉害的：用子树拼出整棵树，目标是贡献系数全
+<span class="math inline">\(1\)</span>，就构造另一个系数差 <span
+class="math inline">\(1\)</span> 的 DP 数组，做“去重” 和 “补全”。</li>
+</ul></li>
+<li>判断 <span class="math inline">\(f(u),f(v),v\in son(u)\)</span>
+的优劣关系。
+<ul>
+<li>为啥会想到父子优劣判断？其实不太好说，可能是感觉 <span
+class="math inline">\(f\)</span>
+具有某种“凸”性（邻域从数轴上的两侧变成树上邻点），所以我们从根开始向下找最优点，可能儿子中只存在一个最优点，不断递归进最优点，最终一定能走到答案。</li>
+<li>事实上这是对的，链接中有证明。</li>
+</ul></li>
+</ul>
+<p>发现两个问题均可以在同一个结构上解决。</p>
+<ul>
+<li>做不带权的点分树（只是为了复杂度），单点更改点权暴力修改 DP
+数组，每次暴力求 <span
+class="math inline">\(f(u),f(v)\)</span>，直接在点分树上走，点分树上边权映射到原树路径长度。</li>
+<li>复杂度挺抽象但似乎没有更快了。</li>
+</ul>
+<p><strong>end</strong></p>
 <p>其实整道题从头到尾都是在容斥。</p>
 <p>题意：维护带点权，边权的树，<span class="math inline">\(m\)</span>
 次单点点权加，<span
@@ -288,8 +321,8 @@ class="math inline">\(x\)</span> 为根的子树点权之和，因为 <span
 class="math inline">\(dis(x,y)&gt;0\)</span>，有</p>
 <p><span class="math display">\[
 \begin{aligned}
-&amp;\Delta=f(y)-f(x)=(s(x)-2s(y))\times dis(x,y)\\
-&amp;\Delta &lt;0\,\Leftrightarrow s(x)&lt;2s(y)
+&amp;\Delta f=f(y)-f(x)=(s(x)-2s(y))\times dis(x,y)\\
+&amp;\Delta f &lt;0\,\Leftrightarrow s(x)&lt;2s(y)
 \end{aligned}
 \]</span></p>
 <p>这一步画个图很好理解。显然对于某个 <span
@@ -340,17 +373,17 @@ class="math inline">\(x\)</span>
 在<strong>点分树</strong>上的父亲，所有和树结构相关的东西也都是在<strong>点分树</strong>上的。</p>
 <p><span class="math display">\[
 \begin{aligned}
-&amp;g(x)=\sum_{i\in subtree(x)}dis(x,i)\times A_i\\
-&amp;h(x)=\sum_{i\in subtree(x)}dis(fa_x,i)\times A_i\\
+&amp;g(x)=\sum_{i\in subtree(x)}dis(x,i)\times w_i\\
+&amp;h(x)=\sum_{i\in subtree(x)}dis(fa_x,i)\times w_i\\
 \end{aligned}
 \]</span></p>
-<p>设 <span class="math inline">\(A\)</span> 为 <span
+<p>设 <span class="math inline">\(T\)</span> 为 <span
 class="math inline">\(x\)</span>
 的所有根以外的祖先组成的点集，则有：</p>
 <p><span class="math display">\[
 \begin{aligned}
 f(x)=g(x)+\sum\limits_{i\in
-A}g(fa_i)-h(i)+dis(x,fa_i)\times(s(fa_i)-s(i))
+T}g(fa_i)-h(i)+dis(x,fa_i)\times(s(fa_i)-s(i))
 \end{aligned}
 \]</span></p>
 <p>画图感受一下这个式子，<span class="math inline">\(h,g\)</span>
@@ -362,7 +395,7 @@ class="math inline">\(fa_i\)</span> 为根子树（除了以 <span
 class="math inline">\(i\)</span> 为根子树部分）构成的点集。</p>
 <p><span class="math inline">\(g(fa_i)-h(i)\)</span> 也就等于 <span
 class="math inline">\(\sum\limits_{u\in D}dis(fa_i,u)\times
-A_u\)</span>。</p>
+w_u\)</span>。</p>
 <p>加上 <span
 class="math inline">\(dis(x,fa_i)\times(s(fa_i)-s(i))\)</span>，补齐了从
 <span class="math inline">\(dis(fa_i,u)\)</span> 到 <span
@@ -370,7 +403,7 @@ class="math inline">\(dis(x,u)\)</span>
 的系数区别，然后枚举祖先，就可以求出全部 <span
 class="math inline">\(D\)</span> 并起来的答案，也就是 <span
 class="math inline">\(f(x)\)</span> 了。</p>
-<p><span class="math inline">\(|A|\)</span> 是 <span
+<p><span class="math inline">\(|T|\)</span> 是 <span
 class="math inline">\(O(\log n)\)</span> 的，复杂度正确。</p>
 <p>修改就直接在点分树上暴力上跳，改 <span
 class="math inline">\(s,h,g\)</span> 即可。</p>
