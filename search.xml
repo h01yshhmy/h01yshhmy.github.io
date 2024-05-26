@@ -676,56 +676,53 @@ Random Kth Max</a></p>
 <p>小有震撼。</p>
 <p>首先不难想到 min-max 容斥。 <span class="math display">\[
 \begin{aligned}
-&amp;\mathbb{E}[\operatorname{Kmax}(S)]=\sum_{T}\binom{|T|-1}{K-1}(-1)^{|T|+K}\mathbb{E}[\min(T)]
+&amp;\mathrm{E}[\operatorname{Kmax}(S)]=\sum_{T}\binom{|T|-1}{K-1}(-1)^{|T|+K}\mathrm{E}[\min(T)]
 \end{aligned}
 \]</span> 期望就是所有取值乘对应概率的和（题意数据范围 <span
 class="math inline">\([0,100]\)</span>）： <span class="math display">\[
 \begin{aligned}
-\mathbb{E}[\min(T)]&amp;=\int_{0}^{100}x\mathbb{P}[\min(T)=x]\,\mathrm{d}x\\
-&amp;=\int_{0}^{100}\mathbb{P}[\min(T)&gt; x]\,\mathrm{d}x\\
-&amp;=\int_{0}^{100}\prod_{i}^{}\mathbb{P}[T_i&gt;x]\,\mathrm{d}x\\
+\mathrm{E}[\min(T)]&amp;=\int_{0}^{100}x\mathrm{P}[\min(T)=x]\,\mathrm{d}x\\
+&amp;=\int_{0}^{100}\mathrm{P}[\min(T)&gt; x]\,\mathrm{d}x\\
+&amp;=\int_{0}^{100}\prod_{i}^{}\mathrm{P}[T_i&gt;x]\,\mathrm{d}x\\
 \end{aligned}
 \]</span> 注等号二：将贡献重新拆解再组合，变成后缀叠加的形式。</p>
 <p>然后对着题意表示 <span
-class="math inline">\(\mathbb{P}[T_i&gt;x]\)</span>，易得： <span
+class="math inline">\(\mathrm{P}[T_i&gt;x]\)</span>，易得： <span
 class="math display">\[
-\mathbb{P}[T_i&gt;x]=\begin{cases}1&amp;x&lt;L_i\\\dfrac{R_i-x}{R_i-L_i}&amp;L_i\le
+\mathrm{P}[T_i&gt;x]=\begin{cases}1&amp;x&lt;L_i\\\dfrac{R_i-x}{R_i-L_i}&amp;L_i\le
 x&lt;R_i\\0&amp;x\ge R_i\end{cases}
 \]</span> 设： <span class="math display">\[
-f(x)=\sum_{T}\binom{|T|-1}{K-1}(-1)^{|T|+K}\prod_{i}\mathbb{P}[T_i&gt;x]
+f(x)=\sum_{T}\binom{|T|-1}{K-1}(-1)^{|T|+K}\prod_{i}\mathrm{P}[T_i&gt;x]
 \]</span> 得到好看的形式： <span class="math display">\[
-\mathbb{E}[\operatorname{Kmax}(S)]=\int_{0}^{100}f(x)\,\mathrm{d}x
+\mathrm{E}[\operatorname{Kmax}(S)]=\int_{0}^{100}f(x)\,\mathrm{d}x
 \]</span> <span class="math inline">\(f\)</span>
 中概率相关最有性质。<span
-class="math inline">\(\mathbb{P}[T_i&gt;x]\)</span> 是一个关于 <span
+class="math inline">\(\mathrm{P}[T_i&gt;x]\)</span> 是一个关于 <span
 class="math inline">\(x\)</span>
 的分三段函数，它的取值只有在积到对应区间的时候才需要考虑。</p>
-<p>将 <span class="math inline">\(f(x)\)</span> 考虑成一个关于 <span
-class="math inline">\(x\)</span> 的多项式。如果每个 <span
-class="math inline">\(i\)</span>
+<p>如果每个 <span class="math inline">\(i\)</span>
 所在的段没有改变（这是唯一会变的东西），<span
-class="math inline">\(f(x)\)</span> 各次的系数显然不会改变。一共只有至多
-<span class="math inline">\(n\)</span> 个 <span
+class="math inline">\(f(x)\)</span> 显然不会改变。一共只有至多 <span
+class="math inline">\(n\)</span> 个 <span
 class="math inline">\(i\)</span>，对应至多 <span
 class="math inline">\(2n\)</span> 次改变，所以 <span
 class="math inline">\(f(x)\)</span> 是一个至多分 <span
 class="math inline">\(2n\)</span> 段的，<span
-class="math inline">\(n\)</span>
-次分段函数。是由一堆高次曲线拼成的。</p>
+class="math inline">\(n\)</span> 次分段函数。</p>
 <p>上述只是在“减少变量”，让我们可以专心在同一段内， <span
-class="math inline">\(\mathbb{P}[T_i&gt;x]\)</span> 不会因 <span
+class="math inline">\(\mathrm{P}[T_i&gt;x]\)</span> 不会因 <span
 class="math inline">\(x\)</span> 改变形式的前提下思考。</p>
 <p>设 <span class="math inline">\(a,b\)</span> 为每一段的界，<span
 class="math inline">\(j\)</span> 为第几段，现在有： <span
 class="math display">\[
-\mathbb{E}[\operatorname{Kmax}(S)]=\sum_{j}\int_{a_j}^{b_j}f_j(x)\,\mathrm{d}x
+\mathrm{E}[\operatorname{Kmax}(S)]=\sum_{j}\int_{a_j}^{b_j}f_j(x)\,\mathrm{d}x
 \]</span> 不过，这和 <span
 class="math inline">\(\sum_{i=0}^{99}\int_{i}^{i+1}\)</span>
 的形式跑的一样快，因为 <span class="math inline">\(n,V\)</span>
 同阶。但还是值得一写。</p>
 <p>现在的问题是怎么计算每一段的 <span
 class="math inline">\(f(x)\)</span> 是什么。</p>
-<p>枚举全部集合，对集合内贡献之<strong>积</strong>求<strong>和</strong>的问题，使用二项式
+<p>对子集内贡献之<strong>积</strong>求<strong>和</strong>的问题，使用二项式
 <span class="math inline">\((1+W(x)z)^n\)</span>
 的自然形式。二项式乘出来的 <span class="math inline">\(s\)</span>
 次项系数对应的是 <span class="math inline">\(|T|=s\)</span> 的 <span
@@ -736,18 +733,18 @@ class="math inline">\(|T|\)</span> 提取系数就可以。</p>
 <p>具体的： <span class="math display">\[
 \begin{aligned}
 &amp;\int_a^bf(x)\,\mathrm{d}x\\
-=&amp;\int_a^b\sum_{s=K}^n\binom{s-1}{K-1}(-1)^{s+K}[z^s]\prod_{i=1}^n(1+\mathbb{P}[T_i&gt;x]z)\,\mathrm{d}x\\
+=&amp;\int_a^b\sum_{s=K}^n\binom{s-1}{K-1}(-1)^{s+K}[z^s]\prod_{i=1}^n(1+\mathrm{P}[T_i&gt;x]z)\,\mathrm{d}x\\
 =&amp;\int_a^b\sum_{s=K}^n\binom{s-1}{K-1}(-1)^{s+K}g_s(x)\,\mathrm{d}x\\
 =&amp;\sum_{s=K}^n\binom{s-1}{K-1}(-1)^{s+K}\int_a^bg_s(x)\,\mathrm{d}x\\
 \end{aligned}
 \]</span> 暴力计算 <span class="math inline">\(g\)</span>
 就可以过。这样是 <span class="math inline">\(O(n^4)\)</span> 的。</p>
 <p>当然，<span class="math inline">\(g\)</span> 每次变动只是其中有一个
-<span class="math inline">\(\mathbb{P}[T_i&gt;x]\)</span>
+<span class="math inline">\(\mathrm{P}[T_i&gt;x]\)</span>
 动了，精细实现，可以做到 <span
 class="math inline">\(O(n^3)\)</span>。</p>
 <p><span class="math inline">\(O(n^3)\)</span> 代码：</p>
-<p>采用了不做分段的写法，分段的写起来有点细节，不过正确性是没问题的。</p>
+<p>采用了按照整点全拆开的写法，分段的写起来有点细节，不过正确性是没问题的。</p>
 <p>重载运算符加或是不加 <code>&amp;</code>
 的选择看起来有点意义不明。实际上是因为加上会报错。实在不行都不加了，不差这点内存。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">55</span>, V = <span class="number">100</span>, mod = <span class="number">998244353</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">qpow</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (b)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>)</span><br><span class="line">            res = <span class="number">1ll</span> * res * a % mod;</span><br><span class="line">        a = <span class="number">1ll</span> * a * a % mod;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">inv</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">qpow</span>(x, mod - <span class="number">2</span>); &#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mad</span><span class="params">(<span class="type">int</span> &amp;x, <span class="type">int</span> v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    x += v;</span><br><span class="line">    <span class="keyword">if</span> (x &gt;= mod)</span><br><span class="line">        x -= mod;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">using</span> poly = vector&lt;<span class="type">int</span>&gt;;</span><br><span class="line">poly <span class="keyword">operator</span>*(poly &amp;A, poly &amp;B)</span><br><span class="line">&#123;</span><br><span class="line">    poly C;</span><br><span class="line">    C.<span class="built_in">resize</span>(A.<span class="built_in">size</span>() + B.<span class="built_in">size</span>());</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, A.<span class="built_in">size</span>() - <span class="number">1</span>) <span class="built_in">rep</span>(j, <span class="number">0</span>, B.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">        <span class="built_in">mad</span>(C[i + j], <span class="number">1ll</span> * A[i] * B[j] % mod);</span><br><span class="line">    <span class="keyword">return</span> C;</span><br><span class="line">&#125;</span><br><span class="line">poly <span class="keyword">operator</span>+(poly &amp;A, poly B)</span><br><span class="line">&#123;</span><br><span class="line">    poly C;</span><br><span class="line">    C.<span class="built_in">resize</span>(<span class="built_in">max</span>(A.<span class="built_in">size</span>(), B.<span class="built_in">size</span>()));</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, C.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; A.<span class="built_in">size</span>())</span><br><span class="line">            <span class="built_in">mad</span>(C[i], A[i]);</span><br><span class="line">        <span class="keyword">if</span> (i &lt; B.<span class="built_in">size</span>())</span><br><span class="line">            <span class="built_in">mad</span>(C[i], B[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> C;</span><br><span class="line">&#125;</span><br><span class="line">poly <span class="keyword">operator</span>-(poly &amp;A, poly B)</span><br><span class="line">&#123;</span><br><span class="line">    poly C;</span><br><span class="line">    C.<span class="built_in">resize</span>(<span class="built_in">max</span>(A.<span class="built_in">size</span>(), B.<span class="built_in">size</span>()));</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, C.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; A.<span class="built_in">size</span>())</span><br><span class="line">            <span class="built_in">mad</span>(C[i], A[i]);</span><br><span class="line">        <span class="keyword">if</span> (i &lt; B.<span class="built_in">size</span>())</span><br><span class="line">            <span class="built_in">mad</span>(C[i], mod - B[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> C;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">Int</span><span class="params">(poly &amp;A, <span class="type">int</span> a, <span class="type">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, A.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">        <span class="built_in">mad</span>(res, <span class="number">1ll</span> * (<span class="built_in">qpow</span>(b, i + <span class="number">1</span>) - <span class="built_in">qpow</span>(a, i + <span class="number">1</span>) + mod) * <span class="built_in">inv</span>(i + <span class="number">1</span>) % mod * A[i] % mod);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line">poly g[N], p[N];</span><br><span class="line"><span class="type">int</span> n, K, cur, L[N], R[N], C[N][N];</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; bucL[V + <span class="number">5</span>], bucR[V + <span class="number">5</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(poly &amp;v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cur++;</span><br><span class="line">    <span class="built_in">pe</span>(i, cur) g[i] = g[i] + g[i - <span class="number">1</span>] * v;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">del</span><span class="params">(poly &amp;v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">re</span>(i, cur) g[i] = g[i] - g[i - <span class="number">1</span>] * v;</span><br><span class="line">    cur--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">read</span>(n, K);</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">read</span>(L[i], R[i]);</span><br><span class="line">        bucL[L[i]].<span class="built_in">pb</span>(i), bucR[R[i]].<span class="built_in">pb</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line">    C[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        C[i][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">re</span>(j, n)</span><br><span class="line">        &#123;</span><br><span class="line">            C[i][j] = C[i - <span class="number">1</span>][j - <span class="number">1</span>] + C[i - <span class="number">1</span>][j];</span><br><span class="line">            <span class="keyword">if</span> (C[i][j] &gt;= mod)</span><br><span class="line">                C[i][j] -= mod;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    poly cas1, cas3;</span><br><span class="line">    cas1.<span class="built_in">resize</span>(<span class="number">1</span>, <span class="number">1</span>), cas3.<span class="built_in">resize</span>(<span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">re</span>(i, n)</span><br><span class="line">    &#123;</span><br><span class="line">        p[i].<span class="built_in">resize</span>(<span class="number">2</span>);</span><br><span class="line">        p[i][<span class="number">0</span>] = <span class="number">1ll</span> * R[i] * <span class="built_in">inv</span>(R[i] - L[i]) % mod;</span><br><span class="line">        p[i][<span class="number">1</span>] = mod - <span class="built_in">inv</span>(R[i] - L[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    g[<span class="number">0</span>].<span class="built_in">resize</span>(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">    cur = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">re</span>(i, n) <span class="built_in">add</span>(cas1);</span><br><span class="line">    <span class="built_in">rep</span>(i, <span class="number">0</span>, <span class="number">99</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x : bucR[i])</span><br><span class="line">            <span class="built_in">del</span>(p[x]), <span class="built_in">add</span>(cas3);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x : bucL[i])</span><br><span class="line">            <span class="built_in">del</span>(cas1), <span class="built_in">add</span>(p[x]);</span><br><span class="line">        <span class="built_in">rep</span>(j, K, cur)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> val = <span class="built_in">Int</span>(g[j], i, i + <span class="number">1</span>);</span><br><span class="line">            val = <span class="number">1ll</span> * val * C[j - <span class="number">1</span>][K - <span class="number">1</span>] % mod;</span><br><span class="line">            <span class="keyword">if</span> ((j + K) &amp; <span class="number">1</span>)</span><br><span class="line">                <span class="built_in">mad</span>(ans, mod - val);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="built_in">mad</span>(ans, val);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">write</span>(ans, <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -4698,9 +4695,9 @@ class="math inline">\([l_1,r_1],[l_2,r_2]\)</span>，使得 <span
 class="math inline">\(\textrm{S}a_{r_1}-\textrm{S}b_{r_2}=\textrm{S}a_{l_1-1}-\textrm{S}a_{l_2-1}\)</span>。做了一个移项。</p>
 <p>有 <span class="math inline">\(\forall
 i,\,a_i,b_i\in[1,n]\)</span>。以下下标范围 <span
-class="math inline">\([0,n]\)</span>，<span
-class="math inline">\(0\)</span> 是 <span
-class="math inline">\(l-1\)</span> 的差分。</p>
+class="math inline">\([0,n]\)</span>（<span
+class="math inline">\(0\)</span> 来自 <span
+class="math inline">\(l-1\)</span>）。</p>
 <ul>
 <li>钦定 <span class="math inline">\(\textrm{S}b_n\ge
 \textrm{S}a_n\)</span>。</li>
@@ -13769,5 +13766,102 @@ class="math inline">\(O(\frac{n^3}{\omega})\)</span>。</p>
       <categories>
         <category>闲话</category>
       </categories>
+  </entry>
+  <entry>
+    <title>randomwalk</title>
+    <url>/2024/05/26/randomwalk/</url>
+    <content><![CDATA[<p>随便写写。</p>
+<span id="more"></span>
+<h2 id="一维">一维</h2>
+<h3 id="对于常返性的证明">对于常返性的证明</h3>
+<p>对于在 <span class="math inline">\(\mathbb{Z}\)</span>
+上的随机游走，向左向右概率均为 <span
+class="math inline">\(\frac12\)</span>，设：</p>
+<ul>
+<li><span class="math inline">\(P_n\)</span> 为进行 <span
+class="math inline">\(2n\)</span> 次游走，在时刻 <span
+class="math inline">\(2n\)</span>
+<strong>第一次</strong>走回原点的概率，<span
+class="math inline">\(F_n\)</span> 为此事件的方案数。</li>
+<li><span class="math inline">\(X_t\)</span> 为 <span
+class="math inline">\(t\)</span> 时刻的游走方向，<span
+class="math inline">\(X_t\in\{1,-1\}\)</span>。</li>
+</ul>
+<p>奇数时刻不会回到原点，所以定义为 <span
+class="math inline">\(2n\)</span>。</p>
+<p>将随机游走过程看作折线，容易想到 Catalan 数。</p>
+<blockquote>
+<p>Catalan 数 <span class="math inline">\(C_n\)</span> 的组合意义：</p>
+<p><span class="math inline">\(n\)</span> 个 <span
+class="math inline">\(+1\)</span> 和 <span
+class="math inline">\(n\)</span> 个 <span
+class="math inline">\(-1\)</span> 组成的长为 <span
+class="math inline">\(2n\)</span> 的序列，满足任意前缀和 <span
+class="math inline">\(\ge 0\)</span> 的序列个数。</p>
+</blockquote>
+<p>这与 <span class="math inline">\(F_{n}\)</span> 唯一区别在于：<span
+class="math inline">\(F_n\)</span> 要求全部真前缀的前缀和 <span
+class="math inline">\(&gt;0\)</span>。</p>
+<p>只考虑正半轴，相当于钦定头尾，折线需要满足：<span
+class="math inline">\(X_1=1,X_{2n}=-1\)</span>。</p>
+<p><span class="math inline">\(F_n\)</span> 的约束转为： <span
+class="math display">\[
+\sum_{i=2}^{t}X_i\ge0,\,t\in[2,2n-1]
+\]</span> 与 Catalan 数形式相同。</p>
+<p>考虑负半轴的对称，易得 <span
+class="math inline">\(F_n=2C_{n-1}\)</span>。 <span
+class="math display">\[
+\begin{aligned}
+C_n&amp;=\frac{1}{n+1}\binom{2n}{n}\\
+F_n&amp;=2C_{n-1}=\frac{2}{n}\times\frac{(2n-2)!}{(n-1)!(n-1)!}\\
+&amp;=\frac{2}{n}\times\frac{(2n)!}{n!n!}\times\frac{n^2}{2n(2n-1)}\\
+&amp;=\frac{1}{2n-1}\binom{2n}{n}
+\end{aligned}
+\]</span> 根据定义：<span
+class="math inline">\(P_n=F_n\times2^{-n}2^{-n}=\dfrac{\binom{2n}{n}}{(2n-1)2^{2n}}\)</span>。</p>
+<p>证明： <span class="math display">\[
+\sum_{n=1}^{\infty}P_n=1
+\]</span> 定义序列 <span class="math inline">\(u\)</span>： <span
+class="math display">\[
+\begin{aligned}
+&amp;u_1=1,\,u_n=\frac{\binom{2n}{n}}{2^{2n}}\;(n&gt;1)\\
+&amp;\frac{u_{n+1}}{u_n}=\frac{2n+1}{2n+2}&lt;1\\
+&amp;\lim_{n\to\infty}u_n=0
+\end{aligned}
+\]</span> 也可以使用斯特林公式： <span class="math display">\[
+\begin{aligned}
+&amp;n!\sim\sqrt{2\pi n}(\frac{n}{e})^n\\
+&amp;u_n\sim\frac{1}{\sqrt{\pi n}}\\
+&amp;\lim_{n\to\infty}u_n=0\\
+\end{aligned}
+\]</span> 这个近似在 <span class="math inline">\(n\to\infty\)</span>
+时是精确的。</p>
+<p>注意到： <span class="math display">\[
+\begin{aligned}
+&amp;P_n=\dfrac{\binom{2n}{n}}{(2n-1)2^{2n}}=u_{n-1}-u_n\\
+&amp;\lim_{n\to\infty}\sum_{t=1}^{n}P_t=1-u_1+u_1-u_2\cdots=1-u_n=1
+\end{aligned}
+\]</span> 证毕。</p>
+<p>这个差分可能有什么深刻的组合意义，但我不知道。</p>
+<h2 id="二维">二维</h2>
+<p>有一个十分巧妙的 trick：</p>
+<p>在 <span class="math inline">\(\mathbb{Z}^2\)</span>
+上，对于每一维，移动有 <span class="math inline">\(\{-1,0,1\}\)</span>
+三种，<span class="math inline">\(0\)</span>
+的选择绑定了两个维度，推导变得有些复杂。</p>
+<p>考虑将坐标系旋转 <span
+class="math inline">\(45\degree\)</span>，现在方位只剩 <span
+class="math inline">\(\{\sqrt2,-\sqrt2\}\)</span> 两种，且概率各自 <span
+class="math inline">\(\frac12\)</span>，如果我们只关注某一维，和一维游走完全等价。</p>
+<p>所以具有很多一维的性质，包括常返性。</p>
+<h2 id="三维">三维</h2>
+<p>三维随机游走不存在这样的旋转，同时也不具有常返性，感觉十分深刻。</p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>概率与期望</tag>
+      </tags>
   </entry>
 </search>
