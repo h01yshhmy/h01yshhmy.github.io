@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"h01yshhmy.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="行列式 可以将其理解为，对 \(n\) 维线性空间做线性变换，基构成的 \(n\) 维对象的“面积&#x2F;体积”的变化倍数，同时它的正负性代表着“方向”，或是“翻转”，这在二维空间中尤其形象。 矩阵 \(A\) 的行列式记为 \(\det A\) 或 \(|A|\)。 性质：  \(|A|&#x3D;|A^T|\)：易得。同时以下的行&#x2F;列也应当等价。 两行互换，值变号：交换两维，相当于以这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linearAlgebra">
+<meta property="og:url" content="https://h01yshhmy.github.io/2024/06/02/linearAlgebra/index.html">
+<meta property="og:site_name" content="h01yshhmy">
+<meta property="og:description" content="行列式 可以将其理解为，对 \(n\) 维线性空间做线性变换，基构成的 \(n\) 维对象的“面积&#x2F;体积”的变化倍数，同时它的正负性代表着“方向”，或是“翻转”，这在二维空间中尤其形象。 矩阵 \(A\) 的行列式记为 \(\det A\) 或 \(|A|\)。 性质：  \(|A|&#x3D;|A^T|\)：易得。同时以下的行&#x2F;列也应当等价。 两行互换，值变号：交换两维，相当于以这">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-06-02T03:43:29.000Z">
+<meta property="article:modified_time" content="2024-06-02T03:49:24.868Z">
+<meta property="article:author" content="Untitled-1">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://h01yshhmy.github.io/2024/06/02/linearAlgebra/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://h01yshhmy.github.io/2024/06/02/linearAlgebra/","path":"2024/06/02/linearAlgebra/","title":"linearAlgebra"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>linearAlgebra | h01yshhmy</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">h01yshhmy</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">OI Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%8C%E5%88%97%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">行列式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E7%A9%BA%E9%97%B4"><span class="nav-number">2.</span> <span class="nav-text">线性空间</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E7%9B%B8%E5%85%B3%E4%B8%8E%E7%BA%BF%E6%80%A7%E6%97%A0%E5%85%B3"><span class="nav-number">2.1.</span> <span class="nav-text">线性相关与线性无关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%9A%84%E7%A7%A9"><span class="nav-number">2.2.</span> <span class="nav-text">矩阵的秩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%A0%E6%88%90%E7%A9%BA%E9%97%B4"><span class="nav-number">2.3.</span> <span class="nav-text">张成空间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E7%AD%89%E5%8F%98%E6%8D%A2"><span class="nav-number">3.</span> <span class="nav-text">初等变换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%B4%E9%9A%8F%E7%9F%A9%E9%98%B5"><span class="nav-number">3.1.</span> <span class="nav-text">伴随矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%9A%84%E9%80%86"><span class="nav-number">3.2.</span> <span class="nav-text">矩阵的逆</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%98%A0%E5%B0%84"><span class="nav-number">4.</span> <span class="nav-text">线性映射</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%90%E6%A0%87"><span class="nav-number">4.1.</span> <span class="nav-text">坐标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E6%B8%A1%E7%9F%A9%E9%98%B5"><span class="nav-number">4.2.</span> <span class="nav-text">过渡矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E4%BC%BC%E7%9F%A9%E9%98%B5"><span class="nav-number">4.3.</span> <span class="nav-text">相似矩阵</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC"><span class="nav-number">5.</span> <span class="nav-text">矩阵特征值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%A7%92%E5%8C%96"><span class="nav-number">5.1.</span> <span class="nav-text">对角化</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Untitled-1"
+      src="/images/1.png">
+  <p class="site-author-name" itemprop="name">Untitled-1</p>
+  <div class="site-description" itemprop="description">学生 OIer Gamer</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">221</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">134</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/h01yshhmy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;h01yshhmy" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.luogu.com.cn/user/416442" title="Luogu → https:&#x2F;&#x2F;www.luogu.com.cn&#x2F;user&#x2F;416442" rel="noopener me" target="_blank">Luogu</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://h01yshhmy.github.io/2024/06/02/linearAlgebra/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.png">
+      <meta itemprop="name" content="Untitled-1">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="h01yshhmy">
+      <meta itemprop="description" content="学生 OIer Gamer">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="linearAlgebra | h01yshhmy">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          linearAlgebra
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-06-02 11:43:29 / 修改时间：11:49:24" itemprop="dateCreated datePublished" datetime="2024-06-02T11:43:29+08:00">2024-06-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><span id="more"></span>
+<h2 id="行列式">行列式</h2>
+<p>可以将其理解为，对 <span class="math inline">\(n\)</span>
+维线性空间做线性变换，基构成的 <span class="math inline">\(n\)</span>
+维对象的“面积/体积”的变化倍数，同时它的正负性代表着“方向”，或是“翻转”，这在二维空间中尤其形象。</p>
+<p>矩阵 <span class="math inline">\(A\)</span>
+的<strong>行列式</strong>记为 <span class="math inline">\(\det
+A\)</span> 或 <span class="math inline">\(|A|\)</span>。</p>
+<p>性质：</p>
+<ul>
+<li><p><span
+class="math inline">\(|A|=|A^T|\)</span>：易得。同时以下的行/列也应当等价。</p></li>
+<li><p>两行互换，值变号：交换两维，相当于以这两维构成的平面为轴，翻转空间。</p></li>
+<li><p>两行对应值成比例，值为 <span
+class="math inline">\(0\)</span>：存在两个在同一直线的向量，维度被压缩，面积/体积为
+<span class="math inline">\(0\)</span>。</p>
+<p>有一行全 <span class="math inline">\(0\)</span> 的行列式也是 <span
+class="math inline">\(0\)</span>：压到 <span
+class="math inline">\(0\)</span> 维。</p></li>
+<li><p>对某一行数乘 <span class="math inline">\(k\)</span>，行列式也乘
+<span class="math inline">\(k\)</span>：考虑变化倍数。</p></li>
+</ul>
+<p>数值计算：Gauss-Jordan 消元。</p>
+<h2 id="线性空间">线性空间</h2>
+<p>关于加法与数乘封闭，满足结合律、交换律，有零元、幺元。阿贝尔群性质等等都有。</p>
+<h3 id="线性相关与线性无关">线性相关与线性无关</h3>
+<p>对于向量集合 <span class="math inline">\(V\)</span> 和向量 <span
+class="math inline">\(x\in V\)</span>。</p>
+<p>若存在 <span class="math inline">\(A\subseteq V\)</span> ，将 <span
+class="math inline">\(A\)</span> 中的向量数乘放缩后相加等于 <span
+class="math inline">\(x\)</span>，称呼 <span
+class="math inline">\(x\)</span> 能被向量组 <span
+class="math inline">\(A\)</span> <strong>线性表出</strong>。</p>
+<p>若<strong>零向量</strong>能被线性表出当且仅当 <span
+class="math inline">\(A\)</span> 中向量都要数乘 <span
+class="math inline">\(0\)</span>，称呼向量组 <span
+class="math inline">\(A\)</span> <strong>线性无关</strong>，否则称呼为
+<strong>线性相关</strong>。</p>
+<p>若存在 <span class="math inline">\(A\subseteq B\)</span> 线性相关，则
+<span class="math inline">\(B\)</span> 线性相关；若 <span
+class="math inline">\(B\)</span> 线性无关，则任意 <span
+class="math inline">\(A\subseteq B\)</span> 线性无关。</p>
+<h3 id="矩阵的秩">矩阵的秩</h3>
+<p>向量组也是矩阵，线性相关其实就是存在多余向量。</p>
+<p>对于向量组 <span
+class="math inline">\(A\)</span>，不断删去多余向量，剩余的极大线性无关组的大小，就是
+<span class="math inline">\(A\)</span> 的<strong>秩</strong>，记作 <span
+class="math inline">\(\rank A\)</span>。</p>
+<h3 id="张成空间">张成空间</h3>
+<p>类似于群论中的重要概念 生成群。</p>
+<p>对于向量组 <span class="math inline">\(A\)</span>，将 <span
+class="math inline">\(A\)</span>
+可以线性表出的向量组成新的线性空间，记作 <span
+class="math inline">\(\operatorname{span}A\)</span>。</p>
+<p>注意 <span class="math inline">\(A\)</span> 不一定线性无关。</p>
+<p>同样可以类似定义（真）子空间，也就是（真）子群。</p>
+<h2 id="初等变换">初等变换</h2>
+<p>三种：倍乘（第 <span class="math inline">\(i\)</span> 行乘 <span
+class="math inline">\(k,k\ne 0\)</span>），倍加（第 <span
+class="math inline">\(j\)</span> 行加上第 <span
+class="math inline">\(i\)</span> 行乘 <span
+class="math inline">\(k\)</span>），对换（交换两行）。</p>
+<p>其实 对换 并不完全本质，可以通过前两种实现。</p>
+<p>对于矩阵 <span class="math inline">\(B\)</span> 和初等变换 <span
+class="math inline">\(A\)</span>，<span class="math inline">\(B\gets
+AB\)</span> 做上述行变换，<span class="math inline">\(B\gets BA\)</span>
+则做对称的列变换。</p>
+<h3 id="伴随矩阵">伴随矩阵</h3>
+<p>有一方阵 <span class="math inline">\(A\)</span>，将 <span
+class="math inline">\(A\)</span> 矩阵扣掉 <span
+class="math inline">\(a_{ij}\)</span> 所在行列，并将剩余部分合并，得到
+<span class="math inline">\(n-1\)</span> 阶方阵。</p>
+<p>称呼这个 <span class="math inline">\(n-1\)</span> 方阵的行列式为元素
+<span class="math inline">\(a_{ij}\)</span>
+的<strong>余子式</strong>，记为 <span
+class="math inline">\(M_{ij}\)</span>；称呼 <span
+class="math inline">\(A^{*}_{ij}=(-1)^{i+j}M_{ij}\)</span> 为元素 <span
+class="math inline">\(a_{ij}\)</span>
+的<strong>代数余子式</strong>。</p>
+<p>称呼矩阵 <span class="math inline">\(A^*\)</span> 为 <span
+class="math inline">\(A\)</span> 的<strong>伴随矩阵</strong>。</p>
+<h3 id="矩阵的逆">矩阵的逆</h3>
+<p>显然矩阵的逆只对方阵有意义。</p>
+<p>如果<strong>方阵</strong> <span class="math inline">\(A,B\)</span>
+满足 <span class="math inline">\(AB=I\)</span>，那么 <span
+class="math inline">\(A\)</span> 被称作可逆矩阵或非奇异矩阵，<span
+class="math inline">\(B\)</span> 记作 <span
+class="math inline">\(A^{-1}\)</span>。</p>
+<p>初等变换并不影响可逆性。若称呼从 <span
+class="math inline">\(I\)</span>
+开始，经过初等变换后得到的矩阵为初等矩阵，那么初等矩阵均是可逆的。</p>
+<ul>
+<li>如何<strong>判定</strong>：矩阵 <span
+class="math inline">\(A\)</span> 可逆，当且仅当 <span
+class="math inline">\(\det A\ne0\)</span> 或是 <span
+class="math inline">\(\rank A=\dim A\)</span>，也就是 <span
+class="math inline">\(A\)</span> 线性无关。</li>
+</ul>
+<p>关于伴随矩阵的性质：<span class="math inline">\(A\)</span>
+可逆当且仅当 <span class="math inline">\(A^*\)</span> 可逆，<span
+class="math inline">\(A^*=|A|A^{-1}\)</span>。</p>
+<p>给出感性理解：从基变换角度，将 <span class="math inline">\(A\)</span>
+作为一组新的基，若线性无关，鸽巢原理，一定存在一个维度被压缩，这一维也就丢失了，无法逆回去。</p>
+<ul>
+<li>如何<strong>计算</strong>：
+<ol type="1">
+<li>待定系数。对着 <span class="math inline">\(AB=I\)</span>
+做，解方程。</li>
+<li>做初等变换。将 <span class="math inline">\(A\)</span> 变换为 <span
+class="math inline">\(I\)</span>，记录过程中的变换，求它们逆变换的累乘。</li>
+<li>伴随矩阵。<span class="math inline">\(A^{-1}=\frac1{|A|}
+A^*\)</span>，其中 <span class="math inline">\(A^*\)</span> 是 <span
+class="math inline">\(A\)</span> 的伴随矩阵。</li>
+</ol></li>
+</ul>
+<h2 id="线性映射">线性映射</h2>
+<p>设 <span class="math inline">\(V,W\)</span> 是数域 <span
+class="math inline">\(F\)</span> 上的两个线性空间，<span
+class="math inline">\(T\)</span> 是 <span
+class="math inline">\(V\)</span> 到 <span
+class="math inline">\(W\)</span> 的映射。</p>
+<p>若对于 <span class="math inline">\(x,y\in V;\,l,k\in F\)</span> 有
+<span class="math inline">\(T(kx+ly)=kTx+lTy\)</span>，称呼 <span
+class="math inline">\(T\)</span> 是 <span
+class="math inline">\(V\)</span> 到 <span
+class="math inline">\(W\)</span> 的<strong>线性映射</strong>。</p>
+<p>若 <span class="math inline">\(V=W\)</span>，称呼为 <span
+class="math inline">\(V\)</span> 上的<strong>线性变换</strong>。</p>
+<p>线性变换和 <span class="math inline">\(n\)</span>
+阶方阵之间存在一一对应关系。</p>
+<h3 id="坐标">坐标</h3>
+<p>设向量组 <span class="math inline">\(x\)</span> 是 <span
+class="math inline">\(V\)</span> 的一组基，对于向量 <span
+class="math inline">\(y\in V\)</span> 与<strong>数域</strong>中的列向量
+<span class="math inline">\(a\)</span>，令 <span
+class="math inline">\(y=a_1x_1+\cdots+a_nx_n=(x_1,\cdots,x_n)\cdot
+a\)</span>。</p>
+<p>称呼列向量 <span class="math inline">\(a\)</span> 为 <span
+class="math inline">\(y\)</span> 在基 <span
+class="math inline">\(x\)</span> 下的<strong>坐标</strong>，注意 <span
+class="math inline">\(a\)</span>
+是一个“标量向量”，并不是线性空间中的抽象向量。</p>
+<h3 id="过渡矩阵">过渡矩阵</h3>
+<p>设两个向量组 <span class="math inline">\(\alpha,\beta\)</span> 均是
+<span class="math inline">\(V\)</span> 的基。</p>
+<p>若矩阵 <span class="math inline">\(A\)</span> 满足 <span
+class="math inline">\((\alpha_1,\alpha_2,\cdots,\alpha_n)A=(\beta_1,\beta_2,\cdots,\beta_n)\)</span>，称呼
+<span class="math inline">\(A\)</span> 是基 <span
+class="math inline">\((\alpha_1,\cdots,\alpha_n)\)</span> 到基 <span
+class="math inline">\((\beta_1,\cdots,\beta_n)\)</span>
+的<strong>过渡矩阵</strong>。</p>
+<p>显然过渡矩阵可逆，<span class="math inline">\(\beta\)</span> 到 <span
+class="math inline">\(\alpha\)</span> 的过渡矩阵为 <span
+class="math inline">\(A^{-1}\)</span>。</p>
+<p>十分形象的名字。若将一组基看作观察线性空间的一种视角，过渡矩阵就是视角的转换器。</p>
+<p>设向量 <span class="math inline">\(z\in V\)</span>，有 <span
+class="math inline">\(z=\alpha(\xi_1,\cdots,\xi_n)^T=\beta(\eta_1,\cdots,\eta_n)^T\)</span>，列向量
+<span class="math inline">\(\xi^T,\eta^T\)</span> 分别为 <span
+class="math inline">\(z\)</span> 在 <span
+class="math inline">\(\alpha,\beta\)</span> 下的坐标。</p>
+<p>由上文 <span class="math inline">\(\beta=\alpha A\)</span> 得：<span
+class="math inline">\(\xi^T=A\eta^T\)</span>。</p>
+<p>上式中的向量和矩阵均作为“标量”。</p>
+<h3 id="相似矩阵">相似矩阵</h3>
+<p>对于同一个线性变换 <span class="math inline">\(T\)</span> 与 <span
+class="math inline">\(V\)</span> 中两组基 <span
+class="math inline">\(\alpha,\beta\)</span>，在 <span
+class="math inline">\(\alpha\)</span> 的视角下 <span
+class="math inline">\(T\)</span> 为方阵 <span
+class="math inline">\(A\)</span>，在 <span
+class="math inline">\(\beta\)</span> 的视角下 <span
+class="math inline">\(T\)</span> 为方阵 <span
+class="math inline">\(B\)</span>。</p>
+<p>称呼矩阵 <span class="math inline">\(A\)</span> 与矩阵 <span
+class="math inline">\(B\)</span> <strong>相似</strong>。</p>
+<p>设过渡矩阵为 <span class="math inline">\(C\)</span>，即 <span
+class="math inline">\(\alpha C=\beta\)</span>。</p>
+<p>因为是同一个变换，变换前后过渡矩阵不变，<span
+class="math inline">\(\alpha\)</span> 视角下有 <span
+class="math inline">\(T(\alpha)C=T(\beta)=\alpha AC\)</span>。</p>
+<p>在 <span class="math inline">\(\beta\)</span> 视角下，有 <span
+class="math inline">\(T(\beta)=\beta B=\alpha CB\)</span>。</p>
+<p>所以 <span class="math inline">\(\alpha CB=\alpha AC\)</span>，易得
+<span class="math inline">\(B=C^{-1}AC\)</span>。</p>
+<p>根据上述过程，线性变换 <span class="math inline">\(T\)</span>
+在任意基视角下的矩阵均相似。</p>
+<h2 id="矩阵特征值">矩阵特征值</h2>
+<p>对于将线性变换反复进行多次的过程，能否找到一个视角，将变换转为简单的缩放呢？</p>
+<p>设 <span class="math inline">\(V\)</span> 是 <span
+class="math inline">\(F\)</span> 上的线性空间，<span
+class="math inline">\(T\)</span> 是 <span
+class="math inline">\(V\)</span> 上的线性变换。</p>
+<p>若存在非 <span class="math inline">\(0\)</span> 向量 <span
+class="math inline">\(\xi\)</span> 与 <span
+class="math inline">\(F\)</span> 中的 <span
+class="math inline">\(\lambda\)</span> 满足 <span
+class="math inline">\(T\xi=\lambda\xi\)</span>，称呼 <span
+class="math inline">\(\lambda\)</span> 为 <span
+class="math inline">\(T\)</span> 的<strong>特征值</strong>，<span
+class="math inline">\(\xi\)</span> 是属于特征值 <span
+class="math inline">\(\lambda\)</span>
+的一个<strong>特征向量</strong>。</p>
+<p>考虑解 <span class="math inline">\(T\xi=\lambda\xi\)</span>。</p>
+<p>设 <span class="math inline">\(\alpha\)</span> 是 <span
+class="math inline">\(V\)</span> 的一组基，<span
+class="math inline">\(T\)</span> 在 <span
+class="math inline">\(\alpha\)</span> 视角下的矩阵为 <span
+class="math inline">\(A\)</span>，有 <span
+class="math inline">\(T(\alpha)=\alpha A\)</span>。</p>
+<p>设 <span class="math inline">\(\xi\)</span> 在 <span
+class="math inline">\(\alpha\)</span> 下的坐标为 <span
+class="math inline">\(X\)</span>，有 <span
+class="math inline">\(\xi=\alpha X\)</span>。</p>
+<p>于是有 <span class="math inline">\(T(\alpha)X=\lambda\alpha
+X\)</span>，<span class="math inline">\(\alpha AX=\lambda \alpha
+X\)</span>，<span class="math inline">\(AX=\lambda X\)</span>，<span
+class="math inline">\((A-\lambda I)X=0\)</span>。</p>
+<p>空间中存在会被 <span class="math inline">\((A-\lambda I)\)</span>
+变换到原点的坐标，等价于 <span class="math inline">\(|A-\lambda
+I|=0\)</span>。</p>
+<p>解这个方程，得到域 <span class="math inline">\(F\)</span>
+中的全部根，也就是全部特征值。</p>
+<p>对于某个特征值，根据上述推导，解 <span
+class="math inline">\(A\xi=\lambda\xi\)</span>，就可以得到对应特征向量
+<span class="math inline">\(\xi\)</span>。</p>
+<h3 id="对角化">对角化</h3>
+<p>矩阵特征值的一个应用。</p>
+<p>以斐波那契数列通项公式的计算为例：</p>
+<p>对于 <span
+class="math inline">\(F_0=0,F_1=1,F_n=F_{n-1}+F_{n-2}\)</span>，有：
+<span class="math display">\[
+\begin{bmatrix}F_n\\F_{n-1}\end{bmatrix}=\begin{bmatrix}1&amp;1\\1&amp;0\end{bmatrix}\begin{bmatrix}F_{n-1}\\F_{n-2}\end{bmatrix}
+\]</span> 令： <span class="math display">\[
+\begin{aligned}
+A&amp;=\begin{bmatrix}1&amp;1\\1&amp;0\end{bmatrix}\\f_n&amp;=\begin{bmatrix}F_n\\F_{n-1}\end{bmatrix}&amp;f_0=\begin{bmatrix}1\\0\end{bmatrix}
+\end{aligned}
+\]</span> 有： <span class="math display">\[
+f_n=A^nf_0
+\]</span> 进行对角化。也就是找到一个与 <span
+class="math inline">\(A\)</span> 相似的对角阵 <span
+class="math inline">\(\Lambda\)</span>，并求出它们之间的过渡矩阵 <span
+class="math inline">\(P\)</span>，得到 <span
+class="math inline">\(A=P^{-1}\Lambda P\)</span>，<span
+class="math inline">\(A^n=P^{-1}\Lambda^nP\)</span> 的形式。</p>
+<p>设 <span class="math inline">\(A\)</span> 的两个特征值分别为 <span
+class="math inline">\(\lambda_1,\lambda_2\)</span>，解特征多项式，得：
+<span class="math display">\[
+\begin{aligned}
+&amp;\lambda_1=\frac{1+\sqrt{5}}{2},\,\lambda_2=\frac{1-\sqrt{5}}{2}\\
+&amp;\Lambda=\begin{bmatrix}\lambda_1&amp;0\\0&amp;\lambda_2\end{bmatrix}
+\end{aligned}
+\]</span> 再得到两个特征向量 <span
+class="math inline">\(\xi_1,\xi_2\)</span>： <span
+class="math display">\[
+\begin{aligned}
+&amp;\xi_1=\begin{bmatrix}\lambda_1\\1\end{bmatrix},\,\xi_2=\begin{bmatrix}\lambda_2\\1\end{bmatrix}\\
+&amp;P=\begin{bmatrix}\xi_1&amp;\xi_2\end{bmatrix}=\begin{bmatrix}\lambda_1&amp;\lambda_2\\1&amp;1\end{bmatrix}
+\end{aligned}
+\]</span> <span class="math inline">\(P\)</span> 需要是 <span
+class="math inline">\(A\)</span> 到 <span
+class="math inline">\(\Lambda\)</span>
+的过渡矩阵，而根据特征向量的定义，以 <span
+class="math inline">\(\{\xi_1,\xi_2\}\)</span> 为基，线性变换 <span
+class="math inline">\(A\)</span>
+将表现为简单做特征值标量缩放的形式——这个缩放就是 <span
+class="math inline">\(\Lambda\)</span>。</p>
+<p>所以 <span
+class="math inline">\(\begin{bmatrix}\xi_1&amp;\xi_2\end{bmatrix}\)</span>
+就是过渡矩阵。</p>
+<p>还需要求 <span
+class="math inline">\(P^{-1}\)</span>，这个是简单的。</p>
+<p>经过化简，就可以得到 <span class="math inline">\(F_n\)</span>
+的通项公式了： <span class="math display">\[
+F_n=\frac1{\sqrt{5}}\left(\left(\frac{1+\sqrt{5}}{2}\right)^n-\left(\frac{1-\sqrt{5}}{2}\right)^n\right)
+\]</span></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/05/26/randomwalk/" rel="prev" title="randomwalk">
+                  <i class="fa fa-angle-left"></i> randomwalk
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Untitled-1</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+
+  <a href="https://github.com/h01yshhmy" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
