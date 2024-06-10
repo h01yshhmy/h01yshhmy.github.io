@@ -14187,4 +14187,100 @@ class="math inline">\(\frac12\)</span>，如果我们只关注某一维，和一
         <category>闲话</category>
       </categories>
   </entry>
+  <entry>
+    <title>P3978</title>
+    <url>/2024/06/10/P3978/</url>
+    <content><![CDATA[<p><a href="https://www.luogu.com.cn/problem/P3978">P3978 [TJOI2015]
+概率论</a></p>
+<span id="more"></span>
+<p>首先，非 ⌈ 同构 ⌋
+的判定并不需要考虑子树旋转，也就是说左右儿子有区分。</p>
+<p>求叶子节点个数期望。考虑分别求出所有方案数，和所有方案的叶子个数之和，最后算期望。</p>
+<p>众所周知，<span class="math inline">\(n\)</span>
+个点的无标号非同构二叉树个数是第 <span class="math inline">\(n\)</span>
+个卡特兰数。</p>
+<p>过程：</p>
+<p>设 <span class="math inline">\(T_n\)</span> 为 <span
+class="math inline">\(n\)</span> 个点无标号非同构二叉树个数。 <span
+class="math display">\[
+\begin{aligned}
+&amp;T_0=1\\
+&amp;T_n=\sum_{i=0}^{n-1}T_{i}T_{n-i-1}
+\end{aligned}
+\]</span> 常规的枚举左子树大小。</p>
+<p>考虑生成函数： <span class="math display">\[
+\begin{aligned}
+T(z)&amp;:=\sum_{n\ge 0}T_nz^n\\
+T_nz^n&amp;=z^n\sum_{i=0}^{n-1}T_iT_{n-i-1}\\\\
+\sum_{n\ge 1}T_nz^n&amp;=\sum_{n\ge
+1}z(\sum_{i=0}^{n-1}T_iT_{n-1-i})z^{n-1}\\
+&amp;=z\sum_{k\ge 0}\sum_{i=0}^{k}T_iT_{k-i}z^{k}\\
+&amp;=zT^2(z)=\sum_{n\ge 0}T_nz^n-T_0\\\\
+&amp;T(z)-1=zT^2(z)
+\end{aligned}
+\]</span> 解得 <span
+class="math inline">\(T(z)=\dfrac{1\pm\sqrt{1-4z}}{2z}\)</span>。</p>
+<p>注意 <span class="math inline">\(z\to 0\)</span> 时，<span
+class="math inline">\(T(z)\to 0\)</span>。</p>
+<p>舍掉一个，得到 <span
+class="math inline">\(T(z)=\dfrac{1-\sqrt{1-4z}}{2z}\)</span>。</p>
+<p>根据广义二项式定理： <span class="math display">\[
+\begin{aligned}
+&amp;(1-4z)^{\frac12}=\sum_{k\ge 0}\binom{\frac12}{k}(-4z)^k\\
+&amp;zT(z)=-\frac12((\sum_{k\ge
+0}\binom{\frac12}{k}(-4z)^k)-1)=-\frac12\sum_{k\ge
+1}\binom{\frac12}{k}(-4)^kz^k\\
+&amp;T(z)=-\frac12\sum_{k\ge 0}\binom{\frac12}{k+1}(-4)^{k+1}z^k
+\end{aligned}
+\]</span> 得到 <span class="math inline">\(T_n\)</span> 通项： <span
+class="math display">\[
+\begin{aligned}
+T_n&amp;=-\frac12\binom{\frac12}{n+1}(-4)^{n+1}\\
+&amp;=-\frac12\frac{\frac12(\frac12-1)(\frac12-2)\cdots(\frac12-n)}{(n+1)!}(-4)^{n+1}\\
+&amp;=-\frac12\frac{1\cdot3\cdot5\cdots(2n-1)\times(-1)^{n+1}}{2^n(n+1)!}(-4)^{n+1}\\
+&amp;=\frac1{n+1}\frac{1\cdot3\cdot5\cdots(2n-1)}{n!}2^n\\
+&amp;=\frac1{n+1}\frac{1\cdot3\cdot5\cdots(2n-1)}{n!}\frac{2\cdot4\cdot6\cdots(2n)}{n!}\\
+&amp;=\frac1{n+1}\binom{2n}{n}
+\end{aligned}
+\]</span> 得到答案。</p>
+<p>接下来考虑如何计算叶子个数之和。</p>
+<p>设 <span class="math inline">\(n\)</span>
+个点的无标号非同构二叉树叶子个数之和为 <span
+class="math inline">\(F_n\)</span>。</p>
+<p>易得： <span class="math display">\[
+\begin{aligned}
+&amp;F_0=0,F_1=1\\
+&amp;F_n=2\sum_{i=0}^{n-1}F_iT_{n-1-i}
+\end{aligned}
+\]</span> 枚举左子树大小 <span
+class="math inline">\(i\)</span>，右子树方案为贡献系数。乘 <span
+class="math inline">\(2\)</span> 做对称。</p>
+<p>同样考虑生成函数，得到： <span class="math display">\[
+\begin{aligned}
+&amp;F(z):=\sum_{n\ge 0}F_nz^n\\
+&amp;F_nz^n=2z(\sum_{i=0}^{n-1}F_iT_{n-1-i})z^{n-1}\\
+&amp;\sum_{n\ge 1}F_nz^n=2z\sum_{n-1\ge
+0}(\sum_{i=0}^{n-1}F_iT_{n-1-i})z^{n-1}=2zF(z)T(z)\\
+&amp;\sum_{n\ge 1}F_nz^n=(\sum_{n\ge 0}F_nz^n)-F_0-F_1z=F(z)-z\\\\
+&amp;F(z)=2zF(z)T(z)+z
+\end{aligned}
+\]</span> 根据前面 <span class="math inline">\(T(z)\)</span> 的解，易得
+<span class="math inline">\(F(z)=\dfrac{z}{\sqrt{1-4z}}\)</span>。</p>
+<p>同样的手法，得到： <span class="math display">\[
+\begin{aligned}
+&amp;F_n=\binom{2n-2}{n-1}\\
+&amp;\frac{F_n}{T_n}=\frac{n(n+1)}{2(2n-1)}
+\end{aligned}
+\]</span> 得到答案。</p>
+]]></content>
+      <categories>
+        <category>题解</category>
+        <category>随机过程与计数</category>
+      </categories>
+      <tags>
+        <tag>计数</tag>
+        <tag>概率与期望</tag>
+        <tag>生成函数</tag>
+      </tags>
+  </entry>
 </search>
